@@ -1,8 +1,8 @@
-import MessageEvan from "./MessageEvan";
+import ListGroupEvan from "./components/ListGroupEvan";
 
 
 function App(){
-  return <div><MessageEvan></MessageEvan></div>
+  return <div><ListGroupEvan /></div>;
 }
 
 export default App;
