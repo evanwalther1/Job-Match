@@ -1,8 +1,8 @@
-import MessageEvan from "./MessageEvan";
+import MessageRachel from "./MessageRachel";
 
 
 function App(){
-  return <div><MessageEvan></MessageEvan></div>
+  return <div><MessageRachel></MessageRachel></div>
 }
 
 export default App;
