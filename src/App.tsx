@@ -1,9 +1,10 @@
 import MessageEvan from "./MessageEvan";
+import ListGroupEvan from "./components/ListGroupEvan";
 
 function App() {
   return (
     <div>
-      <MessageEvan></MessageEvan>
+      <ListGroupEvan></ListGroupEvan>
     </div>
   );
 }
