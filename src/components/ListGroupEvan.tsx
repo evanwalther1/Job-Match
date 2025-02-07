@@ -28,21 +28,7 @@ function ListGroupEvan({ items, heading, onSelectItem }: Props) {
           >
             {item}
           </li>
-        {items.map((item, index) => (
-          <li
-            className={
-              selectedIndex === index
-                ? "list-group-item active"
-                : "list-group-item"
-            }
-            key={item}
-            onClick={() => {
-              setSelectedIndex(index);
-              onSelectItem(item);
-            }}
-          >
-            {item}
-          </li>
+        
         ))}
       </ul>
     </>
