@@ -1,7 +1,8 @@
 import React from "react";
+import LoginForm from "./components/LoginForm";
 
 const App = () => {
-  return <div>App</div>;
+  return <form>Temp</form>;
 };
 
 export default App;
