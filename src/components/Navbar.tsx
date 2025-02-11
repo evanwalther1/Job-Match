@@ -44,17 +44,17 @@ const Navbar = () => {
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li>
-                    <a className="dropdown-item" href="/jobsearch">
+                    <a className="dropdown-item" href="/job-search">
                       Job Search
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <a className="dropdown-item" href="/job-history">
                       Job History
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <a className="dropdown-item" href="/active-jobs">
                       Active Jobs
                     </a>
                   </li>
