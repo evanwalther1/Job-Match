@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const LoginForm = () => {
   return (
@@ -25,19 +26,9 @@ const LoginForm = () => {
           placeholder="Password"
         />
       </div>
-      <div className="form-check">
-        <input
-          type="checkbox"
-          className="form-check-input"
-          id="exampleCheck1"
-        />
-        <label className="form-check-label" htmlFor="exampleCheck1">
-          Check me out
-        </label>
-      </div>
-      <button type="submit" className="btn btn-primary">
+      <Link to="/home" className="btn btn-primary">
         Submit
-      </button>
+      </Link>
     </>
   );
 };
