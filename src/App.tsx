@@ -1,11 +1,9 @@
 import React from "react";
-import JobMarker from "./components/JobMarker";
-import Navbar from "./components/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import JobSearch from "./pages/JobSearch";
-import LoginForm from "./components/LoginForm";
+import LoginForm from "./pages/LoginForm";
 const App = () => {
   return (
     <div>
