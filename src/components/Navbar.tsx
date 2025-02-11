@@ -59,8 +59,8 @@ const Navbar = () => {
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
-                      Flagged Jobs
+                    <a className="dropdown-item" href="/create-job">
+                      Create Job
                     </a>
                   </li>
                 </ul>
