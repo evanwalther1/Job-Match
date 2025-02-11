@@ -5,9 +5,9 @@ const Navbar = () => {
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
+          <h1 className="navbar-brand" style={{ fontSize: 40 }}>
             Job-Match
-          </a>
+          </h1>
           <button
             className="navbar-toggler"
             type="button"
