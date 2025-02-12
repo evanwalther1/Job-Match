@@ -5,6 +5,7 @@ const App = () => {
   return (
     <div>
       App
+      <JobSearchResult more_information={<p>hi</p>} />
       <JobSearchResult />
     </div>
   );
