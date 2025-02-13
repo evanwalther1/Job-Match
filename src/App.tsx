@@ -3,10 +3,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import JobSearch from "./pages/JobSearch";
-import LoginForm from "./pages/LoginForm";
+import LoginForm from "./components/LoginForm";
 import JobHistory from "./pages/JobHistory";
 import ActiveJobs from "./pages/ActiveJobs";
 import CreateJob from "./pages/CreateJob";
+import "./index.css";
 const App = () => {
   return (
     <div>
