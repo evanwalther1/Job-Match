@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar";
-const CreatJob = () => {
+const CreateJob = () => {
   return (
     <>
       <div>
@@ -10,4 +10,4 @@ const CreatJob = () => {
   );
 };
 
-export default CreatJob;
+export default CreateJob;
