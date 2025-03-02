@@ -1,3 +1,4 @@
+import JobPostForm from "../components/JobPostForm";
 import Navbar from "../components/Navbar";
 const CreateJob = () => {
   return (
@@ -5,7 +6,9 @@ const CreateJob = () => {
       <div>
         <Navbar></Navbar>
       </div>
-      <h1>Create Job</h1>
+      <div>
+        <JobPostForm></JobPostForm>
+      </div>
     </>
   );
 };
