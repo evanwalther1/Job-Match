@@ -7,6 +7,7 @@ import LoginForm from "./components/LoginForm";
 import JobHistory from "./pages/JobHistory";
 import ActiveJobs from "./pages/ActiveJobs";
 import CreateJob from "./pages/CreateJob";
+import RegisterUser from "./components/RegisterUser";
 import "./index.css";
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route index element={<LoginForm />} />
+            <Route path="/register" element={<RegisterUser />} />
             <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/job-search" element={<JobSearch />} />

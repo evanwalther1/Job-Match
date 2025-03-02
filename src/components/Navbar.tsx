@@ -1,6 +1,20 @@
 import React from "react";
-
+import { useState } from "react";
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
+import { Navigate, useNavigate } from "react-router-dom";
 const Navbar = () => {
+  const navigate = useNavigate();
+  const logOut = async () => {
+    try {
+      const result = await signOut(auth);
+      console.log("User Signed out successfully");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -26,6 +40,7 @@ const Navbar = () => {
                   Home
                 </a>
               </li>
+              <button onClick={logOut}>Logout</button>
               <li className="nav-item">
                 <a className="nav-link" href="/profile">
                   Profile
