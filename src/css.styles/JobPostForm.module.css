@@ -2,22 +2,24 @@
 
 .formContainer{
     display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   height: 100vh;
   background-color: #ffffff; 
   flex-direction: column;
+  gap: 50px;
 }
 
-/* More Specific: Label in .formBox */
-.formBox label {
-    margin-bottom: 15px;  /* Overrides .formContainer label */
-  }
+
   
   /* Box that holds the post form */
   .formBox {
-  
-    width: 350px;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 900px;
+    width:100%;
     padding: 30px;
     background-color: #ffffff;
     border-radius: 8px;
@@ -27,17 +29,45 @@
   
   /* Styling for each input group */
   .inputGroup {
-    margin-bottom: 100px;
+    display:flex;
+    margin-bottom: 20px;
+    flex-direction: column;
+    padding:5px;
+    width:50%
+  }
+
+  .description textarea{
+    height:100px;
+  }
+    
+  /* Styling for the submit button */
+  .postButton button{
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: black !important;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    border-color: black !important;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .paymentGroup {
+    display:flex;
+    flex-direction: row;
   }
   
-  
   .formContainer label {
-    font-size: 24px;
+    font-size: 36px;
     font-weight: bold;
     color: #333; /* Darker shade for contrast */
     text-align: center;
+    justify-content: center;
     display: block;
     margin-bottom: 2px;
+    margin-top: 30px;
     text-transform: uppercase;
     letter-spacing: 2px;
     position: relative;
@@ -56,7 +86,32 @@
     position: relative;
     z-index: 1;
   }
-  
+
+  .inputGroup label {
+    font-size: 15px;
+    font-weight: bold;
+    color: #333; /* Darker shade for contrast */
+    text-align: left;
+    display: block;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .paymentGroup label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333; /* Darker shade for contrast */
+    text-align: left;
+    display: block;
+    margin-bottom: 2px;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+  }
+
   .formBox input {
     width: 100%;
     padding: 8px;
@@ -64,41 +119,20 @@
     margin-bottom: 15px; /* Overrides both above */
     border-radius: 4px;
   }
-  
-  
-  /* targets all of the <label> 
-  elements inside the element with the class inputGroup */
-  .inputGroup label {
-    display: block;
-    margin-bottom: 5px; /* Overrides both above */
-    font-weight: 600;
-  }
-  
-  
-  
-  
-  /*
-  
-  */
-  .inputGroup input {
+
+  .inputGroup input,textarea {
     width: 100%;
     padding: 8px;
     border: 1px solid #cccccc;
+    margin-bottom: 15px; /* Overrides both above */
     border-radius: 4px;
   }
-  
-  /* Styling for the submit button */
-  .postButton {
-    width: 100%;
-    padding: 10px;
-    background-color: black !important;
-    border: none;
-    color: #fff;
+  .paymentGroup input{
+    width: 50%;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    margin-bottom: 4px; /* Overrides both above */
     border-radius: 4px;
-    border-color: black !important;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
   }
   
   .inputGroup link {
