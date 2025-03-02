@@ -99,6 +99,7 @@ elements inside the element with the class inputGroup */
   color: #fff;
   border-radius: 4px;
   border-color: black !important;
+  margin-bottom: 5px;
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
