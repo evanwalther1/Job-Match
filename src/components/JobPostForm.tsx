@@ -10,6 +10,10 @@ const JobPostForm = () => {
         <div>
           <label>Create a Job</label>
         </div>
+        <div className={styles.formBox}>
+          <label htmlFor="title">Job Title</label>
+          <input id="title"></input>
+        </div>
       </div>
     </>
   );
