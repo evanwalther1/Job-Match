@@ -1,13 +1,15 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auth } from "../firebase";
-import { signOut } from "firebase/auth";
+import { Auth, signOut } from "firebase/auth";
 import { Navigate, useNavigate } from "react-router-dom";
 import profilePic from "../assets/profilepic.png";
 import { Link } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState<any>(auth.currentUser);
   const logOut = async () => {
     try {
       const result = await signOut(auth);
@@ -17,6 +19,16 @@ const Navbar = () => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("setting user to" + user);
+      setUser(user); // Automatically updates the user state
+    });
+
+    // Cleanup listener on component unmount
+    return () => unsubscribe();
+  }, []);
 
   return (
     <>

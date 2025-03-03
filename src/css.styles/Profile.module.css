@@ -1,78 +1,77 @@
+/* Profile Form Styles aligned with LoginForm.module.css */
+
 .profileContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px;
-  }
-  
-  .profileHeader {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .profileInfo {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
-    background-color: #f9f9f9;
-  }
-  
-  .profileInfo h1 {
-    font-size: 1.5rem;
-    margin: 5px 0;
-    color: #333;
-  }
-  
-  .profileInfo p {
-    font-size: 1rem;
-    margin: 5px 0;
-    color: #555;
-  }
-  
-  .profileInfo .profileItem {
-    margin-bottom: 15px;
-  }
-  
-  .profileInfo .profileItem:last-child {
-    margin-bottom: 0;
-  }
-  
-  .profileAvatar {
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    margin-bottom: 20px;
-  }
-  
-  .profileBtn {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    font-size: 1rem;
-    margin-top: 20px;
-  }
-  
-  .profileBtn:hover {
-    background-color: #0056b3;
-  }
-  
-  .profileInfo .profileItem h1,
-  .profileInfo .profileItem p {
-    color: #333;
-  }
-  
-  .profileInfo .profileItem .label {
-    font-weight: bold;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f7f7f7;
+  flex-direction: column;
+}
+
+.profileHeader {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.profileBox {
+  width: 350px;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profileAvatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.profileItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.profileInfo span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.profileInfo input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+
+.profileBtn {
+  width: 100%;
+  padding: 10px;
+  background-color: black;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.profileBtn:hover {
+  background-color: #0056b3;
+}

@@ -9,6 +9,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -39,11 +40,21 @@ const LoginForm = () => {
 
   const googleLogin = async () => {
     const provider = new GoogleAuthProvider();
+    const db = getFirestore();
 
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       console.log(user); // Check the user info, like user.displayName, user.email, etc.
+
+      await setDoc(doc(db, "user", user.uid), {
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        lastLogin: new Date(),
+        userId: user.uid,
+      }); // merge ensures existing data isn't overwritten
+
       navigate("/home");
     } catch (err) {
       console.error(err);

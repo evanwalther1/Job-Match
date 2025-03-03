@@ -6,6 +6,7 @@ import { useState } from "react";
 import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import profilePic from "../assets/profilepic.png";
 import {
   getDocs,
   collection,
@@ -13,6 +14,7 @@ import {
   deleteDoc,
   doc,
   updateDoc,
+  setDoc,
 } from "firebase/firestore";
 
 const RegisterUser = () => {
@@ -45,15 +47,19 @@ const RegisterUser = () => {
         email,
         password
       );
-      await addDoc(userCollectionRef, {
+      const user = result.user;
+
+      await setDoc(doc(db, "user", user.uid), {
+        // 🔹 Use setDoc instead of addDoc
         firstname: firstname,
         lastname: lastname,
         username: username,
-        password: password,
         email: email,
         age: age,
-        userId: auth?.currentUser?.uid,
+        userId: user.uid, // 🔹 Ensure userId matches Firestore doc ID
+        photoURL: { profilePic },
       });
+
       getUserList();
       console.log(result.user);
       navigate("/");
