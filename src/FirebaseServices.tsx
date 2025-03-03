@@ -8,13 +8,27 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-
+export interface Job {
+  id: string;
+  title: string;
+  location: string;
+  description: string;
+  pay: number;
+  cash: boolean;
+  venmo: boolean;
+  cashapp: boolean;
+  date: Date;
+  employerID: string;
+}
 // Function to get all jobs
-export const getAllJobs = async () => {
+export const getAllJobs = async (): Promise<Job[]> => {
   try {
     const jobCollectionRef = collection(db, "jobs");
     const data = await getDocs(jobCollectionRef);
-    return data.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return data.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<Job, "id">),
+    }));
   } catch (error) {
     console.error("Error fetching jobs:", error);
     throw error;
