@@ -1,0 +1,78 @@
+.profileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+  }
+  
+  .profileHeader {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .profileInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    background-color: #f9f9f9;
+  }
+  
+  .profileInfo h1 {
+    font-size: 1.5rem;
+    margin: 5px 0;
+    color: #333;
+  }
+  
+  .profileInfo p {
+    font-size: 1rem;
+    margin: 5px 0;
+    color: #555;
+  }
+  
+  .profileInfo .profileItem {
+    margin-bottom: 15px;
+  }
+  
+  .profileInfo .profileItem:last-child {
+    margin-bottom: 0;
+  }
+  
+  .profileAvatar {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+  }
+  
+  .profileBtn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1rem;
+    margin-top: 20px;
+  }
+  
+  .profileBtn:hover {
+    background-color: #0056b3;
+  }
+  
+  .profileInfo .profileItem h1,
+  .profileInfo .profileItem p {
+    color: #333;
+  }
+  
+  .profileInfo .profileItem .label {
+    font-weight: bold;
+  }
+  

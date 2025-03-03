@@ -3,6 +3,9 @@ import { useState } from "react";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { Navigate, useNavigate } from "react-router-dom";
+import profilePic from "../assets/profilepic.png";
+import { Link } from "react-router-dom";
+
 const Navbar = () => {
   const navigate = useNavigate();
   const logOut = async () => {
@@ -36,16 +39,41 @@ const Navbar = () => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/home">
-                  Home
-                </a>
+                <Link className="nav-link" to="/profile">
+                  <img
+                    src={profilePic} // Replace with actual profile image URL
+                    alt="Profile"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
+                      marginRight: "10px",
+                      marginLeft: "10px",
+                    }}
+                  />
+                  Your account
+                </Link>
               </li>
-              <button onClick={logOut}>Logout</button>
               <li className="nav-item">
-                <a className="nav-link" href="/profile">
-                  Profile
-                </a>
+                <Link
+                  className="nav-link active"
+                  aria-current="page"
+                  to="/home"
+                  style={{ marginRight: "10px", marginLeft: "20px" }}
+                >
+                  Home
+                </Link>
               </li>
+              <li className="nav-item">
+                <button
+                  className="btn btn-danger"
+                  style={{ marginRight: "10px" }}
+                  onClick={logOut}
+                >
+                  Logout
+                </button>
+              </li>
+
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -59,35 +87,36 @@ const Navbar = () => {
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li>
-                    <a className="dropdown-item" href="/job-search">
+                    <Link className="dropdown-item" to="/job-search">
                       Job Search
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="/job-history">
+                    <Link className="dropdown-item" to="/job-history">
                       Job History
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="/active-jobs">
+                    <Link className="dropdown-item" to="/active-jobs">
                       Active Jobs
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="/create-job">
+                    <Link className="dropdown-item" to="/create-job">
                       Create Job
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
             </ul>
+
             <form className="d-flex">
               <input
                 className="form-control me-2"
                 type="search"
                 placeholder="Search"
                 aria-label="Search"
-              ></input>
+              />
               <button className="btn btn-outline-success" type="submit">
                 Search
               </button>
@@ -98,5 +127,4 @@ const Navbar = () => {
     </>
   );
 };
-
 export default Navbar;
