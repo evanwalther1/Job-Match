@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "/src/css.styles/JobPostForm.module.css";
 import classNames from "classnames";
+import { auth } from "../firebase";
 
 import { addJob } from "../FirebaseServices";
 const JobPostForm = () => {
@@ -27,6 +28,7 @@ const JobPostForm = () => {
         cash: cashAccept,
         venmo: venmoAccept,
         cashApp: cashAppAccept,
+        employerID: auth?.currentUser?.uid,
       });
     } catch (err) {
       console.error(err);
