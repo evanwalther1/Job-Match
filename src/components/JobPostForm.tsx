@@ -2,46 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "/src/css.styles/JobPostForm.module.css";
 import classNames from "classnames";
-import { auth, db } from "../firebase";
-import {
-  getDocs,
-  collection,
-  addDoc,
-  deleteDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
-const JobPostForm = () => {
-  //Job List
-  interface Job {
-    id: string;
-    title?: string;
-    description?: string;
-    date?: Date;
-    location?: string;
-    pay?: number;
-    cash?: boolean;
-    venmo?: boolean;
-    cashapp?: boolean;
-  }
-  const [jobList, setJobList] = useState<Job[]>([]);
-  const jobCollectionRef = collection(db, "jobs");
-  useEffect(() => {
-    const getJobList = async () => {
-      try {
-        const data = await getDocs(jobCollectionRef);
-        const filteredData = data.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setJobList(filteredData);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getJobList();
-  }, []);
 
+import { addJob } from "../FirebaseServices";
+const JobPostForm = () => {
   //New Job States
   const [newJobTitle, setNewJobTitle] = useState("");
   const [newJobDate, setNewJobDate] = useState("");
@@ -55,7 +18,7 @@ const JobPostForm = () => {
 
   const onPostJob = async () => {
     try {
-      await addDoc(jobCollectionRef, {
+      await addJob({
         title: newJobTitle,
         description: newJobDescription,
         date: newJobDate,
@@ -155,14 +118,6 @@ const JobPostForm = () => {
               <button onClick={onPostJob}>Post Job</button>
             </div>
           </div>
-        </div>
-        <div>
-          {jobList.map((job) => (
-            <div key={job.id}>
-              <h1>{job.title}</h1>
-              <p>{job.description}</p>
-            </div>
-          ))}
         </div>
       </div>
     </>
