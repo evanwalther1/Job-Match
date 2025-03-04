@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "/src/css.styles/JobPostForm.module.css";
 import classNames from "classnames";
-import { auth } from "../firebase";
+import { auth, storage } from "../firebase";
 import popupStyles from "/src/css.styles/Popup.module.css";
 import { addJob } from "../FirebaseServices";
+import { ref, uploadBytes } from "firebase/storage";
 const JobPostForm = () => {
   const [isOpen, setOpen] = useState(false);
   //New Job States
@@ -16,7 +17,7 @@ const JobPostForm = () => {
   const [cashAccept, setCashAccept] = useState(false);
   const [venmoAccept, setVenmoAccept] = useState(false);
   const [cashAppAccept, setCashAppAccept] = useState(false);
-  const [newImages, setImages] = useState("");
+  const [newImages, setImages] = useState<File[]>([]);
 
   const onPostJob = async () => {
     try {
@@ -40,11 +41,25 @@ const JobPostForm = () => {
       setVenmoAccept(false);
       setCashAppAccept(false);
       setOpen(true);
+      uploadFile();
     } catch (err) {
       console.error(err);
     }
   };
 
+  const uploadFile = async () => {
+    if (newImages.length != 0) {
+      const imagesFolderRef = ref(storage, "projectImages/${newImages.name}");
+      try {
+        for (let i = 0; i < newImages.length; i++) {
+          await uploadBytes(imagesFolderRef, newImages[i]);
+        }
+        setImages([]);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
   return (
     <>
       <div className={styles.formContainer}>
@@ -91,7 +106,13 @@ const JobPostForm = () => {
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="images">Image</label>
-            <input id="images" type="image"></input>
+            <input
+              id="images"
+              type="file"
+              onChange={(e) =>
+                setImages(e.target.files ? Array.from(e.target.files) : [])
+              }
+            ></input>
           </div>
           <div className={styles.inputGroup}>
             <label>Payment Options</label>

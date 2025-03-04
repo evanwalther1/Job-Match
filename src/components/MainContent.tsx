@@ -16,12 +16,12 @@ interface Job {
   employerID: string;
 }
 
-interface MainConentProps {
+interface MainContentProps {
   searchQuery: string;
   filterCategories: string[];
 }
 
-const MainConent: React.FC<MainConentProps> = ({
+const MainContent: React.FC<MainContentProps> = ({
   searchQuery,
   filterCategories,
 }) => {
@@ -105,4 +105,4 @@ const MainConent: React.FC<MainConentProps> = ({
   );
 };
 
-export default MainConent;
+export default MainContent;
