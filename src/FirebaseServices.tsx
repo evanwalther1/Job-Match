@@ -16,7 +16,7 @@ export interface Job {
   pay: number;
   cash: boolean;
   venmo: boolean;
-  cashapp: boolean;
+  cashApp: boolean;
   date: Date;
   employerID: string;
 }

@@ -11,7 +11,7 @@ interface Job {
   pay: number;
   cash: boolean;
   venmo: boolean;
-  cashapp: boolean;
+  cashApp: boolean;
   date: Date;
   employerID: string;
 }
@@ -89,7 +89,7 @@ const MainConent: React.FC<MainConentProps> = ({
                   </p>
                   <span>{job.cash ? "💵 Cash" : ""}</span>
                   <span>{job.venmo ? "📱 Venmo" : ""}</span>
-                  <span>{job.cashapp ? "💰 CashApp" : ""}</span>
+                  <span>{job.cashApp ? "💰 CashApp" : ""}</span>
                 </div>
                 <a href="#" className="btn btn-primary">
                   Open Job Post
