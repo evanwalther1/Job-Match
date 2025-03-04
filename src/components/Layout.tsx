@@ -16,9 +16,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <div className="flex flex-1">
         <Sidebar
           onSearch={setSearchQuery}
-          onFilter={(category, options) => {
+          onFilter={(filters) => {
+            const category = Object.keys(filters)[0]; // Get the first category
             setFilterCategory(category);
-            setSelectedFilters(options);
+            setSelectedFilters(filters[category] || []);
           }}
         />
 
