@@ -1,12 +1,12 @@
+import Layout from "../components/Layout";
+import MainContent from "../components/MainConent";
 import Navbar from "../components/Navbar";
+
 const JobSearch = () => {
   return (
-    <>
-      <div>
-        <Navbar></Navbar>
-      </div>
-      <h1>Job Search</h1>
-    </>
+    <Layout>
+      <MainContent searchQuery={""} filterCategories={[]} />
+    </Layout>
   );
 };
 
