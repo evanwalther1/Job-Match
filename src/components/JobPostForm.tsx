@@ -49,9 +49,12 @@ const JobPostForm = () => {
 
   const uploadFile = async () => {
     if (newImages.length != 0) {
-      const imagesFolderRef = ref(storage, "projectImages/${newImages.name}");
       try {
         for (let i = 0; i < newImages.length; i++) {
+          const imagesFolderRef = ref(
+            storage,
+            `projectImages/${newImages[i].name}`
+          );
           await uploadBytes(imagesFolderRef, newImages[i]);
         }
         setImages([]);
@@ -109,6 +112,7 @@ const JobPostForm = () => {
             <input
               id="images"
               type="file"
+              multiple
               onChange={(e) =>
                 setImages(e.target.files ? Array.from(e.target.files) : [])
               }
