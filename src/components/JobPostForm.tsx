@@ -30,6 +30,14 @@ const JobPostForm = () => {
         cashApp: cashAppAccept,
         employerID: auth?.currentUser?.uid,
       });
+      setNewJobTitle("");
+      setNewJobDate("");
+      setNewJobLocation("");
+      setNewJobDescription("");
+      setNewPaymentAmount(0);
+      setCashAccept(false);
+      setVenmoAccept(false);
+      setCashAppAccept(false);
     } catch (err) {
       console.error(err);
     }
@@ -47,6 +55,7 @@ const JobPostForm = () => {
             <input
               id="title"
               placeholder="Building a Fence"
+              value={newJobTitle}
               onChange={(e) => setNewJobTitle(e.target.value)}
             ></input>
           </div>
@@ -54,7 +63,8 @@ const JobPostForm = () => {
             <label htmlFor="location">Location</label>
             <input
               id="location"
-              placeholder="City/Town/Neighborhood"
+              placeholder="City,Town, or Neighborhood"
+              value={newJobLocation}
               onChange={(e) => setNewJobLocation(e.target.value)}
             ></input>
           </div>
@@ -64,6 +74,7 @@ const JobPostForm = () => {
               <textarea
                 id="description"
                 placeholder="Assemble a fence using a posthole digger and the wood that I painted..."
+                value={newJobDescription}
                 onChange={(e) => setNewJobDescription(e.target.value)}
               ></textarea>
             </div>
@@ -74,6 +85,7 @@ const JobPostForm = () => {
               id="amount"
               placeholder="50"
               type="number"
+              value={newPaymentAmount}
               onChange={(e) => setNewPaymentAmount(Number(e.target.value))}
             ></input>
           </div>
@@ -88,6 +100,7 @@ const JobPostForm = () => {
                 type="checkbox"
                 id="cash"
                 value="Cash"
+                checked={cashAccept}
                 onChange={(e) => setCashAccept(e.target.checked)}
               />
               <label htmlFor="cash"> Cash </label>
@@ -95,6 +108,7 @@ const JobPostForm = () => {
                 type="checkbox"
                 id="venmo"
                 value="Venmo"
+                checked={venmoAccept}
                 onChange={(e) => setVenmoAccept(e.target.checked)}
               />
               <label htmlFor="venmo"> Venmo </label>
@@ -102,6 +116,7 @@ const JobPostForm = () => {
                 type="checkbox"
                 id="cashapp"
                 value="CashApp"
+                checked={cashAppAccept}
                 onChange={(e) => setCashAppAccept(e.target.checked)}
               />
               <label htmlFor="cashapp"> CashApp </label>
@@ -112,6 +127,7 @@ const JobPostForm = () => {
             <input
               id="date"
               type="date"
+              value={newJobDate}
               onChange={(e) => setNewJobDate(e.target.value)}
             ></input>
           </div>
