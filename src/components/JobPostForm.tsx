@@ -12,7 +12,7 @@ const JobPostForm = () => {
   const [newJobDate, setNewJobDate] = useState("");
   const [newJobLocation, setNewJobLocation] = useState("");
   const [newJobDescription, setNewJobDescription] = useState("");
-  const [newPaymentAmount, setNewPaymentAmount] = useState(0);
+  const [newPaymentAmount, setNewPaymentAmount] = useState(Number);
   const [cashAccept, setCashAccept] = useState(false);
   const [venmoAccept, setVenmoAccept] = useState(false);
   const [cashAppAccept, setCashAppAccept] = useState(false);
@@ -85,9 +85,7 @@ const JobPostForm = () => {
             <label htmlFor="amount">Pay Amount in $</label>
             <input
               id="amount"
-              placeholder="0"
               type="number"
-              value={newPaymentAmount}
               onChange={(e) => setNewPaymentAmount(Number(e.target.value))}
             ></input>
           </div>
