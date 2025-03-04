@@ -49,8 +49,10 @@ const MainContent: React.FC<MainContentProps> = ({
           fetchedJobs.push({ id: doc.id, ...doc.data() } as Job);
         });
 
-        const filteredResults = fetchedJobs.filter((job) =>
-          job.title.toLowerCase().includes(searchQuery.toLowerCase())
+        const filteredResults = fetchedJobs.filter(
+          (job) =>
+            job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            job.description.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
         setJobs(filteredResults);

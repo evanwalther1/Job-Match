@@ -21,7 +21,7 @@ const JobPostForm = () => {
 
   const onPostJob = async () => {
     try {
-      await addJob({
+      const jobID = await addJob({
         title: newJobTitle,
         description: newJobDescription,
         date: newJobDate,
@@ -41,20 +41,17 @@ const JobPostForm = () => {
       setVenmoAccept(false);
       setCashAppAccept(false);
       setOpen(true);
-      uploadFile();
+      uploadFile(jobID);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const uploadFile = async () => {
+  const uploadFile = async (jobID: string) => {
     if (newImages.length != 0) {
       try {
         for (let i = 0; i < newImages.length; i++) {
-          const imagesFolderRef = ref(
-            storage,
-            `projectImages/${newImages[i].name}`
-          );
+          const imagesFolderRef = ref(storage, `${jobID}/${newImages[i].name}`);
           await uploadBytes(imagesFolderRef, newImages[i]);
         }
         setImages([]);
