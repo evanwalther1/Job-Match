@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import styles from "/src/css.styles/JobPostForm.module.css";
 import classNames from "classnames";
 import { auth } from "../firebase";
-
+import popupStyles from "/src/css.styles/Popup.module.css";
 import { addJob } from "../FirebaseServices";
 const JobPostForm = () => {
+  const [isOpen, setOpen] = useState(false);
   //New Job States
   const [newJobTitle, setNewJobTitle] = useState("");
   const [newJobDate, setNewJobDate] = useState("");
@@ -38,6 +39,7 @@ const JobPostForm = () => {
       setCashAccept(false);
       setVenmoAccept(false);
       setCashAppAccept(false);
+      setOpen(true);
     } catch (err) {
       console.error(err);
     }
@@ -83,7 +85,7 @@ const JobPostForm = () => {
             <label htmlFor="amount">Pay Amount in $</label>
             <input
               id="amount"
-              placeholder="50"
+              placeholder="0"
               type="number"
               value={newPaymentAmount}
               onChange={(e) => setNewPaymentAmount(Number(e.target.value))}
@@ -136,6 +138,17 @@ const JobPostForm = () => {
               <button onClick={onPostJob}>Post Job</button>
             </div>
           </div>
+        </div>
+        <div>
+          {isOpen && (
+            <div className={popupStyles.popupOverlay}>
+              <div className={popupStyles.popupContent}>
+                <h2>Job Created! Way to Go!</h2>
+                <p>You can now see your job under active jobs</p>
+                <button onClick={() => setOpen(false)}>Close</button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

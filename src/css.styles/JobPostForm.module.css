@@ -45,11 +45,11 @@
     width: 100%;
     text-align: center;
     padding: 10px;
-    background-color: black !important;
+    background-color: black;
     border: none;
     color: #fff;
     border-radius: 4px;
-    border-color: black !important;
+    border-color: red;
     font-size: 24px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -146,6 +146,6 @@
   }
   
   
-  .postButton:hover {
-    background-color: #0056b3;
+  .postButton button:hover {
+    background-color: #09a1d3 !important;
   }
