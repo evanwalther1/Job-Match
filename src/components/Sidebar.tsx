@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import "../css.styles/SideBar.css";
+import { FaSearch } from "react-icons/fa";
 
 const categoryOptions: { [key: string]: string[] } = {
   Payment: ["$0-50", "$50-100", "$100-150", "More"],
-  Location: ["USA", "Europe", "Asia"],
+  Location: ["USA", "Europe", "Asia", "Other"],
   PayWay: ["Cash", "Venmo", "CashApp"],
 };
 
@@ -14,6 +16,12 @@ const Sidebar: React.FC<{
   const [category, setCategory] = useState("");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
+  useEffect(() => {
+    if (category) {
+      onFilter(category, selectedOptions);
+    }
+  }, [category, selectedOptions, onFilter]);
+
   const handleCheckboxChange = (option: string) => {
     setSelectedOptions((prevOptions) =>
       prevOptions.includes(option)
@@ -23,60 +31,61 @@ const Sidebar: React.FC<{
   };
 
   return (
-    <aside className="Sidebar">
-      <h3 className="Search&Filter">Search & Filter</h3>
-
+    <aside className="sidebar">
       {/* Search Bar */}
-      <input
-        type="text"
-        placeholder="Search..."
-        value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-          onSearch(e.target.value);
-        }}
-        className="SearchBar"
-      />
+      <div className="search-wrapper">
+        <div className="search-input-group">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              onSearch(e.target.value);
+            }}
+            className="search-input"
+          />
+          <FaSearch className="search-icon" />
+        </div>
+      </div>
 
       {/* Filter Dropdown */}
-      <select
-        value={category}
-        onChange={(e) => {
-          const selectedCategory = e.target.value;
-          setCategory(selectedCategory);
-          setSelectedOptions([]); // Reset checkboxes on category change
-          onFilter(selectedCategory, []);
-        }}
-        className="Filter"
-      >
-        <option value="">All Categories</option>
-        {Object.keys(categoryOptions).map((cat) => (
-          <option key={cat} value={cat}>
-            {cat}
-          </option>
-        ))}
-      </select>
-
-      {/* Dynamic Checkboxes Based on Selected Category */}
-      {category && categoryOptions[category] && (
-        <div className="CheckboxContainer">
-          <h4 className="CheckboxTitle">{category} Options</h4>
-          {categoryOptions[category].map((option) => (
-            <label key={option} className="CheckboxLabel">
-              <input
-                type="checkbox"
-                value={option}
-                checked={selectedOptions.includes(option)}
-                onChange={() => {
-                  handleCheckboxChange(option);
-                  onFilter(category, selectedOptions);
-                }}
-              />
-              {option}
-            </label>
+      <div className="category-filters">
+        <select
+          value={category}
+          onChange={(e) => {
+            const selectedCategory = e.target.value;
+            setCategory(selectedCategory);
+            setSelectedOptions([]); // Reset checkboxes on category change
+          }}
+          className="Filter"
+        >
+          <option value="">All Categories</option>
+          {Object.keys(categoryOptions).map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
           ))}
-        </div>
-      )}
+        </select>
+
+        {/* ✅ Dynamic Checkboxes Based on Selected Category */}
+        {category && categoryOptions[category] && (
+          <div className="CheckboxContainer">
+            <h4 className="CheckboxTitle">{category} Options</h4>
+            {categoryOptions[category].map((option) => (
+              <label key={option} className="CheckboxLabel">
+                <input
+                  type="checkbox"
+                  value={option}
+                  checked={selectedOptions.includes(option)}
+                  onChange={() => handleCheckboxChange(option)}
+                />
+                {option}
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
     </aside>
   );
 };
