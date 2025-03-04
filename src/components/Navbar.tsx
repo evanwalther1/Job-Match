@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { auth } from "../firebase";
 import { Auth, signOut } from "firebase/auth";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import profilePic from "../assets/profilepic.png";
 import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
