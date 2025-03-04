@@ -1,29 +1,53 @@
 import React, { useEffect, useState } from "react";
 import "../css.styles/SideBar.css";
 import { FaSearch } from "react-icons/fa";
+import { db } from "../firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
+
+interface Job {
+  id: string;
+  title: string;
+  location: string;
+  description: string;
+  pay: number;
+  cash: boolean;
+  venmo: boolean;
+  cashApp: boolean;
+  date: Date;
+  employerID: string;
+}
 
 const categoryOptions: { [key: string]: string[] } = {
   Payment: ["$0-50", "$50-100", "$100-150", "More"],
   Location: ["USA", "Europe", "Asia", "Other"],
   PayWay: ["Cash", "Venmo", "CashApp"],
 };
+
 const Sidebar: React.FC<{
   onSearch: (query: string) => void;
-  onFilter: (category: string, selectedOptions: string[]) => void;
+  onFilter: (filters: { [category: string]: string[] }) => void;
 }> = ({ onSearch, onFilter }) => {
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("");
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<{
+    [key: string]: string[];
+  }>({});
 
-useEffect(() => {
-  if (category) {
-    onFilter(category, selectedOptions);
-  }
-}, [category, selectedOptions, onFilter]);
+  // Updates the filter state dynamically
+  useEffect(() => {
+    onFilter(selectedOptions);
+  }, [selectedOptions, onFilter]);
 
-  const handleCheckboxChange = (option: string) => {
-    setSelectedOptions((prevOptions) =>
-      prevOptions.includes(option)
+  const handleCheckboxChange = (category: string, option: string) => {
+    setSelectedOptions((prev) => {
+      const updatedCategory = prev[category] || [];
+
+      return {
+        ...prev,
+        [category]: updatedCategory.includes(option)
+          ? updatedCategory.filter((opt: string) => opt !== option) // Uncheck
+          : [...updatedCategory, option], // Check
+      };
+    });
   };
 
   return (
@@ -45,43 +69,27 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Filter Dropdown */}
+      {/* All Category Checkboxes Shown by Default */}
       <div className="category-filters">
-        <select
-          value={category}
-          onChange={(e) => {
-            const selectedCategory = e.target.value;
-            setCategory(selectedCategory);
-            setSelectedOptions([]); // Reset checkboxes on category change
-          }}
-          className="Filter"
-        >
-          <option value="">All Categories</option>
-          {Object.keys(categoryOptions).map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-          </select>
-
-      {/* ✅ Dynamic Checkboxes Based on Selected Category */}
-  {category && categoryOptions[category] && (
-  <div className="CheckboxContainer">
-    <h4 className="CheckboxTitle">{category} Options</h4>
-    {categoryOptions[category].map((option) => (
-      <label key={option} className="CheckboxLabel">
-        <input
-          type="checkbox"
-          value={option}
-          checked={selectedOptions.includes(option)}
-          onChange={() => handleCheckboxChange(option)}
-        />
-        {option}
-      </label>
-    ))}
-  </div>
-)}
-</div>
-</aside>
-);
+        {Object.entries(categoryOptions).map(([category, options]) => (
+          <div key={category} className="CheckboxContainer">
+            <h4 className="CheckboxTitle">{category}</h4>
+            {options.map((option) => (
+              <label key={option} className="CheckboxLabel">
+                <input
+                  type="checkbox"
+                  value={option}
+                  checked={selectedOptions[category]?.includes(option) || false}
+                  onChange={() => handleCheckboxChange(category, option)}
+                />
+                {option}
+              </label>
+            ))}
+          </div>
+        ))}
+      </div>
+    </aside>
+  );
 };
+
+export default Sidebar;
