@@ -11,6 +11,7 @@
     align-items: center;
     padding: 15px;
     overflow-y: auto;
+    padding-top: 6rem;
   }
   
   .search-wrapper {
