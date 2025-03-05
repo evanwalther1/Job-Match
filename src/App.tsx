@@ -18,7 +18,7 @@ const App = () => {
           <Routes>
             <Route index element={<LoginForm />} />
             <Route path="/register" element={<RegisterUser />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/home" element={<JobSearch />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/job-search" element={<JobSearch />} />
             <Route path="/job-history" element={<JobHistory />} />

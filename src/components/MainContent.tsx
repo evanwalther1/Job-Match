@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import "../css.styles/SearchBar.css";
+import { getJobImages } from "../FirebaseServices";
 
 interface Job {
   id: string;
@@ -27,6 +28,7 @@ const MainContent: React.FC<MainContentProps> = ({
 }) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const [jobImages, setJobImages] = useState<{ [key: string]: string }>({}); // To store job image URLs
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -66,6 +68,31 @@ const MainContent: React.FC<MainContentProps> = ({
     fetchJobs();
   }, [searchQuery, filterCategories]);
 
+  useEffect(() => {
+    // Fetch images for each job
+    const loadJobImages = async () => {
+      const images: { [key: string]: string } = {}; // Object to hold image URLs
+
+      try {
+        const imagePromises = jobs.map(async (job) => {
+          const imageUrls = await getJobImages(job.id); // Get image URLs for the job
+          if (imageUrls.length > 0) {
+            // Use the first image URL (or you could handle multiple if needed)
+            images[job.id] = imageUrls[0];
+          }
+        });
+        await Promise.all(imagePromises);
+        setJobImages(images); // Store images URLs in state
+      } catch (error) {
+        console.error("Error fetching job images:", error);
+      }
+    };
+
+    if (jobs.length > 0) {
+      loadJobImages();
+    }
+  }, [jobs]);
+
   return (
     <div className="search-container">
       <h1 className="search-title">Search Results</h1>
@@ -75,7 +102,11 @@ const MainContent: React.FC<MainContentProps> = ({
         {jobs.length > 0 ? (
           jobs.map((job) => (
             <div key={job.id} className="job-card" style={{ width: "18rem" }}>
-              <img src="..." className="card-img-top" alt="..."></img>
+              <img
+                src={jobImages[job.id] || "..."}
+                className="card-img-top"
+                alt="..."
+              ></img>
               <div className="card-body">
                 <h5>{job.title}</h5>
                 <p>
