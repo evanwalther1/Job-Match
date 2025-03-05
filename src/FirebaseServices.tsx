@@ -22,8 +22,9 @@ export interface Job {
   date: Date;
   employerID: string;
 }
+
 {
-  /*}
+  /*
 export const getJobImages = async (jobID: string): Promise<File[]> => {
   try {
     const imageListRef = ref(storage, `${jobID}/`);
@@ -32,6 +33,7 @@ export const getJobImages = async (jobID: string): Promise<File[]> => {
   }
 };*/
 }
+
 // Function to get all jobs
 export const getAllJobs = async (): Promise<Job[]> => {
   try {
