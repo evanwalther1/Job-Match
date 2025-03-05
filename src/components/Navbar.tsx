@@ -53,7 +53,7 @@ const Navbar = () => {
               <li className="nav-item">
                 <Link className="nav-link" to="/profile">
                   <img
-                    src={user.photoURL?.profilePic ?? user.photoURL} // Replace with actual profile image URL
+                    src={user?.photoURL ?? profilePic}
                     alt="Profile"
                     style={{
                       width: "30px",
