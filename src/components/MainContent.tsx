@@ -73,19 +73,19 @@ const MainContent: React.FC<MainContentProps> = ({
     const loadJobImages = async () => {
       const images: { [key: string]: string } = {}; // Object to hold image URLs
 
-      for (const job of jobs) {
-        try {
+      try {
+        const imagePromises = jobs.map(async (job) => {
           const imageUrls = await getJobImages(job.id); // Get image URLs for the job
           if (imageUrls.length > 0) {
             // Use the first image URL (or you could handle multiple if needed)
             images[job.id] = imageUrls[0];
           }
-        } catch (error) {
-          console.error(`Error fetching image for job ${job.id}:`, error);
-        }
+        });
+        await Promise.all(imagePromises);
+        setJobImages(images); // Store images URLs in state
+      } catch (error) {
+        console.error("Error fetching job images:", error);
       }
-
-      setJobImages(images); // Store images URLs in state
     };
 
     if (jobs.length > 0) {
