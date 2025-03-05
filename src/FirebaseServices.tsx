@@ -1,6 +1,6 @@
 // src/services/firestoreService.ts
 import { db, storage } from "./firebase"; // Import Firestore instance
-import { ref } from "firebase/storage";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
 import {
   collection,
   getDoc,
@@ -23,17 +23,24 @@ export interface Job {
   employerID: string;
 }
 
-{
-  /*
-export const getJobImages = async (jobID: string): Promise<File[]> => {
+export const getJobImages = async (jobID: string): Promise<string[]> => {
   try {
     const imageListRef = ref(storage, `${jobID}/`);
-  } catch (err) {
-    console.error(err);
-  }
-};*/
-}
+    const result = await listAll(imageListRef); // Get all file references
 
+    // Fetch the download URLs for each image
+    const urlsPromises = result.items.map(async (itemRef) => {
+      const url = await getDownloadURL(itemRef); // Get download URL for each item
+      return url;
+    });
+
+    // Wait for all URLs to resolve and return the list of URLs
+    return await Promise.all(urlsPromises);
+  } catch (err) {
+    console.error("Error fetching job images:", err);
+    return []; // Return empty array in case of error
+  }
+};
 // Function to get all jobs
 export const getAllJobs = async (): Promise<Job[]> => {
   try {
