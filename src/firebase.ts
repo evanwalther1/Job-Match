@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import {getFirestore} from "firebase/firestore"
-
+import {getStorage}from "firebase/storage";
 
 // Your Firebase config object (replace with your own credentials)
 const firebaseConfig = {
@@ -28,6 +28,6 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
+const storage = getStorage(app);
 // Export authentication instance
-export { db ,auth, GoogleAuthProvider, signInWithPopup };
+export { storage, db ,auth, GoogleAuthProvider, signInWithPopup };

@@ -9,6 +9,7 @@ import ActiveJobs from "./pages/ActiveJobs";
 import CreateJob from "./pages/CreateJob";
 import RegisterUser from "./components/RegisterUser";
 import "./index.css";
+import Layout from "./components/Layout";
 const App = () => {
   return (
     <div>

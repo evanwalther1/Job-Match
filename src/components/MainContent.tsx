@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import "./SearchBar.css";
+import "../css.styles/SearchBar.css";
 
 interface Job {
   id: string;
@@ -11,17 +11,17 @@ interface Job {
   pay: number;
   cash: boolean;
   venmo: boolean;
-  cashapp: boolean;
+  cashApp: boolean;
   date: Date;
   employerID: string;
 }
 
-interface MainConentProps {
+interface MainContentProps {
   searchQuery: string;
   filterCategories: string[];
 }
 
-const MainConent: React.FC<MainConentProps> = ({
+const MainContent: React.FC<MainContentProps> = ({
   searchQuery,
   filterCategories,
 }) => {
@@ -49,8 +49,10 @@ const MainConent: React.FC<MainConentProps> = ({
           fetchedJobs.push({ id: doc.id, ...doc.data() } as Job);
         });
 
-        const filteredResults = fetchedJobs.filter((job) =>
-          job.title.toLowerCase().includes(searchQuery.toLowerCase())
+        const filteredResults = fetchedJobs.filter(
+          (job) =>
+            job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            job.description.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
         setJobs(filteredResults);
@@ -89,7 +91,7 @@ const MainConent: React.FC<MainConentProps> = ({
                   </p>
                   <span>{job.cash ? "💵 Cash" : ""}</span>
                   <span>{job.venmo ? "📱 Venmo" : ""}</span>
-                  <span>{job.cashapp ? "💰 CashApp" : ""}</span>
+                  <span>{job.cashApp ? "💰 CashApp" : ""}</span>
                 </div>
                 <a href="#" className="btn btn-primary">
                   Open Job Post
@@ -105,4 +107,4 @@ const MainConent: React.FC<MainConentProps> = ({
   );
 };
 
-export default MainConent;
+export default MainContent;

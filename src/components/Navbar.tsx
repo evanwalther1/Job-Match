@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { auth } from "../firebase";
 import { Auth, signOut } from "firebase/auth";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import profilePic from "../assets/profilepic.png";
 import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
@@ -32,7 +32,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div className="container-fluid">
           <h1 className="navbar-brand" style={{ fontSize: 40 }}>
             Job-Match
@@ -121,18 +121,6 @@ const Navbar = () => {
                 </ul>
               </li>
             </ul>
-
-            <form className="d-flex">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
           </div>
         </div>
       </nav>
