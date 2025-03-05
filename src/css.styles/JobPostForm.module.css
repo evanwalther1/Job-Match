@@ -1,13 +1,14 @@
 /*JobPostForm.module.css*/
 
 .formContainer{
-    display: flex;
+  display: flex;
   justify-content: flex-start;
   align-items: center;
   height: 100vh;
   background-color: #ffffff; 
   flex-direction: column;
   gap: 50px;
+  padding-top: 5rem;
 }
 
 
