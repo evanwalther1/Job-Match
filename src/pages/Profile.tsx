@@ -102,7 +102,7 @@ const Profile = () => {
     if (newUsername !== "") updatedFields.username = newUsername;
     if (newFirstName !== "") updatedFields.firstname = newFirstName;
     if (newLastName !== "") updatedFields.lastname = newLastName;
-    updatedFields.age = age;
+    if (age !== null) updatedFields.age = age;
     // Handle file upload if there's a new file
     if (newFile !== null) {
       try {
