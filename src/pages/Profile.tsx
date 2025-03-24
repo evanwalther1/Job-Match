@@ -21,6 +21,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 const Profile = () => {
   const [user, setUser] = useState<any>(auth.currentUser);
+  const [ageCheck, setAgeCheck] = useState(false);
 
   //New user state
   const [newUsername, setNewUsername] = useState("");
@@ -94,13 +95,14 @@ const Profile = () => {
 
   const submitForm = async (id: string) => {
     setIsEditingProfile(false);
+    setAgeCheck(true);
     const userDoc = doc(db, "user", id);
 
     const updatedFields: Record<string, any> = {};
     if (newUsername !== "") updatedFields.username = newUsername;
     if (newFirstName !== "") updatedFields.firstname = newFirstName;
     if (newLastName !== "") updatedFields.lastname = newLastName;
-    if (age !== 0) updatedFields.age = age;
+    updatedFields.age = age;
     // Handle file upload if there's a new file
     if (newFile !== null) {
       try {
@@ -222,9 +224,13 @@ const Profile = () => {
               </span>
               <span>
                 <label>Age: </label>
+
                 <input
-                  onChange={(e) => setAge(Number(e.target.value))}
+                  onChange={(e) => {
+                    setAge(Number(e.target.value));
+                  }}
                   placeholder={user?.age}
+                  disabled={ageCheck}
                 ></input>
               </span>
 
