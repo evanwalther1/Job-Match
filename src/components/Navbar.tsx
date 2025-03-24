@@ -1,10 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { auth } from "../firebase";
+import { db, auth } from "../firebase";
 import { Auth, signOut } from "firebase/auth";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import profilePic from "../assets/profilepic.png";
 import { Link } from "react-router-dom";
+import { doc, onSnapshot } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 const Navbar = () => {
@@ -20,13 +21,55 @@ const Navbar = () => {
     }
   };
 
+  const getProfilePic = () => {
+    console.log("User data:", user);
+    console.log(
+      "photoURL type:",
+      user?.photoURL ? typeof user.photoURL : "user.photoURL is null/undefined"
+    );
+    console.log("photoURL value:", user?.photoURL);
+
+    if (!user) return "../assets/profilepic.png";
+
+    if (typeof user.photoURL === "string") {
+      return user.photoURL;
+    } else if (user.photoURL?.profilePic) {
+      return user.photoURL.profilePic;
+    } else {
+      return "../assets/profilepic.png";
+    }
+  };
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log("setting user to" + user);
-      setUser(user); // Automatically updates the user state
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        console.log("Auth user found:", currentUser.uid);
+        // Get a reference to the user document in Firestore
+        const userDocRef = doc(db, "user", currentUser.uid);
+
+        // Listen for changes to that document
+        const unsubscribeFirestore = onSnapshot(userDocRef, (docSnapshot) => {
+          if (docSnapshot.exists()) {
+            console.log("Firestore data updated:", docSnapshot.data());
+            setUser({
+              ...currentUser,
+              ...docSnapshot.data(), // Combine auth user with Firestore data
+            });
+          } else {
+            console.log("No user document found");
+            setUser(currentUser);
+          }
+        });
+
+        // Return cleanup function for Firestore listener
+        return () => unsubscribeFirestore();
+      } else {
+        console.log("No authenticated user");
+        setUser(null);
+      }
     });
 
-    // Cleanup listener on component unmount
+    // Return cleanup function for auth listener
     return () => unsubscribe();
   }, []);
 
@@ -53,7 +96,7 @@ const Navbar = () => {
               <li className="nav-item">
                 <Link className="nav-link" to="/profile">
                   <img
-                    src={user?.photoURL ?? profilePic}
+                    src={getProfilePic()}
                     alt="Profile"
                     style={{
                       width: "30px",

@@ -9,7 +9,13 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  updateDoc,
+  getDoc,
+} from "firebase/firestore";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -47,13 +53,24 @@ const LoginForm = () => {
       const user = result.user;
       console.log(user); // Check the user info, like user.displayName, user.email, etc.
 
-      await setDoc(doc(db, "user", user.uid), {
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-        lastLogin: new Date(),
-        userId: user.uid,
-      }); // merge ensures existing data isn't overwritten
+      const userRef = doc(db, "user", user.uid);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        // User document exists, only update lastLogin
+        await updateDoc(userRef, {
+          lastLogin: new Date(),
+        });
+      } else {
+        // First time user, create the document with all fields
+        await setDoc(userRef, {
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          lastLogin: new Date(),
+          userId: user.uid,
+        });
+      }
 
       navigate("/home");
     } catch (err) {

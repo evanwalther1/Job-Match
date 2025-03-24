@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { db, auth } from "../firebase";
+import { db, auth, storage } from "../firebase";
+import { ref, uploadBytes, getStorage, getDownloadURL } from "firebase/storage";
 import {
   getDocs,
   collection,
@@ -14,22 +15,43 @@ import {
   Unsubscribe,
 } from "firebase/firestore";
 import styles from "/src/css.styles/Profile.module.css";
-import profilePic from "../assets/profilepic.png";
 import "/src/css.styles/Profile.module.css";
 import classNames from "classnames";
 import { onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 const Profile = () => {
   const [user, setUser] = useState<any>(auth.currentUser);
 
   //New user state
   const [newUsername, setNewUsername] = useState("");
-  const [age, setAge] = useState(0);
+  const [age, setAge] = useState<number | null>(null);
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
+  const navigate = useNavigate();
+  const [newFile, setNewFile] = useState<File | null>(null);
 
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   const userCollectionRef = collection(db, "user");
+
+  const getProfilePic = () => {
+    console.log("User data:", user);
+    console.log(
+      "photoURL type:",
+      user?.photoURL ? typeof user.photoURL : "user.photoURL is null/undefined"
+    );
+    console.log("photoURL value:", user?.photoURL);
+
+    if (!user) return "../assets/profilepic.png";
+
+    if (typeof user.photoURL === "string") {
+      return user.photoURL;
+    } else if (user.photoURL?.profilePic) {
+      return user.photoURL.profilePic;
+    } else {
+      return "../assets/profilepic.png";
+    }
+  };
 
   useEffect(() => {
     // Real-time listener to fetch user data based on the query
@@ -73,17 +95,42 @@ const Profile = () => {
   const submitForm = async (id: string) => {
     setIsEditingProfile(false);
     const userDoc = doc(db, "user", id);
-    await updateDoc(userDoc, {
-      age: age,
-      username: newUsername,
-      firstname: newFirstName,
-      lastname: newLastName,
-    });
+
+    const updatedFields: Record<string, any> = {};
+    if (newUsername !== "") updatedFields.username = newUsername;
+    if (newFirstName !== "") updatedFields.firstname = newFirstName;
+    if (newLastName !== "") updatedFields.lastname = newLastName;
+    if (age !== 0) updatedFields.age = age;
+    // Handle file upload if there's a new file
+    if (newFile !== null) {
+      try {
+        // Get Firebase storage references
+        const storage = getStorage();
+        const storageRef = ref(storage, `profilePictures/${id}`);
+
+        // Upload the file
+        await uploadBytes(storageRef, newFile);
+
+        // Get the download URL
+        const downloadURL = await getDownloadURL(storageRef);
+
+        // Add the photo URL to the updated fields
+        updatedFields.photoURL = { profilePic: downloadURL };
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+
+    // Only perform the update if there are fields to update
+    if (Object.keys(updatedFields).length > 0) {
+      await updateDoc(userDoc, updatedFields);
+    }
   };
 
   const deleteUser = async (id: string) => {
     const userDoc = doc(db, "user", id);
     await deleteDoc(userDoc);
+    navigate("/");
   };
 
   return (
@@ -95,7 +142,7 @@ const Profile = () => {
           {user && !isEditingProfile ? (
             <div className={styles.profileInfo}>
               <img
-                src={user.photoURL?.profilePic ?? user.photoURL}
+                src={getProfilePic()}
                 alt="Profile Photo"
                 className={styles.profileAvatar}
               />
@@ -127,10 +174,24 @@ const Profile = () => {
             <div className={styles.profileInfo}>
               <h1>Edit Your Profile</h1>
               <img
-                src={user.photoURL?.profilePic ?? user.photoURL}
+                src={getProfilePic()}
                 alt="Profile Photo"
                 className={styles.profileAvatar}
               />
+
+              <span>
+                <label>Edit Photo</label>
+                <input
+                  id="image"
+                  type="file"
+                  //accept="image/*"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      setNewFile(e.target.files[0]);
+                    }
+                  }}
+                ></input>
+              </span>
 
               <span>
                 <label>First Name: </label>
