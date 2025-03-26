@@ -1,3 +1,4 @@
+import MyJobs from "../components/MyJobs";
 import Navbar from "../components/Navbar";
 const ActiveJobs = () => {
   return (
@@ -5,7 +6,9 @@ const ActiveJobs = () => {
       <div>
         <Navbar></Navbar>
       </div>
-      <h1 text-align="center">Active Jobs</h1>
+      <div>
+        <MyJobs></MyJobs>
+      </div>
     </>
   );
 };
