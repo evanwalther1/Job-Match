@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import Layout from "../components/Layout";
 import MainContent from "../components/MainContent";
 import JobPostForm from "../components/JobPostForm";
@@ -10,9 +11,10 @@ const JobSearch = () => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     backgroundColor: "#FFF",
-    padding: "10px",
-    zIndex: 1000,
-
+    padding: "50px", // Increased padding for visibility
+    zIndex: 9999, // Very high z-index to ensure it's on top
+    borderRadius: "10px",
+    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -27,7 +29,10 @@ const JobSearch = () => {
     right: 0,
     bottom: 0,
     backgroundColor: "rgba(0, 0, 0, .7)",
-    zIndex: 1000,
+    zIndex: 9998, // Slightly lower than modal, but still very high
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   };
 
   const [isCreateJobModalOpen, setIsCreateJobModalOpen] = useState(false);
@@ -38,7 +43,6 @@ const JobSearch = () => {
     } else {
       document.body.style.overflow = "unset";
     }
-
     return () => {
       document.body.style.overflow = "unset";
     };
@@ -52,18 +56,23 @@ const JobSearch = () => {
     setIsCreateJobModalOpen(false);
   };
 
+  // Render the portal first, outside of the main return
+  const renderPortal = () => {
+    if (!isCreateJobModalOpen) return null;
+
+    return ReactDOM.createPortal(
+      <div style={OVERLAY_STYLES} onClick={handleCloseCreateJobModal}>
+        <div style={MODAL_STYLES} onClick={(e) => e.stopPropagation()}>
+          <JobPostForm onClose={handleCloseCreateJobModal} />
+        </div>
+      </div>,
+      document.getElementById("portal")!
+    );
+  };
+
   return (
     <>
-      {/* Popup Modal */}
-      {isCreateJobModalOpen && (
-        <div style={OVERLAY_STYLES} onClick={handleCloseCreateJobModal}>
-          <div style={MODAL_STYLES} onClick={(e) => e.stopPropagation()}>
-            <JobPostForm onClose={handleCloseCreateJobModal} />
-          </div>
-        </div>
-      )}
-
-      {/* Main Page Content */}
+      {renderPortal()}
       <Layout>
         <MainContent
           onCreateNewJob={handleOpenCreateJobModal}

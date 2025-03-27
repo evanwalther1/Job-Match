@@ -22,6 +22,7 @@ const JobPostForm = ({ onClose }: JobPostFormProps) => {
   const [newImages, setImages] = useState<File[]>([]);
 
   const onPostJob = async () => {
+    console.log("Current User UID:", auth?.currentUser?.uid);
     try {
       const jobID = await addJob({
         title: newJobTitle,
