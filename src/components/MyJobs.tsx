@@ -7,6 +7,7 @@ import { auth, db } from "../firebase";
 const MyJobs = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [employingJobs, setEmployingJobs] = useState<Job[]>([]);
+  const [inProgressJobs, setInProgressJobs] = useState<Job[]>([]);
   const [workingJobs, setWorkingJobs] = useState<Job[]>([]);
   const [jobImages, setJobImages] = useState<{ [key: string]: string }>({});
 
@@ -82,6 +83,45 @@ const MyJobs = () => {
         <div className="job-cards">
           {employingJobs.length > 0 ? (
             employingJobs.map((job) => (
+              <div key={job.id} className="job-card" style={{ width: "18rem" }}>
+                <img
+                  src={jobImages[job.id] || "..."}
+                  className="card-img-top"
+                  alt="..."
+                ></img>
+                <div className="card-body">
+                  <h5>{job.title}</h5>
+                  <p>
+                    <strong>Location:</strong> {job.location}
+                  </p>
+                  <p>{job.description}</p>
+                  <p>
+                    <strong>Pay:</strong> ${job.pay}
+                  </p>
+                  <div className="payment-methods">
+                    <p>
+                      <strong>Payment Methods:</strong>
+                    </p>
+                    <span>{job.cash ? "💵 Cash" : ""}</span>
+                    <span>{job.venmo ? "📱 Venmo" : ""}</span>
+                    <span>{job.cashApp ? "💰 CashApp" : ""}</span>
+                  </div>
+                  <a href="#" className="btn btn-primary">
+                    Open Job Post
+                  </a>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No results found</p>
+          )}
+        </div>
+      </div>
+      <div className="search-container">
+        <h1 className="search-title">In Progress</h1>
+        <div className="job-cards">
+          {inProgressJobs.length > 0 ? (
+            inProgressJobs.map((job) => (
               <div key={job.id} className="job-card" style={{ width: "18rem" }}>
                 <img
                   src={jobImages[job.id] || "..."}
