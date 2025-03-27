@@ -1,11 +1,14 @@
 import Navbar from "../components/Navbar";
+import History from "../components/History";
 const JobHistory = () => {
   return (
     <>
       <div>
         <Navbar></Navbar>
       </div>
-      <h1>Job History</h1>
+      <div>
+        <History></History>
+      </div>
     </>
   );
 };

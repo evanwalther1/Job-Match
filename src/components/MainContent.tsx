@@ -333,7 +333,9 @@ const MainContent: React.FC<MainContentProps> = ({
       if (filterCategories.length > 0 && filterCategories.length <= 10) {
         q = query(
           collection(db, "jobs"),
-          where("category", "in", filterCategories)
+          where("category", "in", filterCategories),
+          where("completed", "==", false),
+          where("workersFound", "==", false)
         );
       }
 

@@ -34,6 +34,8 @@ const JobPostForm = ({ onClose }: JobPostFormProps) => {
         venmo: venmoAccept,
         cashApp: cashAppAccept,
         employerID: auth?.currentUser?.uid,
+        completed: false,
+        workersFound: false,
       });
       setNewJobTitle("");
       setNewJobDate("");

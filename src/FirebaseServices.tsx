@@ -21,6 +21,8 @@ export interface Job {
   cashApp: boolean;
   date: Date;
   employerID: string;
+  workersFound: boolean;
+  completed: boolean;
 }
 
 export const getJobImages = async (jobID: string): Promise<string[]> => {

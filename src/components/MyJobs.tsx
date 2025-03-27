@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
-import "../css.styles/SearchBar.css";
-import { Job, getAllJobs, getJobImages } from "../FirebaseServices";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import styles from "/src/css.styles/ActiveJobs.module.css";
+import classNames from "classnames";
+import { Job, getAllJobs, getJobImages, updateJob } from "../FirebaseServices";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { auth, db } from "../firebase";
 
 const MyJobs = () => {
@@ -11,45 +18,60 @@ const MyJobs = () => {
   const [workingJobs, setWorkingJobs] = useState<Job[]>([]);
   const [jobImages, setJobImages] = useState<{ [key: string]: string }>({});
 
+  const complete = async (job: Job) => {
+    try {
+      await updateJob(job.id, { completed: true }); // Pass the boolean inside an object
+      console.log("Job updated successfully!");
+    } catch (error) {
+      console.error("Failed to update job:", error);
+    }
+  };
+
+  const workers = async (job: Job, workers: boolean) => {
+    try {
+      await updateJob(job.id, { workersFound: workers }); // Pass the boolean inside an object
+      console.log("Job updated successfully!");
+    } catch (error) {
+      console.error("Failed to update job:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const jobArray: Job[] = await getAllJobs();
-        setJobs(jobArray); // ✅ Now setting the resolved array, not a Promise
+        setJobs(jobArray);
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
     };
     fetchJobs();
   }, []);
+
   useEffect(() => {
-    const fetchJobs = async () => {
-      if (!auth.currentUser) {
-        console.error("No user is logged in");
-        return [];
-      }
-      let q = query(collection(db, "jobs")); // Start with base query
+    if (!auth.currentUser) {
+      console.error("No user is logged in");
+      return;
+    }
 
-      q = query(
-        collection(db, "jobs"),
-        where("employerID", "==", auth.currentUser.uid)
-      );
+    const q = query(
+      collection(db, "jobs"),
+      where("employerID", "==", auth.currentUser.uid),
+      where("completed", "==", false)
+    );
 
-      try {
-        const querySnapshot = await getDocs(q);
-        const fetchedJobs: Job[] = [];
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const fetchedJobs = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Job[];
 
-        querySnapshot.forEach((doc) => {
-          fetchedJobs.push({ id: doc.id, ...doc.data() } as Job);
-        });
+      // Split jobs into categories dynamically
+      setEmployingJobs(fetchedJobs.filter((job) => !job.workersFound));
+      setInProgressJobs(fetchedJobs.filter((job) => job.workersFound));
+    });
 
-        setEmployingJobs(fetchedJobs);
-      } catch (error) {
-        console.error("Error fetching jobs:", error);
-      }
-    };
-
-    fetchJobs();
+    return () => unsubscribe(); // Cleanup listener on unmount
   }, []);
 
   useEffect(() => {
@@ -106,8 +128,17 @@ const MyJobs = () => {
                     <span>{job.venmo ? "📱 Venmo" : ""}</span>
                     <span>{job.cashApp ? "💰 CashApp" : ""}</span>
                   </div>
-                  <a href="#" className="btn btn-primary">
+                  <a href="#" className={styles.userOptions}>
                     Open Job Post
+                  </a>
+                  <button
+                    className={styles.userOptions}
+                    onClick={() => workers(job, true)}
+                  >
+                    Worker/s Found
+                  </button>
+                  <a href="#" className={styles.userOptions}>
+                    Edit Job
                   </a>
                 </div>
               </div>
@@ -145,9 +176,21 @@ const MyJobs = () => {
                     <span>{job.venmo ? "📱 Venmo" : ""}</span>
                     <span>{job.cashApp ? "💰 CashApp" : ""}</span>
                   </div>
-                  <a href="#" className="btn btn-primary">
+                  <a href="#" className={styles.userOptions}>
                     Open Job Post
                   </a>
+                  <button
+                    className={styles.userOptions}
+                    onClick={() => workers(job, false)}
+                  >
+                    Look for More Worker/s
+                  </button>
+                  <button
+                    className={styles.userOptions}
+                    onClick={() => complete(job)}
+                  >
+                    Job Completed
+                  </button>
                 </div>
               </div>
             ))

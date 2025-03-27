@@ -1,0 +1,9 @@
+.userOptions{
+    display: flex;
+    padding: 15px;
+    background: #f0f0f0;
+    color: #333;
+    border-radius: 6px;
+    cursor: "pointer";
+    transition: background-color 0.3s;
+  }
