@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import styles from "/src/css.styles/JobPostForm.module.css";
 import classNames from "classnames";
 import { auth, storage } from "../firebase";
-import popupStyles from "/src/css.styles/Popup.module.css";
 import { addJob } from "../FirebaseServices";
 import { ref, uploadBytes } from "firebase/storage";
-const JobPostForm = () => {
-  const [isOpen, setOpen] = useState(false);
+
+interface JobPostFormProps {
+  onClose: () => void;
+}
+
+const JobPostForm = ({ onClose }: JobPostFormProps) => {
   //New Job States
   const [newJobTitle, setNewJobTitle] = useState("");
   const [newJobDate, setNewJobDate] = useState("");
@@ -20,6 +22,7 @@ const JobPostForm = () => {
   const [newImages, setImages] = useState<File[]>([]);
 
   const onPostJob = async () => {
+    console.log("Current User UID:", auth?.currentUser?.uid);
     try {
       const jobID = await addJob({
         title: newJobTitle,
@@ -40,8 +43,8 @@ const JobPostForm = () => {
       setCashAccept(false);
       setVenmoAccept(false);
       setCashAppAccept(false);
-      setOpen(true);
       uploadFile(jobID);
+      onClose();
     } catch (err) {
       console.error(err);
     }
@@ -60,118 +63,167 @@ const JobPostForm = () => {
       }
     }
   };
+
   return (
-    <>
-      <div className={styles.formContainer}>
-        <div>
-          <label>Create a New Job</label>
+    <div
+      className={classNames(
+        styles.formContainer,
+        "bg-white shadow-xl rounded-lg p-6 w-full max-w-md mx-auto"
+      )}
+    >
+      <div className={styles.inputGroup}>
+        <button className={styles.cancelButton} onClick={onClose}>
+          Cancel Job Listing
+        </button>
+      </div>
+      <div className={styles.formBox}>
+        <div className={styles.inputGroup}>
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Job Title
+          </label>
+          <input
+            id="title"
+            placeholder="Building a Fence"
+            value={newJobTitle}
+            onChange={(e) => setNewJobTitle(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
-        <div className={styles.formBox}>
-          <div className={styles.inputGroup}>
-            <label htmlFor="title">Job Title</label>
-            <input
-              id="title"
-              placeholder="Building a Fence"
-              value={newJobTitle}
-              onChange={(e) => setNewJobTitle(e.target.value)}
-            ></input>
+        <div className={styles.inputGroup}>
+          <label
+            htmlFor="location"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Location
+          </label>
+          <input
+            id="location"
+            placeholder="City, Town, or Neighborhood"
+            value={newJobLocation}
+            onChange={(e) => setNewJobLocation(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Job Description
+          </label>
+          <div className={styles.description}>
+            <textarea
+              id="description"
+              placeholder="Assemble a fence using a posthole digger and the wood that I painted..."
+              value={newJobDescription}
+              onChange={(e) => setNewJobDescription(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"
+            />
           </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="location">Location</label>
-            <input
-              id="location"
-              placeholder="City,Town, or Neighborhood"
-              value={newJobLocation}
-              onChange={(e) => setNewJobLocation(e.target.value)}
-            ></input>
-          </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="description">Job Description</label>
-            <div className={styles.description}>
-              <textarea
-                id="description"
-                placeholder="Assemble a fence using a posthole digger and the wood that I painted..."
-                value={newJobDescription}
-                onChange={(e) => setNewJobDescription(e.target.value)}
-              ></textarea>
-            </div>
-          </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="amount">Pay Amount in $</label>
-            <input
-              id="amount"
-              type="number"
-              onChange={(e) => setNewPaymentAmount(Number(e.target.value))}
-            ></input>
-          </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="images">Image</label>
-            <input
-              id="images"
-              type="file"
-              multiple
-              onChange={(e) =>
-                setImages(e.target.files ? Array.from(e.target.files) : [])
-              }
-            ></input>
-          </div>
-          <div className={styles.inputGroup}>
-            <label>Payment Options</label>
-            <div className={styles.paymentGroup}>
+        </div>
+        <div className={styles.inputGroup}>
+          <label
+            htmlFor="amount"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Pay Amount in $
+          </label>
+          <input
+            id="amount"
+            type="number"
+            onChange={(e) => setNewPaymentAmount(Number(e.target.value))}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label
+            htmlFor="images"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Image
+          </label>
+          <input
+            id="images"
+            type="file"
+            multiple
+            onChange={(e) =>
+              setImages(e.target.files ? Array.from(e.target.files) : [])
+            }
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Payment Options
+          </label>
+          <div className={classNames(styles.paymentGroup, "flex space-x-4")}>
+            <label htmlFor="cash" className="inline-flex items-center">
               <input
                 type="checkbox"
                 id="cash"
                 value="Cash"
                 checked={cashAccept}
                 onChange={(e) => setCashAccept(e.target.checked)}
+                className="mr-2"
               />
-              <label htmlFor="cash"> Cash </label>
+              Cash
+            </label>
+            <label htmlFor="venmo" className="inline-flex items-center">
               <input
                 type="checkbox"
                 id="venmo"
                 value="Venmo"
                 checked={venmoAccept}
                 onChange={(e) => setVenmoAccept(e.target.checked)}
+                className="mr-2"
               />
-              <label htmlFor="venmo"> Venmo </label>
+              Venmo
+            </label>
+            <label htmlFor="cashapp" className="inline-flex items-center">
               <input
                 type="checkbox"
                 id="cashapp"
                 value="CashApp"
                 checked={cashAppAccept}
                 onChange={(e) => setCashAppAccept(e.target.checked)}
+                className="mr-2"
               />
-              <label htmlFor="cashapp"> CashApp </label>
-            </div>
-          </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="date">Date Completed by</label>
-            <input
-              id="date"
-              type="date"
-              value={newJobDate}
-              onChange={(e) => setNewJobDate(e.target.value)}
-            ></input>
-          </div>
-          <div className={styles.inputGroup}>
-            <div className={styles.postButton}>
-              <button onClick={onPostJob}>Post Job</button>
-            </div>
+              CashApp
+            </label>
           </div>
         </div>
-        <div>
-          {isOpen && (
-            <div className={popupStyles.popupOverlay}>
-              <div className={popupStyles.popupContent}>
-                <h2>Job Created! Way to Go!</h2>
-                <p>You can now see your job under active jobs</p>
-                <button onClick={() => setOpen(false)}>Close</button>
-              </div>
-            </div>
-          )}
+        <div className={styles.inputGroup}>
+          <label
+            htmlFor="date"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Date Completed by
+          </label>
+          <input
+            id="date"
+            type="date"
+            value={newJobDate}
+            onChange={(e) => setNewJobDate(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <div className={styles.postButton}>
+            <button
+              onClick={() => {
+                onPostJob();
+                onClose();
+              }}
+            >
+              Post Job
+            </button>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,152 +1,162 @@
 /*JobPostForm.module.css*/
 
-.formContainer{
+.formContainer {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   height: 100vh;
   background-color: #ffffff; 
   flex-direction: column;
-  gap: 50px;
-  padding-top: 5rem;
+  gap: 20px; /* Reduced gap */
+  padding-top: 5.5rem; /* Reduced padding at the top */
+}
+
+/* Box that holds the post form */
+.formBox {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 800px; /* Reduced max-width */
+  width: 100%;
+  padding: 20px; /* Reduced padding */
+  background-color: #ffffff;
+  border-radius: 8px;
+  margin-bottom: 1px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for each input group */
+.inputGroup {
+  display: flex;
+  margin-bottom: 15px; /* Reduced bottom margin */
+  flex-direction: column;
+  padding: 5px;
+  width: 50%;
+}
+
+.description textarea {
+  height: 80px; /* Reduced textarea height */
+}
+
+/* Styling for the submit button */
+.postButton button {
+  width: 100%;
+  text-align: center;
+  padding: 8px; /* Reduced padding */
+  background-color: black;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  border-color: red;
+  font-size: 20px; /* Reduced font size */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 
-  
-  /* Box that holds the post form */
-  .formBox {
-    flex-wrap: wrap;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 900px;
-    width:100%;
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    margin-bottom: 1px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Styling for each input group */
-  .inputGroup {
-    display:flex;
-    margin-bottom: 20px;
-    flex-direction: column;
-    padding:5px;
-    width:50%
-  }
+/* Optionally, you can add a different class for the cancel button */
+.cancelButton button {
+  background-color: #f44336; /* Red background for cancel */
+}
 
-  .description textarea{
-    height:100px;
-  }
-    
-  /* Styling for the submit button */
-  .postButton button{
-    width: 100%;
-    text-align: center;
-    padding: 10px;
-    background-color: black;
-    border: none;
-    color: #fff;
-    border-radius: 4px;
-    border-color: red;
-    font-size: 24px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  .paymentGroup {
-    display:flex;
-    flex-direction: row;
-  }
-  
-  .formContainer label {
-    font-size: 36px;
-    font-weight: bold;
-    color: #333; /* Darker shade for contrast */
-    text-align: center;
-    justify-content: center;
-    display: block;
-    margin-bottom: 2px;
-    margin-top: 30px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .formBox label {
-    font-size: 12px;
-    font-weight: bold;
-    color: #333; /* Darker shade for contrast */
-    text-align: left;
-    display: block;
-    margin-bottom: 2px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    position: relative;
-    z-index: 1;
-  }
+/* Hover effect for cancel button */
+.cancelButton button:hover {
+  background-color: #d32f2f !important;
+}
 
-  .inputGroup label {
-    font-size: 15px;
-    font-weight: bold;
-    color: #333; /* Darker shade for contrast */
-    text-align: left;
-    display: block;
-    margin-bottom: 2px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    position: relative;
-    z-index: 1;
-  }
+.paymentGroup {
+  display: flex;
+  flex-direction: row;
+}
 
-  .paymentGroup label {
-    font-size: 12px;
-    font-weight: bold;
-    color: #333; /* Darker shade for contrast */
-    text-align: left;
-    display: block;
-    margin-bottom: 2px;
-    letter-spacing: 2px;
-    position: relative;
-    z-index: 1;
-  }
+.formContainer label {
+  font-size: 28px; /* Reduced font size */
+  font-weight: bold;
+  color: #333; /* Darker shade for contrast */
+  text-align: center;
+  justify-content: center;
+  display: block;
+  margin-bottom: 2px;
+  margin-top: 20px; /* Reduced margin-top */
+  text-transform: uppercase;
+  letter-spacing: 1px; /* Reduced letter-spacing */
+  position: relative;
+  z-index: 1;
+}
 
-  .formBox input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #cccccc;
-    margin-bottom: 15px; /* Overrides both above */
-    border-radius: 4px;
-  }
+.formBox label {
+  font-size: 10px; /* Reduced font size */
+  font-weight: bold;
+  color: #333; /* Darker shade for contrast */
+  text-align: left;
+  display: block;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 1px; /* Reduced letter-spacing */
+  position: relative;
+  z-index: 1;
+}
 
-  .inputGroup input,textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #cccccc;
-    margin-bottom: 15px; /* Overrides both above */
-    border-radius: 4px;
-  }
-  .paymentGroup input{
-    width: 50%;
-    padding: 8px;
-    border: 1px solid #cccccc;
-    margin-bottom: 4px; /* Overrides both above */
-    border-radius: 4px;
-  }
-  
-  .inputGroup link {
-    width: 50%;
-    padding: 10px;
-    border: none;
-    color: #fff;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  
-  .postButton button:hover {
-    background-color: #09a1d3 !important;
-  }
+.inputGroup label {
+  font-size: 13px; /* Reduced font size */
+  font-weight: bold;
+  color: #333; /* Darker shade for contrast */
+  text-align: left;
+  display: block;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 1px; /* Reduced letter-spacing */
+  position: relative;
+  z-index: 1;
+}
+
+.paymentGroup label {
+  font-size: 10px; /* Reduced font size */
+  font-weight: bold;
+  color: #333; /* Darker shade for contrast */
+  text-align: left;
+  display: block;
+  margin-bottom: 2px;
+  letter-spacing: 1px; /* Reduced letter-spacing */
+  position: relative;
+  z-index: 1;
+}
+
+.formBox input {
+  width: 100%;
+  padding: 6px; /* Reduced padding */
+  border: 1px solid #cccccc;
+  margin-bottom: 12px; /* Reduced margin-bottom */
+  border-radius: 4px;
+}
+
+.inputGroup input, textarea {
+  width: 100%;
+  padding: 6px; /* Reduced padding */
+  border: 1px solid #cccccc;
+  margin-bottom: 12px; /* Reduced margin-bottom */
+  border-radius: 4px;
+}
+
+.paymentGroup input {
+  width: 50%;
+  padding: 6px; /* Reduced padding */
+  border: 1px solid #cccccc;
+  margin-bottom: 4px; /* Reduced margin-bottom */
+  border-radius: 4px;
+}
+
+.inputGroup link {
+  width: 50%;
+  padding: 8px; /* Reduced padding */
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 14px; /* Reduced font size */
+  cursor: pointer;
+}
+
+.postButton button:hover {
+  background-color: #09a1d3 !important;
+}
