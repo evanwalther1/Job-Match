@@ -1,19 +1,17 @@
 import React, { useState, useCallback } from "react";
-// Import Sidebar and MainContent here
 import Sidebar from "./Sidebar";
 import MainContent from "./MainContent";
 import Navbar from "./Navbar";
+import JobPostForm from "./JobPostForm";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
-  // Memoize onFilter to prevent unnecessary re-renders
   const handleFilterChange = useCallback(
     (filters: { [category: string]: string[] }) => {
-      // Logic to handle the filter change
-      const category = Object.keys(filters)[0]; // Get the first category
+      const category = Object.keys(filters)[0];
       setFilterCategory(category);
       setSelectedFilters(filters[category] || []);
     },
@@ -21,15 +19,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 
   return (
-    <div className="h-screen flex flex-col">
-      {/* Navbar */}
+    <div className="h-screen flex flex-col relative">
       <Navbar />
-
-      {/* Sidebar + Content */}
       <div className="flex flex-1">
         <Sidebar onSearch={setSearchQuery} onFilter={handleFilterChange} />
-
-        {/* Main Content */}
         <main className="flex-1 p-5">
           {React.cloneElement(children as React.ReactElement, {
             searchQuery,

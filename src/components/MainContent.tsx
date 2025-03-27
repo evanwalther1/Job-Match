@@ -20,11 +20,13 @@ interface Job {
 interface MainContentProps {
   searchQuery: string;
   filterCategories: string[];
+  onCreateNewJob: () => void;
 }
 
 const MainContent: React.FC<MainContentProps> = ({
   searchQuery,
   filterCategories,
+  onCreateNewJob,
 }) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -95,6 +97,13 @@ const MainContent: React.FC<MainContentProps> = ({
 
   return (
     <div className="search-container">
+      <button
+        onClick={onCreateNewJob}
+        className="bg-blue-500 text-black px-4 py-2 rounded"
+      >
+        Create New Job
+      </button>
+
       <h1 className="search-title">Search Results</h1>
       {loading ? <p>Loading...</p> : null}
 
