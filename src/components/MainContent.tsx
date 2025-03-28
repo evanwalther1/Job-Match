@@ -339,7 +339,11 @@ const MainContent: React.FC<MainContentProps> = ({
           where("workersFound", "==", false)
         );
       }
-
+      q = query(
+        collection(db, "jobs"),
+        where("completed", "==", false),
+        where("workersFound", "==", false)
+      );
       try {
         const querySnapshot = await getDocs(q);
         const fetchedJobs: Job[] = [];
