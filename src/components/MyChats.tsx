@@ -17,6 +17,7 @@ import { auth, db } from "../firebase";
 import Navbar from "./Navbar";
 
 //currently this code means more like "AllChats" while I'm testing and figuring things out
+//NOTE - THE MESSAGES DO NOT APPEAR ON THE SCREEN IN REAL TIME; A REFRESH IS REQUIRED
 
 const MyChats = () => {
   const [allChatMsgs, setAllChatMsgs] = useState<ChatMessage[]>([]);
