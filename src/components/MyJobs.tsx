@@ -177,7 +177,7 @@ const MyJobs = () => {
     <>
       {renderPortal()}
       <div className="search-container">
-        <h1 className="search-title">Waiting for Workers</h1>
+        <h1 className={styles.bigheader}>Waiting for Workers</h1>
         <div className="job-cards">
           {employingJobs.length > 0 ? (
             employingJobs.map((job) => (
@@ -233,7 +233,7 @@ const MyJobs = () => {
         </div>
       </div>
       <div className="search-container">
-        <h1 className="search-title">In Progress</h1>
+        <h1 className={styles.bigheader}>In Progress</h1>
         <div className="job-cards">
           {inProgressJobs.length > 0 ? (
             inProgressJobs.map((job) => (
