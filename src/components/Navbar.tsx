@@ -78,7 +78,7 @@ const Navbar = () => {
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div className="container-fluid">
           <h1 className="navbar-brand" style={{ fontSize: 40 }}>
-            Job-Match
+            Job Match
           </h1>
           <button
             className="navbar-toggler"
