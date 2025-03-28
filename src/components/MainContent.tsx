@@ -5,6 +5,7 @@ import "../css.styles/SearchBar.css";
 import { getJobImages } from "../FirebaseServices";
 import ReactDOM from "react-dom";
 import styles from "/src/css.styles/ActiveJobs.module.css";
+import Layout from "./Layout";
 
 interface Job {
   id: string;
@@ -21,12 +22,20 @@ interface Job {
 
 interface MainContentProps {
   searchQuery: string;
+  selectedFilters: { [key: string]: string[] };
   filterCategories: string[];
   onCreateNewJob: () => void;
 }
 
+const categoryOptions: { [key: string]: (string | number)[] } = {
+  Payment: [0, 50, 100, 150],
+  Location: ["USA", "Europe", "Asia", "Other"],
+  PayWay: ["Cash", "Venmo", "CashApp"],
+};
+
 const MainContent: React.FC<MainContentProps> = ({
   searchQuery,
+  selectedFilters,
   filterCategories,
   onCreateNewJob,
 }) => {
@@ -396,65 +405,72 @@ const MainContent: React.FC<MainContentProps> = ({
   }, [jobs]);
 
   return (
-    <>
-      {showJobDetails ? renderJobDetailsPortal() : null}
+    <div>
+      <h2 className="text-xl font-bold mb-4">Active Jobs</h2>
 
-      <div className="search-container">
-        <button
-          onClick={onCreateNewJob}
-          className="bg-blue-500 text-black px-4 py-2 rounded"
-        >
-          Create New Job
-        </button>
+      <>
+        {showJobDetails ? renderJobDetailsPortal() : null}
 
-        <h1 className="search-title">Search Results</h1>
-        {loading ? <p>Loading...</p> : null}
+        <div className="search-container">
+          <button
+            onClick={onCreateNewJob}
+            className="bg-blue-500 text-black px-4 py-2 rounded"
+          >
+            Create New Job
+          </button>
 
-        <div className="job-cards">
-          {jobs.length > 0 ? (
-            jobs.map((job) => (
-              <div key={job.id} className="job-card" style={{ width: "18rem" }}>
-                <img
-                  src={jobImages[job.id] || "..."}
-                  className="card-img-top"
-                  alt="..."
-                ></img>
-                <div className="card-body">
-                  <h5>{job.title}</h5>
-                  <p>
-                    <strong>Location:</strong> {job.location}
-                  </p>
-                  <p>
-                    <strong>Pay:</strong> ${job.pay}
-                  </p>
-                  <div className="payment-methods">
+          <h1 className="search-title">Search Results</h1>
+          {loading ? <p>Loading...</p> : null}
+
+          <div className="job-cards">
+            {jobs.length > 0 ? (
+              jobs.map((job) => (
+                <div
+                  key={job.id}
+                  className="job-card"
+                  style={{ width: "18rem" }}
+                >
+                  <img
+                    src={jobImages[job.id] || "..."}
+                    className="card-img-top"
+                    alt="..."
+                  ></img>
+                  <div className="card-body">
+                    <h5>{job.title}</h5>
                     <p>
-                      <strong>Payment Methods:</strong>
+                      <strong>Location:</strong> {job.location}
                     </p>
-                    <span>{job.cash ? "💵 Cash" : ""}</span>
-                    <span>{job.venmo ? "📱 Venmo" : ""}</span>
-                    <span>{job.cashApp ? "💰 CashApp" : ""}</span>
-                  </div>
-                  <div className={styles.buttoncontainer}>
-                    <button
-                      onClick={() => {
-                        handleOpenJobDetailsModal(job), setShowJobDetails(true);
-                      }}
-                      className={styles.smallbtn}
-                    >
-                      Open Job Post
-                    </button>
+                    <p>
+                      <strong>Pay:</strong> ${job.pay}
+                    </p>
+                    <div className="payment-methods">
+                      <p>
+                        <strong>Payment Methods:</strong>
+                      </p>
+                      <span>{job.cash ? "💵 Cash" : ""}</span>
+                      <span>{job.venmo ? "📱 Venmo" : ""}</span>
+                      <span>{job.cashApp ? "💰 CashApp" : ""}</span>
+                    </div>
+                    <div className={styles.buttoncontainer}>
+                      <button
+                        onClick={() => {
+                          handleOpenJobDetailsModal(job),
+                            setShowJobDetails(true);
+                        }}
+                        className={styles.smallbtn}
+                      >
+                        Open Job Post
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p>No results found</p>
-          )}
+              ))
+            ) : (
+              <p>No results found</p>
+            )}
+          </div>
         </div>
-      </div>
-    </>
+      </>
+    </div>
   );
 };
-
-export default MainContent;

@@ -1,19 +1,21 @@
 import React, { useState, useCallback } from "react";
 import Sidebar from "./Sidebar";
-import MainContent from "./MainContent";
 import Navbar from "./Navbar";
-import JobPostForm from "./JobPostForm";
+import JobsList from "./JobsList";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterCategory, setFilterCategory] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<{
+    [key: string]: string[];
+  }>({});
 
   const handleFilterChange = useCallback(
-    (filters: { [category: string]: string[] }) => {
-      const category = Object.keys(filters)[0];
-      setFilterCategory(category);
-      setSelectedFilters(filters[category] || []);
+    (filters: { [key: string]: string[] }) => {
+      console.log("Filters received in Layout:", filters); // 调试
+      setSelectedFilters((prevFilters) => ({
+        ...prevFilters,
+        ...filters,
+      }));
     },
     []
   );
@@ -24,11 +26,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <div className="flex flex-1">
         <Sidebar onSearch={setSearchQuery} onFilter={handleFilterChange} />
         <main className="flex-1 p-5">
-          {React.cloneElement(children as React.ReactElement, {
-            searchQuery,
-            filterCategory,
-            selectedFilters,
-          })}
+          <JobsList
+            searchQuery={searchQuery}
+            selectedFilters={selectedFilters}
+          />
         </main>
       </div>
     </div>

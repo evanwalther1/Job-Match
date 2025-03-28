@@ -3,6 +3,7 @@ import "../css.styles/SideBar.css";
 import { FaSearch } from "react-icons/fa";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import JobsList from "./JobsList";
 
 interface Job {
   id: string;
@@ -17,36 +18,40 @@ interface Job {
   employerID: string;
 }
 
-const categoryOptions: { [key: string]: string[] } = {
-  Payment: ["$0-50", "$50-100", "$100-150", "More"],
+interface SidebarProps {
+  onSearch: (query: string) => void;
+  onFilter: (filters: { [key: string]: string[] }) => void;
+}
+
+const categoryOptions: { [key: string]: (string | number)[] } = {
+  Payment: [0, 50, 100, 150],
   Location: ["USA", "Europe", "Asia", "Other"],
   PayWay: ["Cash", "Venmo", "CashApp"],
 };
 
-const Sidebar: React.FC<{
-  onSearch: (query: string) => void;
-  onFilter: (filters: { [category: string]: string[] }) => void;
-}> = ({ onSearch, onFilter }) => {
+const Sidebar: React.FC<SidebarProps> = ({ onSearch, onFilter }) => {
   const [query, setQuery] = useState("");
   const [selectedOptions, setSelectedOptions] = useState<{
-    [key: string]: string[];
+    [key: string]: (string | number)[];
   }>({});
 
-  // Updates the filter state dynamically
   useEffect(() => {
-    onFilter(selectedOptions);
+    const formattedFilters = Object.fromEntries(
+      Object.entries(selectedOptions).map(([key, options]) => [
+        key,
+        options.map((opt) => opt.toString().toLowerCase()),
+      ])
+    );
+    onFilter(formattedFilters);
   }, [selectedOptions, onFilter]);
 
-  const handleCheckboxChange = (category: string, option: string) => {
+  const handleCheckboxChange = (category: string, option: string | number) => {
     setSelectedOptions((prev) => {
-      const updatedCategory = prev[category] || [];
-
-      return {
-        ...prev,
-        [category]: updatedCategory.includes(option)
-          ? updatedCategory.filter((opt: string) => opt !== option) // Uncheck
-          : [...updatedCategory, option], // Check
-      };
+      const currentOptions = prev[category] || [];
+      const newOptions = currentOptions.includes(option)
+        ? currentOptions.filter((item) => item !== option)
+        : [...currentOptions, option];
+      return { ...prev, [category]: newOptions };
     });
   };
 
@@ -69,20 +74,20 @@ const Sidebar: React.FC<{
         </div>
       </div>
 
-      {/* All Category Checkboxes Shown by Default */}
+      {/* Category Filters */}
       <div className="category-filters">
         {Object.entries(categoryOptions).map(([category, options]) => (
           <div key={category} className="CheckboxContainer">
             <h4 className="CheckboxTitle">{category}</h4>
             {options.map((option) => (
-              <label key={option} className="CheckboxLabel">
+              <label key={option.toString()} className="CheckboxLabel">
                 <input
                   type="checkbox"
-                  value={option}
+                  value={option.toString()}
                   checked={selectedOptions[category]?.includes(option) || false}
                   onChange={() => handleCheckboxChange(category, option)}
                 />
-                {option}
+                {typeof option === "number" ? `$${option}` : option}
               </label>
             ))}
           </div>
@@ -93,3 +98,8 @@ const Sidebar: React.FC<{
 };
 
 export default Sidebar;
+function setSelectedFilters(filters: {
+  [category: string]: (string | number)[];
+}) {
+  throw new Error("Function not implemented.");
+}
