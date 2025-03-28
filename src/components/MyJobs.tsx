@@ -135,9 +135,6 @@ const MyJobs = () => {
                     <span>{job.cashApp ? "💰 CashApp" : ""}</span>
                   </div>
                   <div className={styles.buttoncontainer}>
-                    <a href="#" className={styles.smallbtn}>
-                      Open Job Post
-                    </a>
                     <button
                       className={styles.smallbtn}
                       onClick={() => workers(job, true)}
@@ -191,9 +188,6 @@ const MyJobs = () => {
                     <span>{job.cashApp ? "💰 CashApp" : ""}</span>
                   </div>
                   <div className={styles.buttoncontainer}>
-                    <a href="#" className={styles.smallbtn}>
-                      Open Job Post
-                    </a>
                     <button
                       className={styles.smallbtn}
                       onClick={() => workers(job, false)}
