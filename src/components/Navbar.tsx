@@ -139,6 +139,16 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link
+                  className={styles.navbtn}
+                  aria-current="page"
+                  to="/chat"
+                  style={{ marginRight: "10px", marginLeft: "10px" }}
+                >
+                  Chat
+                </Link>
+              </li>
+              <li className="nav-item">
                 <button
                   className={styles.logoutbtn}
                   style={{ marginRight: "10px" }}
@@ -146,16 +156,6 @@ const Navbar = () => {
                 >
                   Logout
                 </button>
-              </li>
-              <li className="nav-item">
-                <Link
-                  className="nav-link active"
-                  aria-current="page"
-                  to="/chat"
-                  style={{ marginRight: "10px", marginLeft: "20px" }}
-                >
-                  Chat
-                </Link>
               </li>
             </ul>
           </div>
