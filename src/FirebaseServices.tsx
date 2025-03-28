@@ -28,6 +28,7 @@ export interface Job {
 export interface ChatMessage {
   id: string;
   sender: string;
+  senderDisplayName: string;
   reciever: string;
   sendTime: Timestamp;
   text: string;
