@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import JobPostForm from "../components/JobPostForm";
 import Navbar from "../components/Navbar";
 const CreateJob = () => {
@@ -7,7 +8,7 @@ const CreateJob = () => {
         <Navbar></Navbar>
       </div>
       <div>
-        <JobPostForm></JobPostForm>
+        <JobPostForm onClose={function (): void {}}></JobPostForm>
       </div>
     </>
   );

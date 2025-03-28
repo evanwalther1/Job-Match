@@ -5,11 +5,9 @@ import { auth, storage } from "../firebase";
 import { addJob } from "../FirebaseServices";
 import { ref, uploadBytes } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
-interface Props {
-  onClose: () => void;
-}
 
-const JobPostForm: React.FC<Props> = ({ onClose }) => {
+const JobEditForm = () => {
+  const navigate = useNavigate();
   //New Job States
   const [newJobTitle, setNewJobTitle] = useState("");
   const [newJobDate, setNewJobDate] = useState("");
@@ -21,7 +19,11 @@ const JobPostForm: React.FC<Props> = ({ onClose }) => {
   const [cashAppAccept, setCashAppAccept] = useState(false);
   const [newImages, setImages] = useState<File[]>([]);
 
-  const onPostJob = async () => {
+  const onClose = () => {
+    navigate("/active-jobs");
+  };
+
+  const onSaveJob = async () => {
     console.log("Current User UID:", auth?.currentUser?.uid);
     try {
       const jobID = await addJob({
@@ -216,7 +218,7 @@ const JobPostForm: React.FC<Props> = ({ onClose }) => {
           <div className={styles.postButton}>
             <button
               onClick={() => {
-                onPostJob();
+                onSaveJob();
                 onClose();
               }}
             >
@@ -229,4 +231,4 @@ const JobPostForm: React.FC<Props> = ({ onClose }) => {
   );
 };
 
-export default JobPostForm;
+export default JobEditForm;
