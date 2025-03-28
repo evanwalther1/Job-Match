@@ -163,6 +163,16 @@ const Navbar = () => {
                   </li>
                 </ul>
               </li>
+              <li className="nav-item">
+                <Link
+                  className="nav-link active"
+                  aria-current="page"
+                  to="/chat"
+                  style={{ marginRight: "10px", marginLeft: "20px" }}
+                >
+                  Chat
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
