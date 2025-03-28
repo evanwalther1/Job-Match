@@ -1,9 +1,38 @@
-.userOptions{
-    display: flex;
-    padding: 15px;
-    background: #f0f0f0;
-    color: #333;
-    border-radius: 6px;
-    cursor: "pointer";
-    transition: background-color 0.3s;
-  }
+.buttoncontainer {
+  display: flex;
+  flex-direction: column; /* Stack the buttons vertically */
+  gap: 10px; /* Add space between buttons */
+}
+
+
+.smallbtn, 
+.smallbtn:link, 
+.smallbtn:visited {
+  display: inline-block; /* Ensures <a> behaves like a button */
+  background-color: #fff; /* Green background */
+  color: black; /* White text */
+  text-align: center;
+  text-decoration: none; /* Removes underline from <a> */
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.smallbtn:hover {
+  background-color: gray; /* Darker green on hover */
+  transform: scale(1.05); /* Slightly increase size */
+}
+
+.smallbtn:active {
+  background-color: gray; /* Even darker green when clicked */
+  transform: scale(0.98); /* Slightly shrink when clicked */
+}
+
+img {
+  width: 200px; /* Set a fixed width */
+  height: 200px; /* Set a fixed height */
+  object-fit: cover; /* Ensure the image covers the area */
+}

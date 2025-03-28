@@ -4,6 +4,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import "../css.styles/SearchBar.css";
 import { getJobImages } from "../FirebaseServices";
 import ReactDOM from "react-dom";
+import styles from "/src/css.styles/ActiveJobs.module.css";
 
 interface Job {
   id: string;
@@ -419,7 +420,6 @@ const MainContent: React.FC<MainContentProps> = ({
                   <p>
                     <strong>Location:</strong> {job.location}
                   </p>
-                  <p>{job.description}</p>
                   <p>
                     <strong>Pay:</strong> ${job.pay}
                   </p>
@@ -431,14 +431,16 @@ const MainContent: React.FC<MainContentProps> = ({
                     <span>{job.venmo ? "📱 Venmo" : ""}</span>
                     <span>{job.cashApp ? "💰 CashApp" : ""}</span>
                   </div>
-                  <button
-                    onClick={() => {
-                      handleOpenJobDetailsModal(job), setShowJobDetails(true);
-                    }}
-                    className="btn btn-primary"
-                  >
-                    Open Job Post
-                  </button>
+                  <div className={styles.buttoncontainer}>
+                    <button
+                      onClick={() => {
+                        handleOpenJobDetailsModal(job), setShowJobDetails(true);
+                      }}
+                      className={styles.smallbtn}
+                    >
+                      Open Job Post
+                    </button>
+                  </div>
                 </div>
               </div>
             ))

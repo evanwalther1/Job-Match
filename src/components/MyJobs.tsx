@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styles from "/src/css.styles/ActiveJobs.module.css";
 import classNames from "classnames";
-import { Job, getAllJobs, getJobImages, updateJob } from "../FirebaseServices";
+import {
+  Job,
+  deleteJob,
+  getAllJobs,
+  getJobImages,
+  updateJob,
+} from "../FirebaseServices";
 import {
   collection,
   getDocs,
@@ -128,18 +134,26 @@ const MyJobs = () => {
                     <span>{job.venmo ? "📱 Venmo" : ""}</span>
                     <span>{job.cashApp ? "💰 CashApp" : ""}</span>
                   </div>
-                  <a href="#" className={styles.userOptions}>
-                    Open Job Post
-                  </a>
-                  <button
-                    className={styles.userOptions}
-                    onClick={() => workers(job, true)}
-                  >
-                    Worker/s Found
-                  </button>
-                  <a href="#" className={styles.userOptions}>
-                    Edit Job
-                  </a>
+                  <div className={styles.buttoncontainer}>
+                    <a href="#" className={styles.smallbtn}>
+                      Open Job Post
+                    </a>
+                    <button
+                      className={styles.smallbtn}
+                      onClick={() => workers(job, true)}
+                    >
+                      Worker/s Found
+                    </button>
+                    <button
+                      className={styles.smallbtn}
+                      onClick={() => deleteJob(job.id)}
+                    >
+                      Delete Job
+                    </button>
+                    <a href="#" className={styles.smallbtn}>
+                      Edit Job
+                    </a>
+                  </div>
                 </div>
               </div>
             ))
@@ -176,21 +190,23 @@ const MyJobs = () => {
                     <span>{job.venmo ? "📱 Venmo" : ""}</span>
                     <span>{job.cashApp ? "💰 CashApp" : ""}</span>
                   </div>
-                  <a href="#" className={styles.userOptions}>
-                    Open Job Post
-                  </a>
-                  <button
-                    className={styles.userOptions}
-                    onClick={() => workers(job, false)}
-                  >
-                    Look for More Worker/s
-                  </button>
-                  <button
-                    className={styles.userOptions}
-                    onClick={() => complete(job)}
-                  >
-                    Job Completed
-                  </button>
+                  <div className={styles.buttoncontainer}>
+                    <a href="#" className={styles.smallbtn}>
+                      Open Job Post
+                    </a>
+                    <button
+                      className={styles.smallbtn}
+                      onClick={() => workers(job, false)}
+                    >
+                      Look for New Worker/s
+                    </button>
+                    <button
+                      className={styles.smallbtn}
+                      onClick={() => complete(job)}
+                    >
+                      Job Completed
+                    </button>
+                  </div>
                 </div>
               </div>
             ))
