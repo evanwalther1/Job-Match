@@ -52,6 +52,34 @@ const MyChats = () => {
           </div>
         );
       })}
+
+      <h2 style={{ paddingTop: 20 }}>Send message</h2>
+      <div className="mb-3">
+        <label htmlFor="exampleFormControlInput1" className="form-label">
+          Display name of reciever (made up, because the feature doesn't work
+          rn)
+        </label>
+        <input
+          className="form-control"
+          id="exampleFormControlInput1"
+          placeholder="Example Name"
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="exampleFormControlTextarea1" className="form-label">
+          Text of message
+        </label>
+        <textarea
+          className="form-control"
+          id="exampleFormControlTextarea1"
+          rows={3}
+        ></textarea>
+      </div>
+      <div className="col-auto">
+        <button type="submit" className="btn btn-primary mb-3">
+          Submit message (doesn't work rn)
+        </button>
+      </div>
     </div>
   );
 };
