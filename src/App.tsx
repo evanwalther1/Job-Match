@@ -8,6 +8,7 @@ import JobHistory from "./pages/JobHistory";
 import ActiveJobs from "./pages/ActiveJobs";
 import CreateJob from "./pages/CreateJob";
 import RegisterUser from "./components/RegisterUser";
+import Chat from "./pages/Chat";
 import "./index.css";
 import Layout from "./components/Layout";
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
             <Route path="/job-history" element={<JobHistory />} />
             <Route path="/active-jobs" element={<ActiveJobs />} />
             <Route path="/create-job" element={<CreateJob />} />
+            <Route path="/chat" element={<Chat />} />
           </Routes>
         </BrowserRouter>
       </>

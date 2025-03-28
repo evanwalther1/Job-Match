@@ -9,6 +9,7 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  Timestamp,
 } from "firebase/firestore";
 export interface Job {
   id: string;
@@ -23,6 +24,14 @@ export interface Job {
   employerID: string;
   workersFound: boolean;
   completed: boolean;
+}
+export interface ChatMessage {
+  id: string;
+  sender: string;
+  senderDisplayName: string;
+  reciever: string;
+  sendTime: Timestamp;
+  text: string;
 }
 
 export const getJobImages = async (jobID: string): Promise<string[]> => {
@@ -89,6 +98,37 @@ export const deleteJob = async (jobId: string) => {
     await deleteDoc(jobDocRef);
   } catch (error) {
     console.error("Error deleting job:", error);
+    throw error;
+  }
+};
+
+// Function to get all chat messages (copied and modified from getAllJobs)
+export const getAllChatMessages = async (): Promise<ChatMessage[]> => {
+  try {
+    const chatMessageCollectionRef = collection(db, "chatMessages");
+    const data = await getDocs(chatMessageCollectionRef);
+    return data.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<ChatMessage, "id">),
+    }));
+  } catch (error) {
+    console.error("Error fetching chat messages:", error);
+    throw error;
+  }
+};
+
+// Function to add a new chat message (copied and modified from addJob)
+export const addChatMessage = async (chatMessageData: any): Promise<string> => {
+  try {
+    // Add chat message to Firestore and get the reference
+    const docRef = await addDoc(
+      collection(db, "chatMessages"),
+      chatMessageData
+    );
+    // Fetch the newly created chat message data using the document ID
+    return docRef.id;
+  } catch (error) {
+    console.error("Error adding chat message:", error);
     throw error;
   }
 };

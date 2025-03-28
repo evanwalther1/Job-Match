@@ -1,17 +1,17 @@
 import Navbar from "../components/Navbar";
-import History from "../components/History";
+import MyChats from "../components/MyChats";
 import ComputerNavBarPadding from "../components/ComputerNavBarPadding";
-const JobHistory = () => {
+const Chat = () => {
   return (
     <>
       <div>
-        <Navbar></Navbar>
+        <Navbar />
       </div>
       <div style={{ paddingTop: ComputerNavBarPadding }}>
-        <History></History>
+        <MyChats />
       </div>
     </>
   );
 };
 
-export default JobHistory;
+export default Chat;

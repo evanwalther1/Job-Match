@@ -3,6 +3,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { getAllJobs } from "../FirebaseServices";
 import { Job } from "../FirebaseServices";
+import ComputerNavBarPadding from "../components/ComputerNavBarPadding";
 const Home = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
 
@@ -23,7 +24,7 @@ const Home = () => {
       <div>
         <Navbar></Navbar>
       </div>
-      <div>
+      <div style={{ paddingTop: ComputerNavBarPadding }}>
         <h2>Job Listings</h2>
         <ul>
           {jobs.map((job) => (
