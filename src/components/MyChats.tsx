@@ -36,7 +36,7 @@ const MyChats = () => {
 
   return (
     <div className="container">
-      <h2>All Messages</h2>
+      <h2>All messages in the entire database (for testing purposes)</h2>
       {allChatMsgs.map((msg) => {
         return (
           <div className="card">
@@ -67,7 +67,7 @@ const MyChats = () => {
       </div>
       <div className="mb-3">
         <label htmlFor="exampleFormControlTextarea1" className="form-label">
-          Text of message
+          Message text
         </label>
         <textarea
           className="form-control"
