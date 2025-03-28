@@ -66,3 +66,13 @@
     margin-left: 250px;
     padding: 20px;
   }
+  
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+  }
+  
+  .empty-state p {
+    margin-bottom: 1rem;
+  }

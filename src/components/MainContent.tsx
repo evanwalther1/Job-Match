@@ -5,7 +5,6 @@ import "../css.styles/SearchBar.css";
 import { getJobImages } from "../FirebaseServices";
 import ReactDOM from "react-dom";
 import styles from "/src/css.styles/ActiveJobs.module.css";
-import Layout from "./Layout";
 
 interface Job {
   id: string;
@@ -33,7 +32,7 @@ const categoryOptions: { [key: string]: (string | number)[] } = {
   PayWay: ["Cash", "Venmo", "CashApp"],
 };
 
-const MainContent: React.FC<MainContentProps> = ({
+export const MainContent: React.FC<MainContentProps> = ({
   searchQuery,
   selectedFilters,
   filterCategories,
@@ -338,34 +337,67 @@ const MainContent: React.FC<MainContentProps> = ({
     const fetchJobs = async () => {
       setLoading(true);
 
-      let q = query(collection(db, "jobs")); // Start with base query
-
-      if (filterCategories.length > 0 && filterCategories.length <= 10) {
-        q = query(
-          collection(db, "jobs"),
-          where("category", "in", filterCategories),
+      try {
+        let q = query(
+          collection(db, "jobs"), // Start with base query
           where("completed", "==", false),
           where("workersFound", "==", false)
         );
-      }
-      q = query(
-        collection(db, "jobs"),
-        where("completed", "==", false),
-        where("workersFound", "==", false)
-      );
-      try {
+
+        if (filterCategories.length > 0 && filterCategories.length <= 10) {
+          q = query(q, where("category", "in", filterCategories));
+        }
+
         const querySnapshot = await getDocs(q);
-        const fetchedJobs: Job[] = [];
-
-        querySnapshot.forEach((doc) => {
-          fetchedJobs.push({ id: doc.id, ...doc.data() } as Job);
-        });
-
-        const filteredResults = fetchedJobs.filter(
-          (job) =>
-            job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            job.description.toLowerCase().includes(searchQuery.toLowerCase())
+        const fetchedJobs = querySnapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as Job)
         );
+        const filteredResults = fetchedJobs.filter((job) => {
+          const matchesSearch =
+            !searchQuery ||
+            job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            job.description.toLowerCase().includes(searchQuery.toLowerCase());
+
+          if (Object.keys(selectedFilters).length === 0) return true;
+
+          const matchesFilters = Object.entries(selectedFilters)
+            .filter(([_, values]) => values.length > 0) // 只处理有值的过滤条件
+            .every(([key, values]) => {
+              if (key === "Payment") {
+                const pay = job.pay;
+                return values.some((v) => {
+                  const range = Number(v);
+                  return (
+                    (range === 0 && pay <= 50) ||
+                    (range === 50 && pay > 50 && pay <= 100) ||
+                    (range === 100 && pay > 100 && pay <= 150) ||
+                    (range === 150 && pay > 150)
+                  );
+                });
+              }
+
+              if (key === "Location") {
+                return values.includes(job.location.toLowerCase());
+              }
+
+              if (key === "PayWay") {
+                return values.some((method) => {
+                  if (method === "cash") return job.cash;
+                  if (method === "venmo") return job.venmo;
+                  if (method === "cashapp") return job.cashApp;
+                  return false;
+                });
+              }
+
+              return true;
+            });
+
+          return matchesSearch && matchesFilters;
+        });
 
         setJobs(filteredResults);
       } catch (error) {
@@ -376,21 +408,19 @@ const MainContent: React.FC<MainContentProps> = ({
     };
 
     fetchJobs();
-  }, [searchQuery, filterCategories]);
+  }, [searchQuery, filterCategories, selectedFilters]);
 
   const loadJobImages = async () => {
-    const images: { [key: string]: string } = {}; // Object to hold image URLs
-
+    const images: { [key: string]: string } = {};
     try {
       const imagePromises = jobs.map(async (job) => {
-        const imageUrls = await getJobImages(job.id); // Get image URLs for the job
+        const imageUrls = await getJobImages(job.id);
         if (imageUrls.length > 0) {
-          // Use the first image URL (or you could handle multiple if needed)
           images[job.id] = imageUrls[0];
         }
       });
       await Promise.all(imagePromises);
-      setJobImages(images); // Store images URLs in state
+      setJobImages(images);
     } catch (error) {
       console.error("Error fetching job images:", error);
     }
@@ -431,10 +461,10 @@ const MainContent: React.FC<MainContentProps> = ({
                   style={{ width: "18rem" }}
                 >
                   <img
-                    src={jobImages[job.id] || "..."}
+                    src={jobImages[job.id] || "https://via.placeholder.com/150"}
                     className="card-img-top"
-                    alt="..."
-                  ></img>
+                    alt={job.title}
+                  />
                   <div className="card-body">
                     <h5>{job.title}</h5>
                     <p>
@@ -466,7 +496,9 @@ const MainContent: React.FC<MainContentProps> = ({
                 </div>
               ))
             ) : (
-              <p>No results found</p>
+              <div className="empty-state">
+                <p>No jobs found matching your criteria</p>
+              </div>
             )}
           </div>
         </div>
@@ -474,3 +506,5 @@ const MainContent: React.FC<MainContentProps> = ({
     </div>
   );
 };
+
+export default MainContent;

@@ -3,7 +3,6 @@ import "../css.styles/SideBar.css";
 import { FaSearch } from "react-icons/fa";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import JobsList from "./JobsList";
 
 interface Job {
   id: string;
@@ -37,10 +36,12 @@ const Sidebar: React.FC<SidebarProps> = ({ onSearch, onFilter }) => {
 
   useEffect(() => {
     const formattedFilters = Object.fromEntries(
-      Object.entries(selectedOptions).map(([key, options]) => [
-        key,
-        options.map((opt) => opt.toString().toLowerCase()),
-      ])
+      Object.entries(selectedOptions)
+        .filter(([_, options]) => options.length > 0)
+        .map(([key, options]) => [
+          key,
+          options.map((opt) => opt.toString().toLowerCase()),
+        ])
     );
     onFilter(formattedFilters);
   }, [selectedOptions, onFilter]);
