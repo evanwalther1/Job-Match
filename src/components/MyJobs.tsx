@@ -16,8 +16,77 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import ReactDOM from "react-dom";
+import JobEditForm from "./JobEditForm";
 
 const MyJobs = () => {
+  const MODAL_STYLES: React.CSSProperties = {
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "#FFF",
+    padding: "50px", // Increased padding for visibility
+    zIndex: 9999, // Very high z-index to ensure it's on top
+    borderRadius: "10px",
+    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    maxHeight: "90vh",
+    overflowY: "auto",
+  };
+
+  const OVERLAY_STYLES: React.CSSProperties = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, .7)",
+    zIndex: 9998, // Slightly lower than modal, but still very high
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  };
+
+  const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  useEffect(() => {
+    if (isEditJobModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isEditJobModalOpen]);
+
+  const handleOpenEditJobModal = (job: Job) => {
+    setSelectedJob(job);
+    setIsEditJobModalOpen(true);
+  };
+
+  const handleCloseEditJobModal = () => {
+    setSelectedJob(null);
+    setIsEditJobModalOpen(false);
+  };
+
+  // Render the portal first, outside of the main return
+  const renderPortal = () => {
+    if (!isEditJobModalOpen) return null;
+
+    return ReactDOM.createPortal(
+      <div style={OVERLAY_STYLES} onClick={handleCloseEditJobModal}>
+        <div style={MODAL_STYLES} onClick={(e) => e.stopPropagation()}>
+          <JobEditForm onClose={handleCloseEditJobModal} job={selectedJob} />
+        </div>
+      </div>,
+      document.getElementById("portal")!
+    );
+  };
+
   const [jobs, setJobs] = useState<Job[]>([]);
   const [employingJobs, setEmployingJobs] = useState<Job[]>([]);
   const [inProgressJobs, setInProgressJobs] = useState<Job[]>([]);
@@ -106,8 +175,9 @@ const MyJobs = () => {
   }, [jobs]);
   return (
     <>
+      {renderPortal()}
       <div className="search-container">
-        <h1 className="search-title">Waiting for Workers</h1>
+        <h1 className={styles.bigheader}>Waiting for Workers</h1>
         <div className="job-cards">
           {employingJobs.length > 0 ? (
             employingJobs.map((job) => (
@@ -135,9 +205,6 @@ const MyJobs = () => {
                     <span>{job.cashApp ? "💰 CashApp" : ""}</span>
                   </div>
                   <div className={styles.buttoncontainer}>
-                    <a href="#" className={styles.smallbtn}>
-                      Open Job Post
-                    </a>
                     <button
                       className={styles.smallbtn}
                       onClick={() => workers(job, true)}
@@ -150,9 +217,12 @@ const MyJobs = () => {
                     >
                       Delete Job
                     </button>
-                    <a href="#" className={styles.smallbtn}>
+                    <button
+                      className={styles.smallbtn}
+                      onClick={() => handleOpenEditJobModal(job)}
+                    >
                       Edit Job
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -163,7 +233,7 @@ const MyJobs = () => {
         </div>
       </div>
       <div className="search-container">
-        <h1 className="search-title">In Progress</h1>
+        <h1 className={styles.bigheader}>In Progress</h1>
         <div className="job-cards">
           {inProgressJobs.length > 0 ? (
             inProgressJobs.map((job) => (
@@ -191,9 +261,6 @@ const MyJobs = () => {
                     <span>{job.cashApp ? "💰 CashApp" : ""}</span>
                   </div>
                   <div className={styles.buttoncontainer}>
-                    <a href="#" className={styles.smallbtn}>
-                      Open Job Post
-                    </a>
                     <button
                       className={styles.smallbtn}
                       onClick={() => workers(job, false)}

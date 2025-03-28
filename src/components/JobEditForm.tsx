@@ -2,31 +2,35 @@ import React, { useState } from "react";
 import styles from "/src/css.styles/JobPostForm.module.css";
 import classNames from "classnames";
 import { auth, storage } from "../firebase";
-import { addJob } from "../FirebaseServices";
+import { addJob, Job, updateJob } from "../FirebaseServices";
 import { ref, uploadBytes } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 
-const JobEditForm = () => {
+interface Props {
+  onClose: () => void;
+  job: Job | null;
+}
+const JobEditForm: React.FC<Props> = ({ onClose, job }) => {
   const navigate = useNavigate();
   //New Job States
-  const [newJobTitle, setNewJobTitle] = useState("");
-  const [newJobDate, setNewJobDate] = useState("");
-  const [newJobLocation, setNewJobLocation] = useState("");
-  const [newJobDescription, setNewJobDescription] = useState("");
-  const [newPaymentAmount, setNewPaymentAmount] = useState(Number);
-  const [cashAccept, setCashAccept] = useState(false);
-  const [venmoAccept, setVenmoAccept] = useState(false);
-  const [cashAppAccept, setCashAppAccept] = useState(false);
+  const [newJobTitle, setNewJobTitle] = useState(job?.title);
+  const [newJobDate, setNewJobDate] = useState(job?.date);
+  const [newJobLocation, setNewJobLocation] = useState(job?.location);
+  const [newJobDescription, setNewJobDescription] = useState(job?.description);
+  const [newPaymentAmount, setNewPaymentAmount] = useState(job?.pay);
+  const [cashAccept, setCashAccept] = useState(job?.cash);
+  const [venmoAccept, setVenmoAccept] = useState(job?.venmo);
+  const [cashAppAccept, setCashAppAccept] = useState(job?.cashApp);
   const [newImages, setImages] = useState<File[]>([]);
-
-  const onClose = () => {
-    navigate("/active-jobs");
-  };
 
   const onSaveJob = async () => {
     console.log("Current User UID:", auth?.currentUser?.uid);
     try {
-      const jobID = await addJob({
+      if (!job?.id) {
+        console.error("Job ID is missing!");
+        return;
+      }
+      await updateJob(job.id, {
         title: newJobTitle,
         description: newJobDescription,
         date: newJobDate,
@@ -35,19 +39,7 @@ const JobEditForm = () => {
         cash: cashAccept,
         venmo: venmoAccept,
         cashApp: cashAppAccept,
-        employerID: auth?.currentUser?.uid,
-        completed: false,
-        workersFound: false,
       });
-      setNewJobTitle("");
-      setNewJobDate("");
-      setNewJobLocation("");
-      setNewJobDescription("");
-      setNewPaymentAmount(0);
-      setCashAccept(false);
-      setVenmoAccept(false);
-      setCashAppAccept(false);
-      uploadFile(jobID);
       onClose();
     } catch (err) {
       console.error(err);
@@ -209,8 +201,12 @@ const JobEditForm = () => {
           <input
             id="date"
             type="date"
-            value={newJobDate}
-            onChange={(e) => setNewJobDate(e.target.value)}
+            value={
+              newJobDate instanceof Date
+                ? newJobDate.toISOString().split("T")[0]
+                : ""
+            }
+            onChange={(e) => setNewJobDate(new Date(e.target.value))}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>

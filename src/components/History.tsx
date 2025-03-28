@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Job } from "../FirebaseServices";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import styles from "/src/css.styles/ActiveJobs.module.css";
 const History = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   useEffect(() => {
@@ -32,7 +33,7 @@ const History = () => {
   return (
     <>
       <div className="search-container">
-        <h1 className="search-title">Completed Jobs</h1>
+        <h1 className={styles.bigheader}>Completed Jobs</h1>
         <div className="job-cards">
           {jobs.length > 0 ? (
             jobs.map((job) => (

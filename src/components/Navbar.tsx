@@ -7,6 +7,7 @@ import profilePic from "../assets/profilepic.png";
 import { Link } from "react-router-dom";
 import { doc, onSnapshot } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import styles from "/src/css.styles/ActiveJobs.module.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -77,9 +78,7 @@ const Navbar = () => {
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div className="container-fluid">
-          <h1 className="navbar-brand" style={{ fontSize: 40 }}>
-            Job-Match
-          </h1>
+          <h1 className={styles.title}>Job Match</h1>
           <button
             className="navbar-toggler"
             type="button"
@@ -94,7 +93,7 @@ const Navbar = () => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link" to="/profile">
+                <Link className={styles.navbtn} to="/profile">
                   <img
                     src={getProfilePic()}
                     alt="Profile"
@@ -106,62 +105,47 @@ const Navbar = () => {
                       marginLeft: "10px",
                     }}
                   />
-                  Your account
+                  Profile
                 </Link>
               </li>
               <li className="nav-item">
                 <Link
-                  className="nav-link active"
                   aria-current="page"
                   to="/home"
-                  style={{ marginRight: "10px", marginLeft: "20px" }}
+                  className={styles.navbtn}
+                  style={{ marginRight: "10px", marginLeft: "10px" }}
                 >
                   Home
                 </Link>
               </li>
               <li className="nav-item">
+                <Link
+                  className={styles.navbtn}
+                  aria-current="page"
+                  to="/active-jobs"
+                  style={{ marginRight: "10px", marginLeft: "10px" }}
+                >
+                  Active Jobs
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
+                  className={styles.navbtn}
+                  aria-current="page"
+                  to="/job-history"
+                  style={{ marginRight: "10px", marginLeft: "10px" }}
+                >
+                  History
+                </Link>
+              </li>
+              <li className="nav-item">
                 <button
-                  className="btn btn-danger"
+                  className={styles.logoutbtn}
                   style={{ marginRight: "10px" }}
                   onClick={logOut}
                 >
                   Logout
                 </button>
-              </li>
-
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Jobs
-                </a>
-                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li>
-                    <Link className="dropdown-item" to="/job-search">
-                      Job Search
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/job-history">
-                      Job History
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/active-jobs">
-                      Active Jobs
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/create-job">
-                      Create Job
-                    </Link>
-                  </li>
-                </ul>
               </li>
               <li className="nav-item">
                 <Link
