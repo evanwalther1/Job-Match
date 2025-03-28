@@ -36,22 +36,21 @@ const MyChats = () => {
   return (
     <div className="container">
       <h2>All Messages</h2>
-      <h2>All Messages</h2>
-      <h2>All Messages</h2>
-      <h2>All Messages</h2>
-      <h2>All Messages</h2>
-
-      <div className="card" style={{ width: "18rem" }}>
-        <div className="card-body">
-          <h6 className="card-subtitle mb-2 text-body-secondary">
-            From: SenderDisplayName
-          </h6>
-          <p className="card-text">
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </p>
-        </div>
-      </div>
+      {allChatMsgs.map((msg) => {
+        return (
+          <div className="card">
+            <div className="card-body">
+              <h6 className="card-subtitle mb-2 text-body-secondary">
+                From: {msg.senderDisplayName}
+              </h6>
+              <h6 className="card-subtitle mb-2 text-body-secondary">
+                Sent at: {msg.sendTime.toDate().toString()}
+              </h6>
+              <p className="card-text">{msg.text}</p>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
