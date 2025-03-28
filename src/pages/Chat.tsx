@@ -1,5 +1,4 @@
 import Navbar from "../components/Navbar";
-// REPLACE WITH CHAT COMPONENT WHEN DONE
 import MyChats from "../components/MyChats";
 const Chat = () => {
   return (
@@ -8,7 +7,7 @@ const Chat = () => {
         <Navbar></Navbar>
       </div>
       <div>
-        <MyChats />
+        <MyChats></MyChats>
       </div>
     </>
   );
