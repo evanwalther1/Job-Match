@@ -1,13 +1,14 @@
 import Navbar from "../components/Navbar";
 import MyChats from "../components/MyChats";
+import ComputerNavBarPadding from "../components/ComputerNavBarPadding";
 const Chat = () => {
   return (
     <>
       <div>
-        <Navbar></Navbar>
+        <Navbar />
       </div>
-      <div>
-        <MyChats></MyChats>
+      <div style={{ paddingTop: ComputerNavBarPadding }}>
+        <MyChats />
       </div>
     </>
   );

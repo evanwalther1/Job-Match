@@ -14,6 +14,7 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import Navbar from "./Navbar";
 
 //currently this code means more like "AllChats" while I'm testing and figuring things out
 
@@ -33,7 +34,13 @@ const MyChats = () => {
   }, []);
 
   return (
-    <div>
+    <div className="container">
+      <h2>All Messages</h2>
+      <h2>All Messages</h2>
+      <h2>All Messages</h2>
+      <h2>All Messages</h2>
+      <h2>All Messages</h2>
+
       <div className="card" style={{ width: "18rem" }}>
         <div className="card-body">
           <h6 className="card-subtitle mb-2 text-body-secondary">

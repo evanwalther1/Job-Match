@@ -19,6 +19,7 @@ import "/src/css.styles/Profile.module.css";
 import classNames from "classnames";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import ComputerNavBarPadding from "../components/ComputerNavBarPadding";
 const Profile = () => {
   const [user, setUser] = useState<any>(auth.currentUser);
   const [ageCheck, setAgeCheck] = useState(false);
@@ -138,6 +139,7 @@ const Profile = () => {
   return (
     <>
       <Navbar />
+      <div style={{ paddingTop: ComputerNavBarPadding }}></div>
       <div className={styles.profileContainer}>
         <h1 className={styles.profileHeader}>Your Profile</h1>
         <div className={styles.profileBox}>
