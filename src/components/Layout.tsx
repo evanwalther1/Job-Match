@@ -1,16 +1,18 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, ReactNode } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import { MainContent } from "./MainContent";
 import { ErrorBoundary } from "react-error-boundary";
 
-const Layout: React.FC = () => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState<{
-    Payment: string[];
-    Location: string[];
-    PayWay: string[];
-  }>({
+  const [selectedFilters, setSelectedFilters] = useState<
+    Record<string, string[]>
+  >({
     Payment: [],
     Location: [],
     PayWay: [],

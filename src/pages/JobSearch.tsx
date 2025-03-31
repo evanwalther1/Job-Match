@@ -78,6 +78,7 @@ const JobSearch = () => {
           onCreateNewJob={handleOpenCreateJobModal}
           searchQuery={""}
           filterCategories={[]}
+          selectedFilters={{}}
         />
       </Layout>
     </>
