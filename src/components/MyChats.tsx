@@ -11,6 +11,7 @@ import {
   getDocs,
   onSnapshot,
   query,
+  Timestamp,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
@@ -21,9 +22,11 @@ import Navbar from "./Navbar";
 
 const MyChats = () => {
   const [allChatMsgs, setAllChatMsgs] = useState<ChatMessage[]>([]);
+  const [recieverIDInput, setRecieverIDInput] = useState<string>("");
+  const [msgTextInput, setMsgTextInput] = useState<string>("");
 
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchAllChatMsgs = async () => {
       try {
         const chatMessagesArray: ChatMessage[] = await getAllChatMessages();
         setAllChatMsgs(chatMessagesArray);
@@ -31,15 +34,30 @@ const MyChats = () => {
         console.error("Error fetching all chat messages:", error);
       }
     };
-    fetchJobs();
+    fetchAllChatMsgs();
   }, []);
+
+  const sendMessage = async () => {
+    try {
+      const msgID = await addChatMessage({
+        sender: auth?.currentUser?.uid,
+        senderDisplayName: auth?.currentUser?.displayName,
+        reciever: recieverIDInput,
+        sendTime: Timestamp.now(),
+        text: msgTextInput,
+      });
+      setMsgTextInput("");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="container">
       <h2>All messages in the entire database (for testing purposes)</h2>
       {allChatMsgs.map((msg) => {
         return (
-          <div className="card">
+          <div className="card" key={msg.id}>
             <div className="card-body">
               <h6 className="card-subtitle mb-2 text-body-secondary">
                 From: {msg.senderDisplayName}
@@ -56,13 +74,15 @@ const MyChats = () => {
       <h2 style={{ paddingTop: 20 }}>Send message</h2>
       <div className="mb-3">
         <label htmlFor="exampleFormControlInput1" className="form-label">
-          Display name of reciever (made up, because the feature doesn't work
-          rn)
+          User ID [one day, display name] of reciever (made up, because the
+          feature doesn't work rn)
         </label>
         <input
           className="form-control"
           id="exampleFormControlInput1"
           placeholder="Example Name"
+          value={recieverIDInput}
+          onChange={(e) => setRecieverIDInput(e.target.value)}
         />
       </div>
       <div className="mb-3">
@@ -72,12 +92,18 @@ const MyChats = () => {
         <textarea
           className="form-control"
           id="exampleFormControlTextarea1"
+          value={msgTextInput}
           rows={3}
+          onChange={(e) => setMsgTextInput(e.target.value)}
         ></textarea>
       </div>
       <div className="col-auto">
-        <button type="submit" className="btn btn-primary mb-3">
-          Submit message (doesn't work rn)
+        <button
+          type="submit"
+          className="btn btn-primary mb-3"
+          onClick={sendMessage}
+        >
+          Submit message
         </button>
       </div>
     </div>
