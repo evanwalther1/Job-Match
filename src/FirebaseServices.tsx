@@ -132,3 +132,19 @@ export const addChatMessage = async (chatMessageData: any): Promise<string> => {
     throw error;
   }
 };
+
+export const hasUser = async (userID: string): Promise<boolean> => {
+  try {
+    const userCollectionRef = collection(db, "user");
+    const data = await getDocs(userCollectionRef);
+    const userIDs = data.docs.map((doc) => doc.id);
+    var toReturn = false;
+    for (var id of userIDs) {
+      toReturn = toReturn || id == userID;
+    }
+    return toReturn;
+  } catch (error) {
+    console.error("Error finding whether a user exists", error);
+    return false;
+  }
+};

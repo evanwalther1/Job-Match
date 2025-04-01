@@ -5,6 +5,7 @@ import {
   ChatMessage,
   getAllChatMessages,
   addChatMessage,
+  hasUser,
 } from "../FirebaseServices";
 import {
   collection,
@@ -24,6 +25,8 @@ const MyChats = () => {
   const [allChatMsgs, setAllChatMsgs] = useState<ChatMessage[]>([]);
   const [recieverIDInput, setRecieverIDInput] = useState<string>("");
   const [msgTextInput, setMsgTextInput] = useState<string>("");
+  const [showInvalidRecieverAlert, setShowInvalidRecieverAlert] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const fetchAllChatMsgs = async () => {
@@ -38,6 +41,13 @@ const MyChats = () => {
   }, []);
 
   const sendMessage = async () => {
+    if (!hasUser(recieverIDInput)) {
+      setShowInvalidRecieverAlert(true);
+      return;
+    }
+
+    setShowInvalidRecieverAlert(false);
+
     try {
       const msgID = await addChatMessage({
         sender: auth?.currentUser?.uid,
@@ -72,6 +82,7 @@ const MyChats = () => {
       })}
 
       <h2 style={{ paddingTop: 20 }}>Send message</h2>
+      <p>{"Invalid reciever: " + showInvalidRecieverAlert}</p>
       <div className="mb-3">
         <label htmlFor="exampleFormControlInput1" className="form-label">
           User ID [one day, display name] of reciever (made up, because the
