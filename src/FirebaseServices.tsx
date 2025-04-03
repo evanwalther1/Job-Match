@@ -10,6 +10,7 @@ import {
   updateDoc,
   deleteDoc,
   Timestamp,
+  Query,
 } from "firebase/firestore";
 export interface Job {
   id: string;
@@ -107,6 +108,21 @@ export const getAllChatMessages = async (): Promise<ChatMessage[]> => {
   try {
     const chatMessageCollectionRef = collection(db, "chatMessages");
     const data = await getDocs(chatMessageCollectionRef);
+    return data.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<ChatMessage, "id">),
+    }));
+  } catch (error) {
+    console.error("Error fetching chat messages:", error);
+    throw error;
+  }
+};
+
+export const getChatMessagesByQuery = async (
+  msgQuery: Query
+): Promise<ChatMessage[]> => {
+  try {
+    const data = await getDocs(msgQuery);
     return data.docs.map((doc) => ({
       id: doc.id,
       ...(doc.data() as Omit<ChatMessage, "id">),

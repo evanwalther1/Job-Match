@@ -4,6 +4,7 @@ import classNames from "classnames";
 import {
   ChatMessage,
   getAllChatMessages,
+  getChatMessagesByQuery,
   addChatMessage,
   hasUser,
 } from "../FirebaseServices";
@@ -31,10 +32,17 @@ const MyChats = () => {
   useEffect(() => {
     const fetchAllChatMsgs = async () => {
       try {
-        const chatMessagesArray: ChatMessage[] = await getAllChatMessages();
+        let messagesQuery = query(
+          collection(db, "chatMessages"),
+          where("reciever", "==", auth?.currentUser?.uid)
+        );
+
+        const chatMessagesArray: ChatMessage[] = await getChatMessagesByQuery(
+          messagesQuery
+        );
         setAllChatMsgs(chatMessagesArray);
       } catch (error) {
-        console.error("Error fetching all chat messages:", error);
+        console.error("Error fetching user's chat messages:", error);
       }
     };
     fetchAllChatMsgs();
@@ -64,7 +72,7 @@ const MyChats = () => {
 
   return (
     <div className="container">
-      <h2>All messages in the entire database (for testing purposes)</h2>
+      <h2>Your messages</h2>
       {allChatMsgs.map((msg) => {
         return (
           <div className="card" key={msg.id}>
