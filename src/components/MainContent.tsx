@@ -5,6 +5,7 @@ import "../css.styles/SearchBar.css";
 import { getJobImages } from "../FirebaseServices";
 import ReactDOM from "react-dom";
 import styles from "/src/css.styles/ActiveJobs.module.css";
+import { Link } from "react-router-dom";
 
 interface Job {
   id: string;
@@ -315,7 +316,9 @@ const MainContent: React.FC<MainContentProps> = ({
                   transition: "background-color 0.3s",
                 }}
               >
-                Message {jobUserData?.firstname} {jobUserData?.lastname}
+                <Link aria-current="page" to="/chat" style={{ color: "white" }}>
+                  Message {jobUserData?.firstname} {jobUserData?.lastname}
+                </Link>
               </button>
             </div>
           </div>
