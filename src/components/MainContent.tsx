@@ -5,6 +5,7 @@ import "../css.styles/SearchBar.css";
 import { getJobImages } from "../FirebaseServices";
 import ReactDOM from "react-dom";
 import styles from "/src/css.styles/ActiveJobs.module.css";
+import { setUserToChatWithID } from "./UserToChatWithID";
 
 interface Job {
   id: string;
@@ -313,6 +314,9 @@ const MainContent: React.FC<MainContentProps> = ({
                   borderRadius: "6px",
                   cursor: "pointer",
                   transition: "background-color 0.3s",
+                }}
+                onClick={() => {
+                  setUserToChatWithID(jobUserData?.uid);
                 }}
               >
                 Message {jobUserData?.firstname} {jobUserData?.lastname}
