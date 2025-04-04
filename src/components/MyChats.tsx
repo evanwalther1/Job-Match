@@ -17,14 +17,13 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import Navbar from "./Navbar";
-import info from "./UserToChatWith";
 
 //currently this code means more like "AllChats" while I'm testing and figuring things out
 //NOTE - THE MESSAGES DO NOT APPEAR ON THE SCREEN IN REAL TIME; A REFRESH IS REQUIRED
 
 const MyChats = () => {
   const [allChatMsgs, setAllChatMsgs] = useState<ChatMessage[]>([]);
-  const [recieverIDInput, setRecieverIDInput] = useState<string>(info[0]);
+  const [recieverIDInput, setRecieverIDInput] = useState<string>("");
   const [msgTextInput, setMsgTextInput] = useState<string>("");
   const [showInvalidRecieverAlert, setShowInvalidRecieverAlert] =
     useState<boolean>(false);
