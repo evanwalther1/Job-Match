@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import "../css.styles/SearchBar.css";
 import { getJobImages } from "../FirebaseServices";
 import ReactDOM from "react-dom";
 import styles from "/src/css.styles/ActiveJobs.module.css";
 import { Link } from "react-router-dom";
+import ChatConversation from "./ChatConversation";
+import ChatSendBox from "./ChatSendBox";
 
 interface Job {
   id: string;
@@ -283,6 +285,9 @@ const MainContent: React.FC<MainContentProps> = ({
                 </div>
               </div>
             </div>
+
+            <ChatConversation otherUserID={jobUserData?.uid} />
+            <ChatSendBox recieverID={jobUserData?.uid} />
 
             <div
               style={{

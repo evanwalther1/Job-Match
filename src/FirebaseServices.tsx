@@ -123,6 +123,13 @@ export const getMessagesFromOneUserToAnother = async (
   senderUserID: string,
   recieverUserID: string
 ): Promise<ChatMessage[]> => {
+  if (senderUserID == undefined) {
+    console.error("The senderUserID is undefined.");
+  }
+  if (recieverUserID == undefined) {
+    console.error("The recieverUserID is undefined.");
+  }
+
   try {
     const sentByCurrentUser = query(
       collection(db, "chatMessages"),
