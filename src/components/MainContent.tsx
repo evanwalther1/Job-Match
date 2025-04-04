@@ -6,6 +6,7 @@ import { getJobImages } from "../FirebaseServices";
 import ReactDOM from "react-dom";
 import styles from "/src/css.styles/ActiveJobs.module.css";
 import { Link } from "react-router-dom";
+import info from "./UserToChatWith";
 
 interface Job {
   id: string;
@@ -314,6 +315,9 @@ const MainContent: React.FC<MainContentProps> = ({
                   borderRadius: "6px",
                   cursor: "pointer",
                   transition: "background-color 0.3s",
+                }}
+                onClick={() => {
+                  info[1](jobUserData?.uid);
                 }}
               >
                 <Link aria-current="page" to="/chat" style={{ color: "white" }}>
