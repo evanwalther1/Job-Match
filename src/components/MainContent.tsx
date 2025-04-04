@@ -77,6 +77,7 @@ export const MainContent: React.FC<MainContentProps> = ({
   const handleOpenJobDetailsModal = (job: Job) => {
     setSelectedJob(job);
     fetchJobUserDetails(job); // Fetch user details when opening the modal
+    setShowJobDetails(true);
   };
 
   const handleCloseJobDetailsModal = () => {
