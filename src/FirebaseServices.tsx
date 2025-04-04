@@ -10,6 +10,8 @@ import {
   updateDoc,
   deleteDoc,
   Timestamp,
+  query,
+  where,
 } from "firebase/firestore";
 export interface Job {
   id: string;
@@ -117,6 +119,31 @@ export const getAllChatMessages = async (): Promise<ChatMessage[]> => {
   }
 };
 
+export const getMessagesFromOneUserToAnother = async (
+  senderUserID: string,
+  recieverUserID: string
+): Promise<ChatMessage[]> => {
+  try {
+    const sentByCurrentUser = query(
+      collection(db, "chatMessages"),
+      where("sender", "==", senderUserID),
+      where("reciever", "==", recieverUserID)
+    );
+    const data = await getDocs(sentByCurrentUser);
+
+    return data.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<ChatMessage, "id">),
+    }));
+  } catch (error) {
+    console.error(
+      "Error getting a conversation's chat messages sent by one user to another",
+      error
+    );
+    return [];
+  }
+};
+
 // Function to add a new chat message (copied and modified from addJob)
 export const addChatMessage = async (chatMessageData: any): Promise<string> => {
   try {
@@ -135,14 +162,12 @@ export const addChatMessage = async (chatMessageData: any): Promise<string> => {
 
 export const hasUser = async (userID: string): Promise<boolean> => {
   try {
-    const userCollectionRef = collection(db, "user");
+    const userCollectionRef = query(
+      collection(db, "user"),
+      where("userId", "==", userID)
+    );
     const data = await getDocs(userCollectionRef);
-    const userIDs = data.docs.map((doc) => doc.id);
-    var toReturn = false;
-    for (var id of userIDs) {
-      toReturn = toReturn || id == userID;
-    }
-    return toReturn;
+    return data.empty;
   } catch (error) {
     console.error("Error finding whether a user exists", error);
     return false;

@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import Navbar from "./Navbar";
+import ChatBubble from "./ChatBubble";
 
 //currently this code means more like "AllChats" while I'm testing and figuring things out
 //NOTE - THE MESSAGES DO NOT APPEAR ON THE SCREEN IN REAL TIME; A REFRESH IS REQUIRED
@@ -66,19 +67,7 @@ const MyChats = () => {
     <div className="container">
       <h2>All messages in the entire database (for testing purposes)</h2>
       {allChatMsgs.map((msg) => {
-        return (
-          <div className="card" key={msg.id}>
-            <div className="card-body">
-              <h6 className="card-subtitle mb-2 text-body-secondary">
-                From: {msg.senderDisplayName}
-              </h6>
-              <h6 className="card-subtitle mb-2 text-body-secondary">
-                Sent at: {msg.sendTime.toDate().toString()}
-              </h6>
-              <p className="card-text">{msg.text}</p>
-            </div>
-          </div>
-        );
+        return <ChatBubble msg={msg} />;
       })}
 
       <h2 style={{ paddingTop: 20 }}>Send message</h2>
