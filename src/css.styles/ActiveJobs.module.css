@@ -7,7 +7,7 @@
 .title{
   font-family: 'Bebas Neue', sans-serif;
   font-size: 3rem;
-  color: #0f6347;
+  color: #000000;
   text-shadow: 5px 5px 12px rgba(0, 0, 0, 0.7);
   background: linear-gradient(45deg, #FF6347, #4CAF50);
   -webkit-background-clip: text;
@@ -74,7 +74,7 @@ img {
   border: none;
   padding: 6px 12px;
   font-size: 20px;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   justify-content: center;
@@ -105,6 +105,7 @@ img {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  background-color: #FF6347;
   justify-content: center;
   height: 45px;
   align-items: center;
