@@ -7,15 +7,28 @@ interface Props {
 
 const ChatBubble = ({ msg, right_aligned = false }: Props) => {
   return (
-    <div className={"card" + (right_aligned ? " text-end" : "")} key={msg.id}>
-      <div className="card-body">
-        <h6 className="card-subtitle mb-2 text-body-secondary">
-          From: {msg.senderDisplayName}
-        </h6>
-        <h6 className="card-subtitle mb-2 text-body-secondary">
+    <div
+      className={"card" + (right_aligned ? " text-end" : "")}
+      key={msg.id}
+      style={{ backgroundColor: "beige" }}
+    >
+      <div className="card-body" style={{ margin: 5, padding: 0 }}>
+        <p className="card-text" style={{ paddingBottom: 0, marginBottom: 0 }}>
+          {msg.text}
+        </p>
+        <p
+          className="fst-italic"
+          key={msg.id}
+          style={{
+            paddingTop: 0,
+            marginTop: 0,
+            paddingBottom: 0,
+            marginBottom: 0,
+            fontSize: "80%",
+          }}
+        >
           Sent at: {msg.sendTime.toDate().toString()}
-        </h6>
-        <p className="card-text">{msg.text}</p>
+        </p>
       </div>
     </div>
   );

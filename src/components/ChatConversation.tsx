@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { auth } from "../firebase";
 import {
   ChatMessage,
@@ -33,7 +33,11 @@ const ChatConversation = ({ otherUserID }: Props) => {
     );
   }
 
-  const messagesWithRightAlignData: [ChatMessage, boolean][] = [];
+  const [messagesWithRightAlignData, setMessagesWithRightAlignData] = useState<
+    [ChatMessage, boolean][]
+  >([]);
+  const [messagesStored, setMessagesStored] = useState<string[]>([]);
+  const [returnElement, setReturnElement] = useState<ReactNode>(null);
 
   const grabMessagesAndSort = async () => {
     const messagesSentByCurrentUser: ChatMessage[] =
@@ -41,11 +45,25 @@ const ChatConversation = ({ otherUserID }: Props) => {
     const messagesSentByOtherUser: ChatMessage[] =
       await getMessagesFromOneUserToAnother(otherUserID, currentUserID);
 
-    messagesSentByCurrentUser.forEach((value) =>
-      messagesWithRightAlignData.push([value, false])
-    );
-    messagesSentByOtherUser.forEach((value) =>
-      messagesWithRightAlignData.push([value, true])
+    messagesSentByCurrentUser.forEach((value) => {
+      if (!messagesStored.includes(value.id)) {
+        console.log("add message ", value.id);
+        console.log("length of messagesStored: ", messagesStored.length);
+        messagesStored.push(value.id);
+        messagesWithRightAlignData.push([value, false]);
+      }
+    });
+    messagesSentByOtherUser.forEach((value) => {
+      if (!messagesStored.includes(value.id)) {
+        console.log("add message ", value.id);
+        console.log("length of messagesStored: ", messagesStored.length);
+        messagesStored.push(value.id);
+        messagesWithRightAlignData.push([value, true]);
+      }
+    });
+    console.log(
+      "number of data items in the big array: ",
+      messagesWithRightAlignData.length
     );
 
     messagesWithRightAlignData.sort(
@@ -53,14 +71,31 @@ const ChatConversation = ({ otherUserID }: Props) => {
     );
   };
 
+  const turnMessagesToUI = () => {
+    setReturnElement(
+      <>
+        {messagesWithRightAlignData.map((value) => {
+          return <ChatBubble msg={value[0]} right_aligned={value[1]} />;
+        })}
+      </>
+    );
+  };
+
   grabMessagesAndSort();
+  //turnMessagesToUI();
 
   return (
     <div className="card">
-      {messagesWithRightAlignData.map((value) => {
-        return <ChatBubble msg={value[0]} right_aligned={value[1]} />;
-      })}
-      <button onClick={() => grabMessagesAndSort()}> Refresh messages</button>
+      {returnElement}
+      <button
+        onClick={() => {
+          grabMessagesAndSort();
+          turnMessagesToUI();
+        }}
+      >
+        {" "}
+        Refresh messages
+      </button>
     </div>
   );
 };

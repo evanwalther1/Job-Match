@@ -52,7 +52,7 @@ const MainContent: React.FC<MainContentProps> = ({
     width: "80vw",
     maxWidth: "1000px",
     maxHeight: "90vh",
-    overflow: "hidden",
+    overflow: "auto",
     zIndex: 9999,
   };
 
@@ -286,8 +286,8 @@ const MainContent: React.FC<MainContentProps> = ({
               </div>
             </div>
 
-            <ChatConversation otherUserID={jobUserData?.uid} />
-            <ChatSendBox recieverID={jobUserData?.uid} />
+            <ChatConversation otherUserID={jobUserData?.userId} />
+            <ChatSendBox recieverID={jobUserData?.userId} />
 
             <div
               style={{

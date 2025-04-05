@@ -25,19 +25,10 @@ interface Props {
 
 const ChatSendBox = ({ recieverID }: Props) => {
   const [msgTextInput, setMsgTextInput] = useState<string>("");
-  const [showInvalidRecieverAlert, setShowInvalidRecieverAlert] =
-    useState<boolean>(false);
 
   useEffect(() => {}, []);
 
   const sendMessage = async () => {
-    if (!hasUser(recieverID)) {
-      setShowInvalidRecieverAlert(true);
-      return;
-    }
-
-    setShowInvalidRecieverAlert(false);
-
     try {
       const msgID = await addChatMessage({
         sender: auth?.currentUser?.uid,
@@ -54,12 +45,7 @@ const ChatSendBox = ({ recieverID }: Props) => {
 
   return (
     <div className="container">
-      <h2 style={{ paddingTop: 20 }}>Send message</h2>
-      <p>{"Invalid reciever: " + showInvalidRecieverAlert}</p>
       <div className="mb-3">
-        <label htmlFor="exampleFormControlTextarea1" className="form-label">
-          Message text
-        </label>
         <textarea
           className="form-control"
           id="exampleFormControlTextarea1"
