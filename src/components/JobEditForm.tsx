@@ -69,7 +69,7 @@ const JobEditForm: React.FC<Props> = ({ onClose, job }) => {
     >
       <div className={styles.inputGroup}>
         <button className={styles.cancelButton} onClick={onClose}>
-          Cancel Job Listing
+          Cancel Edit
         </button>
       </div>
       <div className={styles.formBox}>
