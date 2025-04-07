@@ -13,7 +13,6 @@ interface MainContentProps {
   searchQuery: string;
   selectedFilters: { [key: string]: string[] };
   filterCategories: string[];
-  onCreateNewJob: () => void;
 }
 
 const categoryOptions: { [key: string]: (string | number)[] } = {
@@ -26,7 +25,6 @@ export const MainContent: React.FC<MainContentProps> = ({
   searchQuery,
   selectedFilters,
   filterCategories,
-  onCreateNewJob,
 }) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -193,13 +191,6 @@ export const MainContent: React.FC<MainContentProps> = ({
         ) : null}
 
         <div className="search-container">
-          <button
-            onClick={onCreateNewJob}
-            className="bg-gradient-to-r from-yellow-200 via-orange-200 to-yellow-100 text-black font-bold text-xl px-10 py-4 rounded-2xl shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-200 ease-in-out focus:outline-none focus:ring-4 focus:ring-yellow-300"
-          >
-            Create New Job
-          </button>
-
           <h1 className="search-title">Search Results</h1>
           {loading ? <p>Loading...</p> : null}
 

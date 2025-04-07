@@ -11,20 +11,22 @@
   padding-top: 0rem; /* Reduced padding at the top */
 }
 
-/* Box that holds the post form */
 .formBox {
+  position: relative; /* Add this line */
   flex-wrap: wrap;
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 800px; /* Reduced max-width */
+  max-width: 800px;
   width: 100%;
-  padding: 20px; /* Reduced padding */
+  padding: 20px;
   background-color: #ffffff;
   border-radius: 8px;
   margin-bottom: 1px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+
 
 /* Styling for each input group */
 .inputGroup {
@@ -138,6 +140,23 @@
   border: 1px solid #cccccc;
   margin-bottom: 12px; /* Reduced margin-bottom */
   border-radius: 4px;
+}
+
+/* Position the X button at the top-right corner */
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  color: #f44336; /* Red on hover */
 }
 
 .paymentGroup input {

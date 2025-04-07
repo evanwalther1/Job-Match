@@ -20,6 +20,7 @@ interface Job {
 interface SidebarProps {
   onSearch: (query: string) => void;
   onFilter: (filters: { [key: string]: string[] }) => void;
+  onCreateNewJob: () => void;
 }
 
 const categoryOptions: { [key: string]: (string | number)[] } = {
@@ -28,7 +29,11 @@ const categoryOptions: { [key: string]: (string | number)[] } = {
   PayWay: ["Cash", "Venmo", "CashApp"],
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ onSearch, onFilter }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  onSearch,
+  onFilter,
+  onCreateNewJob,
+}) => {
   const [query, setQuery] = useState("");
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: (string | number)[];
@@ -59,20 +64,25 @@ const Sidebar: React.FC<SidebarProps> = ({ onSearch, onFilter }) => {
   return (
     <aside className="sidebar">
       {/* Search Bar */}
-      <div className="search-wrapper">
-        <div className="search-input-group">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              onSearch(e.target.value);
-            }}
-            className="search-input"
-          />
-          <FaSearch className="search-icon" />
-        </div>
+
+      <div className="search-input-group">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            onSearch(e.target.value);
+          }}
+          className="search-input"
+        />
+        <FaSearch className="search-icon" />
+      </div>
+
+      <div className="primary-button">
+        <button onClick={onCreateNewJob} className="sidebar-button">
+          Create New Job
+        </button>
       </div>
 
       {/* Category Filters */}
