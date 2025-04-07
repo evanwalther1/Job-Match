@@ -7,8 +7,8 @@
   height: 100vh;
   background-color: #ffffff; 
   flex-direction: column;
-  gap: 20px; /* Reduced gap */
-  padding-top: 5.5rem; /* Reduced padding at the top */
+  gap: 5px; /* Reduced gap */
+  padding-top: 0rem; /* Reduced padding at the top */
 }
 
 /* Box that holds the post form */
@@ -58,6 +58,7 @@
 /* Optionally, you can add a different class for the cancel button */
 .cancelButton button {
   background-color: #f44336; /* Red background for cancel */
+  padding: 2px;
 }
 
 /* Hover effect for cancel button */

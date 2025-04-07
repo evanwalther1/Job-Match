@@ -73,11 +73,10 @@ const JobPostForm: React.FC<Props> = ({ onClose }) => {
         "bg-white shadow-xl rounded-lg p-6 w-full max-w-md mx-auto"
       )}
     >
-      <div className={styles.inputGroup}>
-        <button className={styles.cancelButton} onClick={onClose}>
-          Cancel Job Listing
-        </button>
-      </div>
+      <div className={styles.inputGroup}></div>
+      <button className={styles.postButton} onClick={onClose}>
+        Cancel Job Listing
+      </button>
       <div className={styles.formBox}>
         <div className={styles.inputGroup}>
           <label
