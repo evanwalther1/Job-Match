@@ -3,19 +3,7 @@ import "../css.styles/SideBar.css";
 import { FaSearch } from "react-icons/fa";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
-
-interface Job {
-  id: string;
-  title: string;
-  location: string;
-  description: string;
-  pay: number;
-  cash: boolean;
-  venmo: boolean;
-  cashApp: boolean;
-  date: Date;
-  employerID: string;
-}
+import { Job } from "../FirebaseServices";
 
 interface SidebarProps {
   onSearch: (query: string) => void;

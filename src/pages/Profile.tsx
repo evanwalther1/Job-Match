@@ -20,10 +20,10 @@ import classNames from "classnames";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import ComputerNavBarPadding from "../components/ComputerNavBarPadding";
+import { CircleMap } from "../components/CircleMap";
 const Profile = () => {
   const [user, setUser] = useState<any>(auth.currentUser);
   const [ageCheck, setAgeCheck] = useState(false);
-
   //New user state
   const [newUsername, setNewUsername] = useState("");
   const [age, setAge] = useState<number | null>(null);
@@ -31,7 +31,8 @@ const Profile = () => {
   const [newLastName, setNewLastName] = useState("");
   const navigate = useNavigate();
   const [newFile, setNewFile] = useState<File | null>(null);
-
+  const [newLat, setNewLat] = useState();
+  const [newLng, setNewLng] = useState();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   const userCollectionRef = collection(db, "user");
