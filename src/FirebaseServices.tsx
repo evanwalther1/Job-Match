@@ -10,6 +10,7 @@ import {
   updateDoc,
   deleteDoc,
   Timestamp,
+  setDoc,
 } from "firebase/firestore";
 export interface Job {
   id: string;
@@ -24,6 +25,8 @@ export interface Job {
   employerID: string;
   workersFound: boolean;
   completed: boolean;
+  lat: number;
+  lng: number;
 }
 export interface ChatMessage {
   id: string;
@@ -131,4 +134,24 @@ export const addChatMessage = async (chatMessageData: any): Promise<string> => {
     console.error("Error adding chat message:", error);
     throw error;
   }
+};
+
+export const obscureLocation = (
+  lat: number,
+  lng: number,
+  radiusInMeters: number
+): { lat: number; lng: number } => {
+  const r = radiusInMeters / 111300; // Convert to degrees (~111.3 km per degree)
+  const u = Math.random();
+  const v = Math.random();
+  const w = r * Math.sqrt(u);
+  const t = 2 * Math.PI * v;
+  const newLat = lat + w * Math.cos(t);
+  const newLng = lng + (w * Math.sin(t)) / Math.cos(lat * (Math.PI / 180));
+  return { lat: newLat, lng: newLng };
+};
+
+export const saveLocation = async (jobID: string, lat: number, lng: number) => {
+  const obscured = obscureLocation(lat, lng, 3000); // 3km privacy radius
+  await updateJob(jobID, { lat: obscured.lat, lng: obscured.lng });
 };

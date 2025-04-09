@@ -69,6 +69,7 @@ const LoginForm = () => {
           photoURL: user.photoURL,
           lastLogin: new Date(),
           userId: user.uid,
+          dateJoined: new Date(),
         });
       }
 

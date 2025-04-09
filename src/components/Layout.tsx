@@ -105,13 +105,16 @@ const Layout: React.FC = () => {
         className="flex-1 flex min-h-0"
         style={{ minHeight: "calc(100vh - 4rem)" }}
       >
-        <Sidebar onSearch={setSearchQuery} onFilter={handleFilterChange} />
+        <Sidebar
+          onSearch={setSearchQuery}
+          onFilter={handleFilterChange}
+          onCreateNewJob={handleOpenCreateJobModal}
+        />
         <main className="flex-1 p-5 overflow-auto">
           <MainContent
             searchQuery={searchQuery}
             selectedFilters={selectedFilters}
             filterCategories={[]}
-            onCreateNewJob={handleOpenCreateJobModal}
           />
         </main>
       </div>

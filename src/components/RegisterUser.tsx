@@ -58,6 +58,7 @@ const RegisterUser = () => {
         age: age,
         userId: user.uid, // 🔹 Ensure userId matches Firestore doc ID
         photoURL: { profilePic },
+        dateJoined: new Date(),
       });
 
       getUserList();
