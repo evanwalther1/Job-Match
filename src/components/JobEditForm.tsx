@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import styles from "/src/css.styles/JobPostForm.module.css";
 import classNames from "classnames";
 import { auth, storage } from "../firebase";
-import { addJob, Job, updateJob } from "../FirebaseServices";
+import { addJob, Job, saveLocation, updateJob } from "../FirebaseServices";
 import { ref, uploadBytes } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
+import { GoogleMap } from "@react-google-maps/api";
 
 interface Props {
   onClose: () => void;
@@ -22,6 +23,8 @@ const JobEditForm: React.FC<Props> = ({ onClose, job }) => {
   const [venmoAccept, setVenmoAccept] = useState(job?.venmo);
   const [cashAppAccept, setCashAppAccept] = useState(job?.cashApp);
   const [newImages, setImages] = useState<File[]>([]);
+  const [newLat, setLat] = useState(job?.lat);
+  const [newLng, setLng] = useState(job?.lng);
 
   const onSaveJob = async () => {
     console.log("Current User UID:", auth?.currentUser?.uid);
@@ -40,6 +43,9 @@ const JobEditForm: React.FC<Props> = ({ onClose, job }) => {
         venmo: venmoAccept,
         cashApp: cashAppAccept,
       });
+      if (newLat && newLng) {
+        saveLocation(job.id, newLat, newLng);
+      }
       onClose();
     } catch (err) {
       console.error(err);
@@ -57,6 +63,13 @@ const JobEditForm: React.FC<Props> = ({ onClose, job }) => {
       } catch (err) {
         console.error(err);
       }
+    }
+  };
+
+  const handleMapClick = (event: google.maps.MapMouseEvent) => {
+    if (event.latLng) {
+      setLat(event.latLng.lat());
+      setLng(event.latLng.lng());
     }
   };
 
@@ -101,6 +114,14 @@ const JobEditForm: React.FC<Props> = ({ onClose, job }) => {
             value={newJobLocation}
             onChange={(e) => setNewJobLocation(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div style={{ width: "100%", maxWidth: "800px", margin: "0 auto" }}>
+          <GoogleMap
+            mapContainerStyle={{ width: "100%", height: "400px" }}
+            zoom={6}
+            center={{ lat: newLat ?? 42, lng: newLng ?? -88 }}
+            onClick={handleMapClick}
           />
         </div>
         <div className={styles.inputGroup}>

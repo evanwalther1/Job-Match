@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "/src/css.styles/JobPostForm.module.css";
 import classNames from "classnames";
 import { auth, storage } from "../firebase";
-import { addJob } from "../FirebaseServices";
+import { addJob, saveLocation } from "../FirebaseServices";
 import { ref, uploadBytes } from "firebase/storage";
-import { useNavigate } from "react-router-dom";
+import { Circle, GoogleMap, Marker } from "@react-google-maps/api";
 interface Props {
   onClose: () => void;
 }
@@ -20,6 +20,9 @@ const JobPostForm: React.FC<Props> = ({ onClose }) => {
   const [venmoAccept, setVenmoAccept] = useState(false);
   const [cashAppAccept, setCashAppAccept] = useState(false);
   const [newImages, setImages] = useState<File[]>([]);
+  const [newLat, setLat] = useState(42);
+  const [newLng, setLng] = useState(-88);
+  const mapRef = useRef<google.maps.Map | null>(null);
 
   const onPostJob = async () => {
     console.log("Current User UID:", auth?.currentUser?.uid);
@@ -37,11 +40,14 @@ const JobPostForm: React.FC<Props> = ({ onClose }) => {
         completed: false,
         workersFound: false,
       });
+      saveLocation(jobID, newLat, newLng);
       setNewJobTitle("");
       setNewJobDate("");
       setNewJobLocation("");
       setNewJobDescription("");
       setNewPaymentAmount(0);
+      setLat(42);
+      setLng(-88);
       setCashAccept(false);
       setVenmoAccept(false);
       setCashAppAccept(false);
@@ -63,6 +69,17 @@ const JobPostForm: React.FC<Props> = ({ onClose }) => {
       } catch (err) {
         console.error(err);
       }
+    }
+  };
+
+  const onMapLoad = (map: google.maps.Map) => {
+    mapRef.current = map;
+  };
+
+  const handleMapClick = (event: google.maps.MapMouseEvent) => {
+    if (event.latLng) {
+      setLat(event.latLng.lat());
+      setLng(event.latLng.lng());
     }
   };
 
@@ -111,6 +128,15 @@ const JobPostForm: React.FC<Props> = ({ onClose }) => {
             onChange={(e) => setNewJobLocation(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+        </div>
+        <div style={{ width: "100%", maxWidth: "800px", margin: "0 auto" }}>
+          <GoogleMap
+            mapContainerStyle={{ width: "100%", height: "400px" }}
+            zoom={6}
+            center={{ lat: newLat, lng: newLng }}
+            onClick={handleMapClick}
+            onLoad={onMapLoad}
+          ></GoogleMap>
         </div>
         <div className={styles.inputGroup}>
           <label

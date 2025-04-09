@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Job } from "../FirebaseServices";
+import { CircleMap } from "./CircleMap";
 
 interface Props {
   setShowProfile: (show: boolean) => void;
@@ -109,6 +110,7 @@ const JobDetailsModal: React.FC<Props> = ({
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
+              overflow: "auto",
             }}
           >
             <div>
@@ -283,6 +285,15 @@ const JobDetailsModal: React.FC<Props> = ({
                   <p style={{ margin: 0, fontWeight: 500 }}>
                     {selectedJob?.location}
                   </p>
+                </div>
+
+                <div
+                  style={{ width: "100%", maxWidth: "800px", margin: "0 auto" }}
+                >
+                  <CircleMap
+                    lat={selectedJob?.lat ?? 41.8781}
+                    lng={selectedJob?.lng ?? -87.5298}
+                  />
                 </div>
 
                 <div

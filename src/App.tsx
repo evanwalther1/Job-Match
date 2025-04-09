@@ -11,25 +11,28 @@ import RegisterUser from "./components/RegisterUser";
 import Chat from "./pages/Chat";
 import "./index.css";
 import Layout from "./components/Layout";
+import { LoadScript } from "@react-google-maps/api";
 const App = () => {
   return (
-    <div>
-      <>
-        <BrowserRouter>
-          <Routes>
-            <Route index element={<LoginForm />} />
-            <Route path="/register" element={<RegisterUser />} />
-            <Route path="/home" element={<JobSearch />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/job-search" element={<JobSearch />} />
-            <Route path="/job-history" element={<JobHistory />} />
-            <Route path="/active-jobs" element={<ActiveJobs />} />
-            <Route path="/create-job" element={<CreateJob />} />
-            <Route path="/chat" element={<Chat />} />
-          </Routes>
-        </BrowserRouter>
-      </>
-    </div>
+    <LoadScript googleMapsApiKey="AIzaSyBsLBrx0skjBGUbHq9ezyHn5zuCHp-4KY4">
+      <div>
+        <>
+          <BrowserRouter>
+            <Routes>
+              <Route index element={<LoginForm />} />
+              <Route path="/register" element={<RegisterUser />} />
+              <Route path="/home" element={<JobSearch />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/job-search" element={<JobSearch />} />
+              <Route path="/job-history" element={<JobHistory />} />
+              <Route path="/active-jobs" element={<ActiveJobs />} />
+              <Route path="/create-job" element={<CreateJob />} />
+              <Route path="/chat" element={<Chat />} />
+            </Routes>
+          </BrowserRouter>
+        </>
+      </div>
+    </LoadScript>
   );
 };
 
