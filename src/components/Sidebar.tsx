@@ -11,10 +11,26 @@ interface SidebarProps {
   onCreateNewJob: () => void;
 }
 
-const categoryOptions: { [key: string]: (string | number)[] } = {
-  Payment: [0, 50, 100, 150],
-  Location: ["USA", "Europe", "Asia", "Other"],
-  PayWay: ["Cash", "Venmo", "CashApp"],
+const categoryOptions: {
+  [key: string]: { value: number | string; label: string }[];
+} = {
+  Payment: [
+    { value: 0, label: "$0 - $50" },
+    { value: 50, label: "$50 - $100" },
+    { value: 100, label: "$100 - $150" },
+    { value: 150, label: "Other" },
+  ],
+  Location: [
+    { value: "USA", label: "USA" },
+    { value: "Europe", label: "Europe" },
+    { value: "Asia", label: "Asia" },
+    { value: "Other", label: "Other" },
+  ],
+  PayWay: [
+    { value: "Cash", label: "Cash" },
+    { value: "Venmo", label: "Venmo" },
+    { value: "CashApp", label: "CashApp" },
+  ],
 };
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -82,11 +98,13 @@ const Sidebar: React.FC<SidebarProps> = ({
               <label key={option.toString()} className="CheckboxLabel">
                 <input
                   type="checkbox"
-                  value={option.toString()}
-                  checked={selectedOptions[category]?.includes(option) || false}
-                  onChange={() => handleCheckboxChange(category, option)}
+                  value={option.value.toString()}
+                  checked={
+                    selectedOptions[category]?.includes(option.value) || false
+                  }
+                  onChange={() => handleCheckboxChange(category, option.value)}
                 />
-                {typeof option === "number" ? `$${option}` : option}
+                {option.label}
               </label>
             ))}
           </div>

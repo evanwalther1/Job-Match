@@ -15,10 +15,26 @@ interface MainContentProps {
   filterCategories: string[];
 }
 
-const categoryOptions: { [key: string]: (string | number)[] } = {
-  Payment: [0, 50, 100, 150],
-  Location: ["USA", "Europe", "Asia", "Other"],
-  PayWay: ["Cash", "Venmo", "CashApp"],
+const categoryOptions: {
+  [key: string]: { value: number | string; label: string }[];
+} = {
+  Payment: [
+    { value: 0, label: "$0 - $50" },
+    { value: 50, label: "$50 - $100" },
+    { value: 100, label: "$100 - $150" },
+    { value: 150, label: "Other" },
+  ],
+  Location: [
+    { value: "USA", label: "USA" },
+    { value: "Europe", label: "Europe" },
+    { value: "Asia", label: "Asia" },
+    { value: "Other", label: "Other" },
+  ],
+  PayWay: [
+    { value: "Cash", label: "Cash" },
+    { value: "Venmo", label: "Venmo" },
+    { value: "CashApp", label: "CashApp" },
+  ],
 };
 
 export const MainContent: React.FC<MainContentProps> = ({
@@ -103,28 +119,37 @@ export const MainContent: React.FC<MainContentProps> = ({
             .filter(([_, values]) => values.length > 0)
             .every(([key, values]) => {
               if (key === "Payment") {
-                const pay = job.pay;
+                const pay = Number(job.pay);
                 return values.some((v) => {
-                  const range = Number(v);
-                  return (
-                    (range === 0 && pay <= 50) ||
-                    (range === 50 && pay > 50 && pay <= 100) ||
-                    (range === 100 && pay > 100 && pay <= 150) ||
-                    (range === 150 && pay > 150)
-                  );
+                  switch (Number(v)) {
+                    case 0:
+                      return pay <= 50;
+                    case 50:
+                      return pay > 50 && pay <= 100;
+                    case 100:
+                      return pay > 100 && pay <= 150;
+                    case 150:
+                      return pay > 150;
+                    default:
+                      return false;
+                  }
                 });
               }
 
               if (key === "Location") {
-                return values.includes(job.location.toLowerCase());
+                return values.some(
+                  (val) => val.toLowerCase() === job.location.toLowerCase()
+                );
               }
 
               if (key === "PayWay") {
                 return values.some((method) => {
-                  if (method === "cash") return job.cash;
-                  if (method === "venmo") return job.venmo;
-                  if (method === "cashapp") return job.cashApp;
-                  return false;
+                  const methodLower = method.toLowerCase();
+                  return (
+                    (methodLower === "cash" && job.cash) ||
+                    (methodLower === "venmo" && job.venmo) ||
+                    (methodLower === "cashapp" && job.cashApp)
+                  );
                 });
               }
 
