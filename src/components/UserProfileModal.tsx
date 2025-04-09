@@ -1,5 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import "../css.styles/UserProfileModal.css"; // Assuming you have a CSS file for styles
+import { followUser, unfollowUser } from "../FirebaseServices";
+import { auth } from "../firebase"; // Import auth from your firebase configuration
+import { getAuth } from "firebase/auth";
 
 interface Props {
   onClose: () => void;
@@ -47,6 +51,32 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
     alignItems: "center",
   };
 
+  const [following, setFollowing] = React.useState(false);
+
+  const handleFollow = async () => {
+    if (following) {
+      if (currentUserId !== undefined) {
+        // Now TypeScript knows currentUserId is definitely a string
+        console.log("following a user");
+        followUser(currentUserId, userData.userId);
+      } else {
+        // Handle the case where user is not logged in
+        console.error("User must be logged in to follow others");
+        // Maybe show a login prompt
+      }
+    } else {
+      if (currentUserId !== undefined) {
+        // Now TypeScript knows currentUserId is definitely a string
+        console.log("unfollowing a user");
+        unfollowUser(currentUserId, userData.userId);
+      } else {
+        // Handle the case where user is not logged in
+        console.error("User must be logged in to follow others");
+        // Maybe show a login prompt
+      }
+    }
+  };
+
   const getProfilePic = () => {
     console.log("User data:", userData);
     console.log(
@@ -67,6 +97,10 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
       return "../assets/profilepic.png";
     }
   };
+
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  const currentUserId = currentUser?.uid;
 
   // Format the date joined
   const formatDateJoined = () => {
@@ -173,7 +207,16 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                   </svg>
                   Message
                 </button>
+
                 <button
+                  className="follow-button"
+                  onClick={() => {
+                    {
+                      setFollowing(!following);
+
+                      handleFollow();
+                    }
+                  }}
                   style={{
                     padding: "10px 24px",
                     backgroundColor: "#f0f0f0",
@@ -187,23 +230,45 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                     gap: "6px",
                   }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="8.5" cy="7" r="4"></circle>
-                    <line x1="20" y1="8" x2="20" y2="14"></line>
-                    <line x1="23" y1="11" x2="17" y2="11"></line>
-                  </svg>
-                  Follow
+                  {following ? (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                      </svg>
+                      Follow
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        className="checkmark"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M5 13l4 4L19 7" />
+                      </svg>
+                      Following
+                    </>
+                  )}
                 </button>
               </div>
 
