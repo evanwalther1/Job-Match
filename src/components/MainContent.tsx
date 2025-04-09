@@ -100,11 +100,7 @@ export const MainContent: React.FC<MainContentProps> = ({
           if (Object.keys(selectedFilters).length === 0) return true;
 
           const matchesFilters = Object.entries(selectedFilters)
-<<<<<<< HEAD
-            .filter(([_, values]) => values.length > 0) //Only filter conditions with values are processed
-=======
             .filter(([_, values]) => values.length > 0)
->>>>>>> 1af404835468069d5eaf82e200da2e5c60d9e290
             .every(([key, values]) => {
               if (key === "Payment") {
                 const pay = job.pay;
