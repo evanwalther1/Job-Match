@@ -406,7 +406,7 @@ export const MainContent: React.FC<MainContentProps> = ({
           if (Object.keys(selectedFilters).length === 0) return true;
 
           const matchesFilters = Object.entries(selectedFilters)
-            .filter(([_, values]) => values.length > 0) // 只处理有值的过滤条件
+            .filter(([_, values]) => values.length > 0) //Only filter conditions with values are processed
             .every(([key, values]) => {
               if (key === "Payment") {
                 const pay = job.pay;
