@@ -4,6 +4,9 @@ import { getAnalytics } from "firebase/analytics";
 import {getFirestore} from "firebase/firestore"
 import {getStorage}from "firebase/storage";
 
+import { setPersistence, browserLocalPersistence, signInWithEmailAndPassword } from "firebase/auth";
+
+
 // Your Firebase config object (replace with your own credentials)
 const firebaseConfig = {
   apiKey: "AIzaSyDJJm4OprEFNNwO0x7FOLC92tBzs8F_Kb0",
@@ -25,8 +28,22 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+
+
+// Set persistence when your app initializes
+setPersistence(auth, browserLocalPersistence)
+  .then(() => {
+    // This persistence setting will keep users logged in until they explicitly sign out
+    console.log("Persistence set to local");
+  })
+  .catch((error) => {
+    console.error("Error setting persistence:", error);
+  });
+
+
 const analytics = getAnalytics(app);
-const auth = getAuth(app);
+
 const db = getFirestore(app);
 const storage = getStorage(app);
 // Export authentication instance

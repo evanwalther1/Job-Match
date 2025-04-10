@@ -20,7 +20,9 @@ import classNames from "classnames";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import ComputerNavBarPadding from "../components/ComputerNavBarPadding";
-import { unfollowUser } from "../FirebaseServices";
+import { unfollowUser, User } from "../FirebaseServices";
+import UserProfileModal from "../components/UserProfileModal";
+import { profileEvents } from "../FirebaseServices";
 
 const Profile = () => {
   const [user, setUser] = useState<any>(auth.currentUser);
@@ -44,7 +46,12 @@ const Profile = () => {
   const [followersListData, setFollowersListData] = useState<any>([]);
   const [followingListData, setFollowingListData] = useState<any>([]);
 
+  const [openProfile, setOpenProfile] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState<User>(user);
+
   const userCollectionRef = collection(db, "user");
+
+  const [, setRefreshToken] = useState(0);
 
   // Toggle functions for the modals
   const toggleFollowersModal = () => setShowFollowersModal(!showFollowersModal);
@@ -506,7 +513,8 @@ const Profile = () => {
                           flexGrow: 1,
                         }}
                         onClick={() => {
-                          /* Handle navigation to user profile */
+                          setSelectedProfile(followedUser);
+                          setOpenProfile(true);
                         }}
                       >
                         <div
@@ -746,7 +754,8 @@ const Profile = () => {
                           flexGrow: 1,
                         }}
                         onClick={() => {
-                          /* Handle navigation to user profile */
+                          setSelectedProfile(followingUser);
+                          setOpenProfile(true);
                         }}
                       >
                         <div
@@ -822,33 +831,6 @@ const Profile = () => {
                           </div>
                         </div>
                       </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          unfollowUser(user.userId, followingUser.userId);
-                        }}
-                        style={{
-                          marginLeft: "1rem",
-                          padding: "0.375rem 0.75rem",
-                          backgroundColor: "#f3f4f6",
-                          color: "#4b5563",
-                          borderRadius: "0.375rem",
-                          fontSize: "0.875rem",
-                          fontWeight: 500,
-                          border: "none",
-                          cursor: "pointer",
-                          transition: "all 0.15s ease",
-                          flexShrink: 0,
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.backgroundColor = "#e5e7eb";
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.backgroundColor = "#f3f4f6";
-                        }}
-                      >
-                        Unfollow
-                      </button>
                     </div>
                   ))
                 )}
@@ -856,6 +838,15 @@ const Profile = () => {
             </div>
           </div>
         </div>
+      ) : null}
+
+      {openProfile ? (
+        <UserProfileModal
+          onClose={() => {
+            setOpenProfile(false);
+          }}
+          userData={selectedProfile}
+        ></UserProfileModal>
       ) : null}
     </>
   );

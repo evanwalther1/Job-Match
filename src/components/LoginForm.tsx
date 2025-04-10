@@ -16,7 +16,11 @@ import {
   updateDoc,
   getDoc,
 } from "firebase/firestore";
-
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,7 +80,7 @@ const LoginForm = () => {
         });
       }
 
-      navigate("/home");
+      navigate("/splash");
     } catch (err) {
       console.error(err);
     }

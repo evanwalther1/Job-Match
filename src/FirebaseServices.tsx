@@ -97,6 +97,19 @@ export const updateUser = async (
   }
 };
 
+// Simple event emitter for profile re-renders
+export const profileEvents = {
+  listeners: new Set<() => void>(),
+
+  subscribe(callback: () => void) {
+    this.listeners.add(callback);
+    return () => this.listeners.delete(callback);
+  },
+
+  emit() {
+    this.listeners.forEach((callback) => callback());
+  },
+};
 // Relationship methods
 export const followUser = async (
   followerId: string,
@@ -120,6 +133,7 @@ export const followUser = async (
     await setDoc(doc(db, "relationships", relationshipId), relationshipData);
     console.log("Follow relationship created with ID:", relationshipId);
     // Fetch the newly created job data using the document ID
+    profileEvents.emit();
   } catch (error) {
     console.error("Error followingUser:", error);
     throw error;
@@ -142,6 +156,7 @@ export const unfollowUser = async (
     console.log(
       `User ${followerId} unfollowed ${followingId} deleting ${relationshipId}`
     );
+    profileEvents.emit();
   } catch (error) {
     console.error("Error removing follow relationship:", error);
     throw error;
@@ -248,6 +263,21 @@ export const getAllJobs = async (): Promise<Job[]> => {
   try {
     const jobCollectionRef = collection(db, "jobs");
     const data = await getDocs(jobCollectionRef);
+    return data.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<Job, "id">),
+    }));
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    throw error;
+  }
+};
+
+export const getAllJobsFor = async (userId: string): Promise<Job[]> => {
+  try {
+    const jobCollectionRef = collection(db, "jobs");
+    const q = query(jobCollectionRef, where("employerID", "==", userId));
+    const data = await getDocs(q);
     return data.docs.map((doc) => ({
       id: doc.id,
       ...(doc.data() as Omit<Job, "id">),

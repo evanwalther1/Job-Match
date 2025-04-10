@@ -14,6 +14,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase"; // Make sure db is imported
 import { useEffect } from "react";
+import { Job, getAllJobsFor } from "../FirebaseServices";
+import { profileEvents } from "../FirebaseServices"; // Adjust the import path as necessary
 interface Props {
   onClose: () => void;
   userData: {
@@ -65,6 +67,9 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
   const auth = getAuth();
   const currentUser = auth.currentUser;
   const currentUserId = currentUser?.uid;
+  const [refreshToken, setRefreshToken] = React.useState(0);
+
+  const [activeJobs, setActiveJobs] = React.useState<Job[]>([]); // Replace with your job type
 
   useEffect(() => {
     const checkFollowStatus = async () => {
@@ -110,6 +115,15 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
     setFollowing(!following);
   };
 
+  useEffect(() => {
+    const jobs = async () => {
+      const jobsData = await getAllJobsFor(userData.userId);
+      setActiveJobs(jobsData);
+    };
+
+    jobs();
+  }, [userData.userId]); // Assuming you have a way to get the userId from the route loader data
+
   const getProfilePic = () => {
     console.log("User data:", userData);
     console.log(
@@ -137,23 +151,6 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
     const date = new Date(userData.dateJoined);
     return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
   };
-
-  // Sample active job listings (you'll replace with real data)
-  const activeJobs = [
-    { id: 1, title: "Lawn Mowing", date: "Apr 15, 2025", status: "Open" },
-    {
-      id: 2,
-      title: "Furniture Assembly",
-      date: "Apr 20, 2025",
-      status: "Open",
-    },
-    {
-      id: 3,
-      title: "House Cleaning",
-      date: "Apr 25, 2025",
-      status: "Open",
-    },
-  ];
 
   const renderUserProfile = () => {
     return ReactDOM.createPortal(
@@ -590,7 +587,7 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                               <line x1="8" y1="2" x2="8" y2="6"></line>
                               <line x1="3" y1="10" x2="21" y2="10"></line>
                             </svg>
-                            {job.date}
+                            {job.location}
                           </span>
                           <span
                             style={{
@@ -602,7 +599,7 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                               fontWeight: 500,
                             }}
                           >
-                            {job.status}
+                            ${job.pay}
                           </span>
                         </div>
                       </div>
