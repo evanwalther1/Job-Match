@@ -7,16 +7,16 @@ import {
   getDocs,
   addDoc,
   doc,
-  setDoc,
   query,
   where,
   updateDoc,
   deleteDoc,
   Timestamp,
   setDoc,
+  increment,
 } from "firebase/firestore";
 import firebase from "firebase/app";
-import "firebase/firestore";
+import firestore from "firebase/firestore";
 import "firebase/auth";
 import "firebase/storage";
 
@@ -65,7 +65,7 @@ export interface User {
 export interface Relationship {
   followerId: string;
   followingId: string;
-  timestamp?: any; // Using any for timestamp
+  id: string;
 }
 
 export const getUser = async (userId: string): Promise<User | null> => {
@@ -107,12 +107,17 @@ export const followUser = async (
     const relationshipData: Relationship = {
       followerId,
       followingId,
+      id: relationshipId,
     };
     // Add job to Firestore and get the reference
-    const docRef = await addDoc(
-      collection(db, "relationships"),
-      relationshipData
-    );
+
+    await updateDoc(doc(db, "user", followingId), {
+      followers: increment(1),
+    });
+    await updateDoc(doc(db, "user", followerId), {
+      following: increment(1),
+    });
+    await setDoc(doc(db, "relationships", relationshipId), relationshipData);
     console.log("Follow relationship created with ID:", relationshipId);
     // Fetch the newly created job data using the document ID
   } catch (error) {
@@ -128,7 +133,15 @@ export const unfollowUser = async (
   try {
     const relationshipId = `${followerId}_follows_${followingId}`;
     await deleteDoc(doc(db, "relationships", relationshipId));
-    console.log(`User ${followerId} unfollowed ${followingId}`);
+    await updateDoc(doc(db, "user", followingId), {
+      followers: increment(-1),
+    });
+    await updateDoc(doc(db, "user", followerId), {
+      following: increment(-1),
+    });
+    console.log(
+      `User ${followerId} unfollowed ${followingId} deleting ${relationshipId}`
+    );
   } catch (error) {
     console.error("Error removing follow relationship:", error);
     throw error;

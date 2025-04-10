@@ -63,6 +63,7 @@ const LoginForm = () => {
         });
       } else {
         // First time user, create the document with all fields
+
         await setDoc(userRef, {
           displayName: user.displayName,
           email: user.email,
@@ -70,6 +71,8 @@ const LoginForm = () => {
           lastLogin: new Date(),
           userId: user.uid,
           dateJoined: new Date(),
+          following: 0,
+          followers: 0,
         });
       }
 

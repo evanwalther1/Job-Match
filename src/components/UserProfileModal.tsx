@@ -4,7 +4,16 @@ import "../css.styles/UserProfileModal.css"; // Assuming you have a CSS file for
 import { followUser, unfollowUser } from "../FirebaseServices";
 import { auth } from "../firebase"; // Import auth from your firebase configuration
 import { getAuth } from "firebase/auth";
-
+import {
+  addDoc,
+  setDoc,
+  collection,
+  doc,
+  deleteDoc,
+  getDoc,
+} from "firebase/firestore";
+import { db } from "../firebase"; // Make sure db is imported
+import { useEffect } from "react";
 interface Props {
   onClose: () => void;
   userData: {
@@ -53,8 +62,31 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
 
   const [following, setFollowing] = React.useState(false);
 
-  const handleFollow = async () => {
-    if (following) {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  const currentUserId = currentUser?.uid;
+
+  useEffect(() => {
+    const checkFollowStatus = async () => {
+      if (!currentUserId || !userData.userId) return;
+
+      try {
+        const relationshipId = `${currentUserId}_follows_${userData.userId}`;
+        const relationshipDoc = await getDoc(
+          doc(db, "relationships", relationshipId)
+        );
+
+        setFollowing(relationshipDoc.exists());
+      } catch (error) {
+        console.error("Error checking follow status:", error);
+      }
+    };
+
+    checkFollowStatus();
+  }, [currentUserId, userData.userId]);
+
+  const handleToggleFollow = () => {
+    if (!following) {
       if (currentUserId !== undefined) {
         // Now TypeScript knows currentUserId is definitely a string
         console.log("following a user");
@@ -75,6 +107,7 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
         // Maybe show a login prompt
       }
     }
+    setFollowing(!following);
   };
 
   const getProfilePic = () => {
@@ -97,10 +130,6 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
       return "../assets/profilepic.png";
     }
   };
-
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
-  const currentUserId = currentUser?.uid;
 
   // Format the date joined
   const formatDateJoined = () => {
@@ -212,9 +241,7 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                   className="follow-button"
                   onClick={() => {
                     {
-                      setFollowing(!following);
-
-                      handleFollow();
+                      handleToggleFollow();
                     }
                   }}
                   style={{
@@ -230,7 +257,7 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                     gap: "6px",
                   }}
                 >
-                  {following ? (
+                  {!following ? (
                     <>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

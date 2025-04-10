@@ -20,7 +20,8 @@ import classNames from "classnames";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import ComputerNavBarPadding from "../components/ComputerNavBarPadding";
-import { CircleMap } from "../components/CircleMap";
+import { unfollowUser } from "../FirebaseServices";
+
 const Profile = () => {
   const [user, setUser] = useState<any>(auth.currentUser);
   const [ageCheck, setAgeCheck] = useState(false);
@@ -35,9 +36,21 @@ const Profile = () => {
   const [newLng, setNewLng] = useState();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
+  // Add these state variables in your component function
+  const [showFollowersModal, setShowFollowersModal] = useState(false);
+  const [showFollowingModal, setShowFollowingModal] = useState(false);
+  const [followersList, setFollowersList] = useState<any>([]);
+  const [followingList, setFollowingList] = useState<any>([]);
+  const [followersListData, setFollowersListData] = useState<any>([]);
+  const [followingListData, setFollowingListData] = useState<any>([]);
+
   const userCollectionRef = collection(db, "user");
 
-  const getProfilePic = () => {
+  // Toggle functions for the modals
+  const toggleFollowersModal = () => setShowFollowersModal(!showFollowersModal);
+  const toggleFollowingModal = () => setShowFollowingModal(!showFollowingModal);
+
+  const getProfilePic = (user: any) => {
     console.log("User data:", user);
     console.log(
       "photoURL type:",
@@ -95,6 +108,34 @@ const Profile = () => {
     setIsEditingProfile(true);
   };
 
+  const MODAL_STYLES: React.CSSProperties = {
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "#FFF",
+    borderRadius: "12px",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+    width: "80vw",
+    maxWidth: "1000px",
+    maxHeight: "90vh",
+    overflow: "hidden",
+    zIndex: 9999,
+  };
+
+  const OVERLAY_STYLES: React.CSSProperties = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, .7)",
+    zIndex: 9999, // Slightly lower than modal, but still very high
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  };
+
   const submitForm = async (id: string) => {
     setIsEditingProfile(false);
     setAgeCheck(true);
@@ -137,6 +178,64 @@ const Profile = () => {
     navigate("/");
   };
 
+  useEffect(() => {
+    const fetchFollowersAndFollowing = async () => {
+      // Your followers fetching code
+      let followersQuery = query(
+        collection(db, "relationships"),
+        where("followingId", "==", user.userId)
+      );
+      const followersSnapshot = await getDocs(followersQuery);
+      const followers: string[] = [];
+      followersSnapshot.forEach((doc) => {
+        followers.push(doc.data().followerId); // Note: I think this should be followerId not followingId
+      });
+      setFollowersList(followers);
+
+      // Fetch follower user data
+      const followersData: any[] = [];
+      for (let i = 0; i < followers.length; i++) {
+        let userQuery = query(
+          collection(db, "user"),
+          where("userId", "==", followers[i])
+        );
+        const userSnapshot = await getDocs(userQuery);
+        userSnapshot.forEach((doc) => {
+          followersData.push(doc.data());
+        });
+      }
+      setFollowersListData(followersData);
+
+      // Your following fetching code
+      let followingQuery = query(
+        collection(db, "relationships"),
+        where("followerId", "==", user.userId)
+      );
+      const followingSnapshot = await getDocs(followingQuery);
+      const following: string[] = [];
+      followingSnapshot.forEach((doc) => {
+        following.push(doc.data().followingId);
+      });
+      setFollowingList(following);
+
+      // Fetch following user data
+      const followingData: any[] = [];
+      for (let i = 0; i < following.length; i++) {
+        let userQuery = query(
+          collection(db, "user"),
+          where("userId", "==", following[i])
+        );
+        const userSnapshot = await getDocs(userQuery);
+        userSnapshot.forEach((doc) => {
+          followingData.push(doc.data());
+        });
+      }
+      setFollowingListData(followingData);
+    };
+
+    fetchFollowersAndFollowing();
+  }, [user.userId]); // Dependency array - re-run if userId changes
+
   return (
     <>
       <Navbar />
@@ -147,10 +246,30 @@ const Profile = () => {
           {user && !isEditingProfile ? (
             <div className={styles.profileInfo}>
               <img
-                src={getProfilePic()}
+                src={getProfilePic(user)}
                 alt="Profile Photo"
                 className={styles.profileAvatar}
               />
+              {/* Followers and Following Section */}
+              <div className={styles.socialCounters}>
+                <button
+                  onClick={() => setShowFollowersModal(true)}
+                  className={styles.socialCounterBtn}
+                >
+                  <span className={styles.socialCounterLabel}>
+                    Followers {user?.followers}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => setShowFollowingModal(true)}
+                  className={styles.socialCounterBtn}
+                >
+                  <span className={styles.socialCounterLabel}>
+                    Following {user?.following}{" "}
+                  </span>
+                </button>
+              </div>
               <div className={styles.profileItem}>
                 <span className="label">First Name: </span>
                 <span className="label">{user?.firstname}</span>
@@ -171,6 +290,7 @@ const Profile = () => {
                 <span className="label">Age: </span>
                 <span className="label">{user?.age}</span>
               </div>
+
               <button onClick={editProfile} className={styles.profileBtn}>
                 Edit Profile
               </button>
@@ -179,7 +299,7 @@ const Profile = () => {
             <div className={styles.profileInfo}>
               <h1>Edit Your Profile</h1>
               <img
-                src={getProfilePic()}
+                src={getProfilePic(user)}
                 alt="Profile Photo"
                 className={styles.profileAvatar}
               />
@@ -261,8 +381,483 @@ const Profile = () => {
           )}
         </div>
       </div>
+
+      {showFollowingModal ? (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            zIndex: 9999,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "#FFF",
+              borderRadius: "12px",
+              boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
+              width: "80vw",
+              maxWidth: "1000px",
+              maxHeight: "90vh",
+              overflow: "hidden",
+              zIndex: 9999,
+            }}
+          >
+            <div
+              style={{
+                padding: "1.25rem",
+                borderBottom: "1px solid #e5e7eb",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "white",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "1.25rem",
+                  fontWeight: 600,
+                  color: "#1f2937",
+                }}
+              >
+                Following
+              </h2>
+              <button
+                onClick={toggleFollowingModal}
+                style={{
+                  color: "#6b7280",
+                  width: "2rem",
+                  height: "2rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "9999px",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div
+              style={{
+                padding: "0 0.75rem",
+                maxHeight: "24rem",
+                overflowY: "auto",
+              }}
+            >
+              <div>
+                {followingListData.length === 0 ? (
+                  <div
+                    style={{
+                      padding: "2.5rem 0",
+                      textAlign: "center",
+                      color: "#6b7280",
+                    }}
+                  >
+                    <p>You aren't following anyone yet</p>
+                  </div>
+                ) : (
+                  followingListData.map((followedUser: any) => (
+                    <div
+                      key={followedUser.userId}
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "1rem 0.75rem",
+                        borderBottom: "1px solid #f3f4f6",
+                      }}
+                    >
+                      <button
+                        style={{
+                          textAlign: "left",
+                          display: "flex",
+                          alignItems: "center",
+                          border: "none",
+                          background: "none",
+                          cursor: "pointer",
+                          padding: 0,
+                          flexGrow: 1,
+                        }}
+                        onClick={() => {
+                          /* Handle navigation to user profile */
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.75rem",
+                            width: "100%",
+                          }}
+                        >
+                          <div style={{ flexShrink: 0 }}>
+                            <img
+                              src={getProfilePic(followedUser)}
+                              alt={`${followedUser.firstname} ${followedUser.lastname}`}
+                              style={{
+                                width: "3rem",
+                                height: "3rem",
+                                borderRadius: "9999px",
+                                objectFit: "cover",
+                                border: "1px solid #e5e7eb",
+                              }}
+                              onError={(e) => {
+                                e.currentTarget.src =
+                                  "https://via.placeholder.com/48";
+                              }}
+                            />
+                          </div>
+                          <div style={{ flexGrow: 1 }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <p
+                                style={{
+                                  fontWeight: 500,
+                                  color: "#111827",
+                                  margin: 0,
+                                  padding: 0,
+                                }}
+                              >
+                                {followedUser.firstname} {followedUser.lastname}
+                              </p>
+                              <p
+                                style={{
+                                  fontSize: "0.875rem",
+                                  color: "#6b7280",
+                                  margin: 0,
+                                  padding: 0,
+                                }}
+                              >
+                                @{followedUser.username}
+                              </p>
+                            </div>
+                          </div>
+                          <div style={{ flexShrink: 0 }}>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              style={{ color: "#9ca3af" }}
+                            >
+                              <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                          </div>
+                        </div>
+                      </button>
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          await unfollowUser(user.userId, followedUser.userId);
+                          // Refresh the following list data after unfollowing
+                          const updatedFollowingList = followingListData.filter(
+                            (user: any) => user.userId !== followedUser.userId
+                          );
+                          setFollowingListData(updatedFollowingList);
+                        }}
+                        style={{
+                          marginLeft: "1rem",
+                          padding: "0.375rem 0.75rem",
+                          backgroundColor: "#f3f4f6",
+                          color: "#4b5563",
+                          borderRadius: "0.375rem",
+                          fontSize: "0.875rem",
+                          fontWeight: 500,
+                          border: "none",
+                          cursor: "pointer",
+                          transition: "all 0.15s ease",
+                          flexShrink: 0,
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.backgroundColor = "#e5e7eb";
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.backgroundColor = "#f3f4f6";
+                        }}
+                      >
+                        Unfollow
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {showFollowersModal ? (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            zIndex: 9999,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "#FFF",
+              borderRadius: "12px",
+              boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
+              width: "80vw",
+              maxWidth: "1000px",
+              maxHeight: "90vh",
+              overflow: "hidden",
+              zIndex: 9999,
+            }}
+          >
+            <div
+              style={{
+                padding: "1.25rem",
+                borderBottom: "1px solid #e5e7eb",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "white",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "1.25rem",
+                  fontWeight: 600,
+                  color: "#1f2937",
+                }}
+              >
+                Followers
+              </h2>
+              <button
+                onClick={toggleFollowersModal}
+                style={{
+                  color: "#6b7280",
+                  width: "2rem",
+                  height: "2rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "9999px",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div
+              style={{
+                padding: "0 0.75rem",
+                maxHeight: "24rem",
+                overflowY: "auto",
+              }}
+            >
+              <div>
+                {followersListData.length === 0 ? (
+                  <div
+                    style={{
+                      padding: "2.5rem 0",
+                      textAlign: "center",
+                      color: "#6b7280",
+                    }}
+                  >
+                    <p>You don't have any followers yet</p>
+                  </div>
+                ) : (
+                  followersListData.map((followingUser: any) => (
+                    <div
+                      key={followingUser.userId}
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "1rem 0.75rem",
+                        borderBottom: "1px solid #f3f4f6",
+                      }}
+                    >
+                      <button
+                        style={{
+                          textAlign: "left",
+                          display: "flex",
+                          alignItems: "center",
+                          border: "none",
+                          background: "none",
+                          cursor: "pointer",
+                          padding: 0,
+                          flexGrow: 1,
+                        }}
+                        onClick={() => {
+                          /* Handle navigation to user profile */
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.75rem",
+                            width: "100%",
+                          }}
+                        >
+                          <div style={{ flexShrink: 0 }}>
+                            <img
+                              src={getProfilePic(followingUser)}
+                              alt={`${followingUser.firstname} ${followingUser.lastname}`}
+                              style={{
+                                width: "3rem",
+                                height: "3rem",
+                                borderRadius: "9999px",
+                                objectFit: "cover",
+                                border: "1px solid #e5e7eb",
+                              }}
+                              onError={(e) => {
+                                e.currentTarget.src =
+                                  "https://via.placeholder.com/48";
+                              }}
+                            />
+                          </div>
+                          <div style={{ flexGrow: 1 }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <p
+                                style={{
+                                  fontWeight: 500,
+                                  color: "#111827",
+                                  margin: 0,
+                                  padding: 0,
+                                }}
+                              >
+                                {followingUser.firstname}{" "}
+                                {followingUser.lastname}
+                              </p>
+                              <p
+                                style={{
+                                  fontSize: "0.875rem",
+                                  color: "#6b7280",
+                                  margin: 0,
+                                  padding: 0,
+                                }}
+                              >
+                                @{followingUser.username}
+                              </p>
+                            </div>
+                          </div>
+                          <div style={{ flexShrink: 0 }}>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              style={{ color: "#9ca3af" }}
+                            >
+                              <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                          </div>
+                        </div>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          unfollowUser(user.userId, followingUser.userId);
+                        }}
+                        style={{
+                          marginLeft: "1rem",
+                          padding: "0.375rem 0.75rem",
+                          backgroundColor: "#f3f4f6",
+                          color: "#4b5563",
+                          borderRadius: "0.375rem",
+                          fontSize: "0.875rem",
+                          fontWeight: 500,
+                          border: "none",
+                          cursor: "pointer",
+                          transition: "all 0.15s ease",
+                          flexShrink: 0,
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.backgroundColor = "#e5e7eb";
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.backgroundColor = "#f3f4f6";
+                        }}
+                      >
+                        Unfollow
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 };
-
 export default Profile;
