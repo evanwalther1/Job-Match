@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { auth, storage } from "../firebase";
 import { addJob, saveLocation } from "../FirebaseServices";
 import { ref, uploadBytes } from "firebase/storage";
-import { Circle, GoogleMap, Marker } from "@react-google-maps/api";
+import { Circle, GoogleMap, MarkerF } from "@react-google-maps/api";
 interface Props {
   onClose: () => void;
 }
@@ -136,7 +136,9 @@ const JobPostForm: React.FC<Props> = ({ onClose }) => {
             center={{ lat: newLat, lng: newLng }}
             onClick={handleMapClick}
             onLoad={onMapLoad}
-          ></GoogleMap>
+          >
+            <MarkerF position={{ lat: newLat, lng: newLng }}></MarkerF>
+          </GoogleMap>
         </div>
         <div className={styles.inputGroup}>
           <label
