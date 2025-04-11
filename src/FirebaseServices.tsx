@@ -338,6 +338,38 @@ export const getAllChatMessages = async (): Promise<ChatMessage[]> => {
   }
 };
 
+export const getMessagesFromOneUserToAnother = async (
+  senderUserID: string,
+  recieverUserID: string
+): Promise<ChatMessage[]> => {
+  if (senderUserID == undefined) {
+    console.error("The senderUserID is undefined.");
+  }
+  if (recieverUserID == undefined) {
+    console.error("The recieverUserID is undefined.");
+  }
+
+  try {
+    const sentByCurrentUser = query(
+      collection(db, "chatMessages"),
+      where("sender", "==", senderUserID),
+      where("reciever", "==", recieverUserID)
+    );
+    const data = await getDocs(sentByCurrentUser);
+
+    return data.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<ChatMessage, "id">),
+    }));
+  } catch (error) {
+    console.error(
+      "Error getting a conversation's chat messages sent by one user to another",
+      error
+    );
+    return [];
+  }
+};
+
 // Function to add a new chat message (copied and modified from addJob)
 export const addChatMessage = async (chatMessageData: any): Promise<string> => {
   try {
@@ -372,4 +404,17 @@ export const obscureLocation = (
 export const saveLocation = async (jobID: string, lat: number, lng: number) => {
   const obscured = obscureLocation(lat, lng, 3000); // 3km privacy radius
   await updateJob(jobID, { lat: obscured.lat, lng: obscured.lng });
+};
+export const hasUser = async (userID: string): Promise<boolean> => {
+  try {
+    const userCollectionRef = query(
+      collection(db, "user"),
+      where("userId", "==", userID)
+    );
+    const data = await getDocs(userCollectionRef);
+    return data.empty;
+  } catch (error) {
+    console.error("Error finding whether a user exists", error);
+    return false;
+  }
 };
