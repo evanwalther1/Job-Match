@@ -40,6 +40,7 @@ const ChatConversation = ({ otherUserID }: Props) => {
   const [returnElement, setReturnElement] = useState<ReactNode>(null);
 
   const grabMessagesAndSort = async () => {
+    console.log("grabMessagesAndSort - start");
     const messagesSentByCurrentUser: ChatMessage[] =
       await getMessagesFromOneUserToAnother(currentUserID, otherUserID);
     const messagesSentByOtherUser: ChatMessage[] =
@@ -47,31 +48,39 @@ const ChatConversation = ({ otherUserID }: Props) => {
 
     messagesSentByCurrentUser.forEach((value) => {
       if (!messagesStored.includes(value.id)) {
-        console.log("add message ", value.id);
-        console.log("length of messagesStored: ", messagesStored.length);
+        console.log("grabMessagesAndSort - add message ", value.id);
+        console.log(
+          "grabMessagesAndSort - length of messagesStored: ",
+          messagesStored.length
+        );
         messagesStored.push(value.id);
         messagesWithRightAlignData.push([value, false]);
       }
     });
     messagesSentByOtherUser.forEach((value) => {
       if (!messagesStored.includes(value.id)) {
-        console.log("add message ", value.id);
-        console.log("length of messagesStored: ", messagesStored.length);
+        console.log("grabMessagesAndSort - add message ", value.id);
+        console.log(
+          "grabMessagesAndSort - length of messagesStored: ",
+          messagesStored.length
+        );
         messagesStored.push(value.id);
         messagesWithRightAlignData.push([value, true]);
       }
     });
     console.log(
-      "number of data items in the big array: ",
+      "grabMessagesAndSort - number of data items in the big array: ",
       messagesWithRightAlignData.length
     );
 
     messagesWithRightAlignData.sort(
       (a, b) => a[0].sendTime.seconds - b[0].sendTime.seconds
     );
+    console.log("grabMessagesAndSort - end");
   };
 
   const turnMessagesToUI = () => {
+    console.log("turnMessagesToUI");
     setReturnElement(
       <>
         {messagesWithRightAlignData.map((value) => {
@@ -81,7 +90,9 @@ const ChatConversation = ({ otherUserID }: Props) => {
     );
   };
 
+  console.log("line 93");
   grabMessagesAndSort();
+  console.log("line 95");
   //turnMessagesToUI();
 
   return (
@@ -89,8 +100,10 @@ const ChatConversation = ({ otherUserID }: Props) => {
       {returnElement}
       <button
         onClick={() => {
+          console.log("onClick start");
           grabMessagesAndSort();
           turnMessagesToUI();
+          console.log("onClick end");
         }}
       >
         {" "}
