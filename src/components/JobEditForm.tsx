@@ -5,7 +5,7 @@ import { auth, storage } from "../firebase";
 import { addJob, Job, saveLocation, updateJob } from "../FirebaseServices";
 import { ref, uploadBytes } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
-import { GoogleMap } from "@react-google-maps/api";
+import { GoogleMap, MarkerF } from "@react-google-maps/api";
 
 interface Props {
   onClose: () => void;
@@ -122,7 +122,11 @@ const JobEditForm: React.FC<Props> = ({ onClose, job }) => {
             zoom={6}
             center={{ lat: newLat ?? 42, lng: newLng ?? -88 }}
             onClick={handleMapClick}
-          />
+          >
+            <MarkerF
+              position={{ lat: newLat ?? 42, lng: newLng ?? -88 }}
+            ></MarkerF>
+          </GoogleMap>
         </div>
         <div className={styles.inputGroup}>
           <label
