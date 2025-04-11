@@ -241,7 +241,7 @@ const Profile = () => {
     };
 
     fetchFollowersAndFollowing();
-  }, [user.userId]); // Dependency array - re-run if userId changes
+  }, [user?.userId]); // Dependency array - re-run if userId changes
 
   return (
     <>

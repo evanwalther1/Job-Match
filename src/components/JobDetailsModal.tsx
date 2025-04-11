@@ -405,18 +405,28 @@ const JobDetailsModal: React.FC<Props> = ({
             >
               <button
                 style={{
-                  padding: "10px 20px",
-                  backgroundColor: "#f0f0f0",
-                  color: "#333",
+                  position: "fixed",
+                  top: "10px",
+                  right: "10px",
+                  width: "30px",
+                  height: "30px",
+                  backgroundColor: "transparent",
                   border: "none",
-                  borderRadius: "6px",
+                  borderRadius: "50%",
                   cursor: "pointer",
-                  fontWeight: "500",
-                  transition: "background-color 0.3s",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "0",
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  color: "#333",
+                  transition: "background-color 0.2s",
+                  zIndex: "1000",
                 }}
                 onClick={handleJobCloseDetailsModal}
               >
-                Close
+                ✕
               </button>
 
               <button
