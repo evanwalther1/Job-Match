@@ -107,7 +107,7 @@ const ChatConversation = ({ otherUserID }: Props) => {
         }}
       >
         {" "}
-        Refresh messages
+        Show/Refresh messages
       </button>
     </div>
   );

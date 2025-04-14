@@ -50,6 +50,7 @@ export interface Relationship {
 }
 
 export interface User {
+  joinDate: number;
   age: number;
   displayName: string;
   email: string;
@@ -335,6 +336,19 @@ export const getAllChatMessages = async (): Promise<ChatMessage[]> => {
   } catch (error) {
     console.error("Error fetching chat messages:", error);
     throw error;
+  }
+};
+
+export const getAllUsers = async (): Promise<User[]> => {
+  try {
+    const data = await getDocs(query(collection(db, "user")));
+    return data.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<User, "id">),
+    }));
+  } catch (error) {
+    console.error("Error getting all users", error);
+    return [];
   }
 };
 

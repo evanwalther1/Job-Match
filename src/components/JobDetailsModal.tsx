@@ -440,7 +440,7 @@ const JobDetailsModal: React.FC<Props> = ({
               >
                 ✕
               </button>
-              <button
+              {/*<button
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -470,6 +470,7 @@ const JobDetailsModal: React.FC<Props> = ({
                 </svg>
                 Contact About Job
               </button>
+              */}
             </div>
           </div>
         </div>
