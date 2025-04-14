@@ -16,6 +16,8 @@ import { db } from "../firebase"; // Make sure db is imported
 import { useEffect } from "react";
 import { Job, getAllJobsFor } from "../FirebaseServices";
 import { profileEvents } from "../FirebaseServices"; // Adjust the import path as necessary
+import ChatConversation from "./ChatConversation";
+import ChatSendBox from "./ChatSendBox";
 interface Props {
   onClose: () => void;
   userData: {
@@ -204,7 +206,7 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
               </p>
 
               <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
-                <button
+                {/*<button
                   style={{
                     padding: "10px 24px",
                     backgroundColor: "#007bff",
@@ -232,7 +234,7 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                   </svg>
                   Message
-                </button>
+                </button>*/}
 
                 <button
                   className="follow-button"
@@ -677,6 +679,29 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                   }}
                 >
                   <p>No reviews yet</p>
+                </div>
+              </div>
+              <div style={{ marginTop: "40px" }}>
+                <h2
+                  style={{
+                    margin: "0 0 20px 0",
+                    fontSize: "1.5rem",
+                    fontWeight: 600,
+                  }}
+                >
+                  Chat
+                </h2>
+                <div
+                  style={{
+                    padding: "20px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "8px",
+                    textAlign: "center",
+                    color: "#666",
+                  }}
+                >
+                  <ChatConversation otherUserID={userData.userId} />
+                  <ChatSendBox recieverID={userData.userId} />
                 </div>
               </div>
             </div>

@@ -63,7 +63,7 @@ const ChatSendBox = ({ recieverID }: Props) => {
           className="btn btn-primary mb-3"
           onClick={sendMessage}
         >
-          Submit message
+          Send message
         </button>
       </div>
     </div>
