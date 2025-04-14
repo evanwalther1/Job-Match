@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Job } from "../FirebaseServices";
 import { CircleMap } from "./CircleMap";
+import ChatConversation from "./ChatConversation";
+import ChatSendBox from "./ChatSendBox";
 
 interface Props {
   setShowProfile: (show: boolean) => void;
@@ -393,7 +395,17 @@ const JobDetailsModal: React.FC<Props> = ({
                 </div>
               </div>
             </div>
-
+            <h3
+              style={{
+                marginBottom: "10px",
+                color: "#333",
+                fontWeight: 600,
+              }}
+            >
+              Contact About Job
+            </h3>
+            <ChatConversation otherUserID={jobUserData?.userId} />
+            <ChatSendBox recieverID={jobUserData?.userId} />
             <div
               style={{
                 display: "flex",
@@ -428,7 +440,6 @@ const JobDetailsModal: React.FC<Props> = ({
               >
                 ✕
               </button>
-
               <button
                 style={{
                   display: "flex",

@@ -313,9 +313,6 @@ export const MainContent: React.FC<MainContentProps> = ({
               </div>
             </div>
 
-            <ChatConversation otherUserID={jobUserData?.userId} />
-            <ChatSendBox recieverID={jobUserData?.userId} />
-
             <div
               style={{
                 display: "flex",

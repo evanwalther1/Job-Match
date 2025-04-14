@@ -29,6 +29,9 @@ const ChatSendBox = ({ recieverID }: Props) => {
   useEffect(() => {}, []);
 
   const sendMessage = async () => {
+    if (msgTextInput.trim() == "") {
+      return;
+    }
     try {
       const msgID = await addChatMessage({
         sender: auth?.currentUser?.uid,
