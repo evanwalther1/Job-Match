@@ -4,6 +4,7 @@ import { Job } from "../FirebaseServices";
 import { CircleMap } from "./CircleMap";
 import ChatConversation from "./ChatConversation";
 import ChatSendBox from "./ChatSendBox";
+import ChatLog from "./ChatLog";
 
 interface Props {
   setShowProfile: (show: boolean) => void;
@@ -404,8 +405,7 @@ const JobDetailsModal: React.FC<Props> = ({
             >
               Contact About Job
             </h3>
-            <ChatConversation otherUserID={jobUserData?.userId} />
-            <ChatSendBox recieverID={jobUserData?.userId} />
+            <ChatLog otherUserID={jobUserData?.userId} />
             <div
               style={{
                 display: "flex",

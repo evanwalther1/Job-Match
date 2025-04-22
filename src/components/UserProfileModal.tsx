@@ -18,6 +18,7 @@ import { Job, getAllJobsFor } from "../FirebaseServices";
 import { profileEvents } from "../FirebaseServices"; // Adjust the import path as necessary
 import ChatConversation from "./ChatConversation";
 import ChatSendBox from "./ChatSendBox";
+import ChatLog from "./ChatLog";
 interface Props {
   onClose: () => void;
   userData: {
@@ -700,8 +701,7 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                     color: "#666",
                   }}
                 >
-                  <ChatConversation otherUserID={userData.userId} />
-                  <ChatSendBox recieverID={userData.userId} />
+                  <ChatLog otherUserID={userData.userId} />
                 </div>
               </div>
             </div>
