@@ -10,9 +10,13 @@ const ChatBubble = ({ msg, right_aligned = false }: Props) => {
     <div
       className={"card" + (right_aligned ? " text-end" : "")}
       key={msg.id}
-      style={{ backgroundColor: "beige" }}
+      style={{
+        backgroundColor: right_aligned ? "white" : "beige",
+        margin: 5,
+        padding: 0,
+      }}
     >
-      <div className="card-body" style={{ margin: 5, padding: 0 }}>
+      <div className="card-body" style={{ margin: 5, padding: 2 }}>
         <p className="card-text" style={{ paddingBottom: 0, marginBottom: 0 }}>
           {msg.text}
         </p>

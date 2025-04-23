@@ -98,6 +98,10 @@ const ChatConversation = ({ otherUserID }: Props) => {
   return (
     <div className="card">
       {returnElement}
+      <div className="card">
+        <div className="card"></div>
+        <div className="card"></div>
+      </div>
       <button
         onClick={() => {
           console.log("onClick start");
