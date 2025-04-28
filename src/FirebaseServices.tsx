@@ -277,7 +277,12 @@ export const getAllJobs = async (): Promise<Job[]> => {
 export const getAllJobsFor = async (userId: string): Promise<Job[]> => {
   try {
     const jobCollectionRef = collection(db, "jobs");
-    const q = query(jobCollectionRef, where("employerID", "==", userId));
+    const q = query(
+      jobCollectionRef,
+      where("employerID", "==", userId),
+      where("completed", "==", false),
+      where("workersFound", "==", false)
+    );
     const data = await getDocs(q);
     return data.docs.map((doc) => ({
       id: doc.id,

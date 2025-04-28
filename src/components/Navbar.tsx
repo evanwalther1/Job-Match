@@ -21,6 +21,10 @@ const Navbar = () => {
     }
   };
 
+  const MODAL_STYLES: React.CSSProperties = {
+    zIndex: 100,
+  };
+
   const getProfilePic = () => {
     console.log("User data:", user);
     console.log(
@@ -75,8 +79,11 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <div className="container-fluid">
+      <nav
+        style={MODAL_STYLES}
+        className="navbar navbar-expand-lg navbar-light bg-light fixed-top"
+      >
+        <div className="container-fluid" style={MODAL_STYLES}>
           <h1 className={styles.title}>Job Match</h1>
           <button
             className="navbar-toggler"

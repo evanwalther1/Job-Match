@@ -398,7 +398,7 @@ const Profile = () => {
             right: 0,
             bottom: 0,
             backgroundColor: "rgba(0, 0, 0, 0.7)",
-            zIndex: 9999,
+            zIndex: 4500,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -417,7 +417,7 @@ const Profile = () => {
               maxWidth: "1000px",
               maxHeight: "90vh",
               overflow: "hidden",
-              zIndex: 9999,
+              zIndex: 4500,
             }}
           >
             <div
@@ -639,7 +639,7 @@ const Profile = () => {
             right: 0,
             bottom: 0,
             backgroundColor: "rgba(0, 0, 0, 0.7)",
-            zIndex: 9999,
+            zIndex: 4500,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -658,7 +658,7 @@ const Profile = () => {
               maxWidth: "1000px",
               maxHeight: "90vh",
               overflow: "hidden",
-              zIndex: 9999,
+              zIndex: 4500,
             }}
           >
             <div
@@ -846,6 +846,7 @@ const Profile = () => {
             setOpenProfile(false);
           }}
           userData={selectedProfile}
+          onViewJobDetails={(job) => {}}
         ></UserProfileModal>
       ) : null}
     </>
