@@ -2,6 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Job } from "../FirebaseServices";
 import { CircleMap } from "./CircleMap";
+import ChatConversation from "./ChatConversation";
+import ChatSendBox from "./ChatSendBox";
+import ChatLog from "./ChatLog";
 
 interface Props {
   setShowProfile: (show: boolean) => void;
@@ -393,7 +396,16 @@ const JobDetailsModal: React.FC<Props> = ({
                 </div>
               </div>
             </div>
-
+            <h3
+              style={{
+                marginBottom: "10px",
+                color: "#333",
+                fontWeight: 600,
+              }}
+            >
+              Contact About Job
+            </h3>
+            <ChatLog otherUserID={jobUserData?.userId} />
             <div
               style={{
                 display: "flex",
@@ -428,8 +440,7 @@ const JobDetailsModal: React.FC<Props> = ({
               >
                 ✕
               </button>
-
-              <button
+              {/*<button
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -459,6 +470,7 @@ const JobDetailsModal: React.FC<Props> = ({
                 </svg>
                 Contact About Job
               </button>
+              */}
             </div>
           </div>
         </div>
