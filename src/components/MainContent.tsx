@@ -26,7 +26,7 @@ const categoryOptions: {
     { value: 0, label: "$0 - $50" },
     { value: 50, label: "$50 - $100" },
     { value: 100, label: "$100 - $150" },
-    { value: 150, label: "Other" },
+    { value: 150, label: "$150+" },
   ],
   Location: [
     { value: 0, label: "< 1 mile" },
