@@ -28,19 +28,11 @@ const categoryOptions: {
     { value: 150, label: "$150+" },
   ],
   Location: [
-<<<<<<< HEAD
-    { value: "USA", label: "USA" },
-    { value: "Europe", label: "Europe" },
-    { value: "Asia", label: "Asia" },
-    { value: "Other", label: "Other" },
-  ], //might use different way to achieve that.
-=======
     { value: 0, label: "< 1 mile" },
     { value: 1, label: "< 2 miles" },
     { value: 2, label: "< 5 miles" },
     { value: 5, label: "> 5 miles" },
   ],
->>>>>>> 04616a722c8621265a2cbd4abe9f3db9de0a8270
   PayWay: [
     { value: "Cash", label: "Cash" },
     { value: "Venmo", label: "Venmo" },
