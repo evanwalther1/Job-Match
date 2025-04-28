@@ -288,7 +288,7 @@ export const getAllJobsFor = async (userId: string): Promise<Job[]> => {
   }
 };
 
-// Function to add a new job
+//Function to add a new job
 export const addJob = async (jobData: any): Promise<string> => {
   try {
     // Add job to Firestore and get the reference

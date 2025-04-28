@@ -22,14 +22,14 @@ const categoryOptions: {
     { value: 0, label: "$0 - $50" },
     { value: 50, label: "$50 - $100" },
     { value: 100, label: "$100 - $150" },
-    { value: 150, label: "Other" },
+    { value: 150, label: "$150+" },
   ],
   Location: [
     { value: "USA", label: "USA" },
     { value: "Europe", label: "Europe" },
     { value: "Asia", label: "Asia" },
     { value: "Other", label: "Other" },
-  ],
+  ], //might use different way to achieve that.
   PayWay: [
     { value: "Cash", label: "Cash" },
     { value: "Venmo", label: "Venmo" },
