@@ -1,3 +1,4 @@
+import { auth } from "../firebase";
 import ChatConversation from "./ChatConversation";
 import ChatSendBox from "./ChatSendBox";
 
@@ -7,6 +8,9 @@ interface Props {
 }
 
 const ChatLog = ({ otherUserID, otherUserDisplayName }: Props) => {
+  if (otherUserID == auth.currentUser?.uid) {
+    return <p>You cannot chat with yourself.</p>;
+  }
   return (
     <>
       <ChatConversation
