@@ -701,7 +701,10 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                     color: "#666",
                   }}
                 >
-                  <ChatLog otherUserID={userData.userId} />
+                  <ChatLog
+                    otherUserID={userData.userId}
+                    otherUserDisplayName={userData.displayName}
+                  />
                 </div>
               </div>
             </div>

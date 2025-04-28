@@ -179,7 +179,12 @@ const MyChats = () => {
                 }}
               ></UserProfileModal>
             );*/
-              return <ChatLog otherUserID={value?.userId} />;
+              return (
+                <ChatLog
+                  otherUserID={value?.userId}
+                  otherUserDisplayName={value?.displayName}
+                />
+              );
             } else {
               return <></>;
             }

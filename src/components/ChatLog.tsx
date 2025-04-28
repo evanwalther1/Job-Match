@@ -3,12 +3,16 @@ import ChatSendBox from "./ChatSendBox";
 
 interface Props {
   otherUserID: string;
+  otherUserDisplayName: string;
 }
 
-const ChatLog = ({ otherUserID }: Props) => {
+const ChatLog = ({ otherUserID, otherUserDisplayName }: Props) => {
   return (
     <>
-      <ChatConversation otherUserID={otherUserID} />
+      <ChatConversation
+        otherUserID={otherUserID}
+        otherUserDisplayName={otherUserDisplayName}
+      />
       <ChatSendBox recieverID={otherUserID} />
     </>
   );

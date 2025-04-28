@@ -10,9 +10,10 @@ import { Timestamp } from "firebase/firestore";
 
 interface Props {
   otherUserID: string;
+  otherUserDisplayName: string;
 }
 
-const ChatConversation = ({ otherUserID }: Props) => {
+const ChatConversation = ({ otherUserID, otherUserDisplayName }: Props) => {
   const currentUserID = auth.currentUser?.uid;
   if (currentUserID == null || currentUserID == undefined) {
     return (
@@ -40,7 +41,6 @@ const ChatConversation = ({ otherUserID }: Props) => {
   >([]);
   const [messagesStored, setMessagesStored] = useState<string[]>([]);
   const [returnElement, setReturnElement] = useState<ReactNode>(null);
-  const [otherUserName, setOtherUserName] = useState<string>("");
 
   const grabMessagesAndSort = async () => {
     console.log("grabMessagesAndSort - start");
@@ -93,24 +93,8 @@ const ChatConversation = ({ otherUserID }: Props) => {
     );
   };
 
-  const getOtherUserName = async () => {
-    const otherUser = await getUser(otherUserID);
-    //CURRENT PROBLEM: THE GETUSER() CALLS ARE RETURNING USER DOES NOT EXIST
-    /*console.log("entering while loop - hold tight");
-    while (otherUser == null) {
-      //kill time
-    }
-    console.log("exiting while loop");*/
-    if (otherUser == null) {
-      console.log("the other user call is null; returning");
-      return;
-    }
-    setOtherUserName(otherUser.displayName);
-  };
-
   useEffect(() => {
     grabMessagesAndSort();
-    getOtherUserName();
     turnMessagesToUI();
   });
 
@@ -119,10 +103,10 @@ const ChatConversation = ({ otherUserID }: Props) => {
       {returnElement}
       <div className="card">
         <div className="card">
-          <p>{otherUserName == "" ? "Them" : otherUserName}</p>
+          <p style={{ margin: 5 }}>{otherUserDisplayName}</p>
         </div>
         <div className="card text-end">
-          <p>{"You"}</p>
+          <p style={{ margin: 5 }}>{"You"}</p>
         </div>
       </div>
       <button
