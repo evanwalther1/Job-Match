@@ -24,6 +24,7 @@ import ChatBubble from "./ChatBubble";
 import ChatConversation from "./ChatConversation";
 import ChatSendBox from "./ChatSendBox";
 import UserProfileModal from "./UserProfileModal";
+import ChatLog from "./ChatLog";
 
 //currently this code means more like "AllChats" while I'm testing and figuring things out
 //NOTE - THE MESSAGES DO NOT APPEAR ON THE SCREEN IN REAL TIME; A REFRESH IS REQUIRED
@@ -178,12 +179,7 @@ const MyChats = () => {
                 }}
               ></UserProfileModal>
             );*/
-              return (
-                <div>
-                  <ChatConversation otherUserID={value?.userId} />
-                  <ChatSendBox recieverID={value?.userId} />
-                </div>
-              );
+              return <ChatLog otherUserID={value?.userId} />;
             } else {
               return <></>;
             }
