@@ -103,7 +103,13 @@ const ChatConversation = ({ otherUserID, otherUserDisplayName }: Props) => {
       {returnElement}
       <div className="card">
         <div className="card">
-          <p style={{ margin: 5 }}>{otherUserDisplayName}</p>
+          <p style={{ margin: 5 }}>
+            {otherUserDisplayName == "" ||
+            otherUserDisplayName == null ||
+            otherUserDisplayName == undefined
+              ? "User's name not found"
+              : otherUserDisplayName}
+          </p>
         </div>
         <div className="card text-end">
           <p style={{ margin: 5 }}>{"You"}</p>
