@@ -11,19 +11,7 @@ import { Link } from "react-router-dom";
 import ChatConversation from "./ChatConversation";
 import ChatSendBox from "./ChatSendBox";
 import { Job } from "../FirebaseServices";
-
-/*interface Job {
-  id: string;
-  title: string;
-  location: string;
-  description: string;
-  pay: number;
-  cash: boolean;
-  venmo: boolean;
-  cashApp: boolean;
-  date: Date;
-  employerID: string;
-}*/
+import SecondaryJobDetailsModal from "./SecondaryJobDetailsModal";
 
 interface MainContentProps {
   searchQuery: string;
@@ -38,13 +26,13 @@ const categoryOptions: {
     { value: 0, label: "$0 - $50" },
     { value: 50, label: "$50 - $100" },
     { value: 100, label: "$100 - $150" },
-    { value: 150, label: "Other" },
+    { value: 150, label: "$150+" },
   ],
   Location: [
-    { value: "USA", label: "USA" },
-    { value: "Europe", label: "Europe" },
-    { value: "Asia", label: "Asia" },
-    { value: "Other", label: "Other" },
+    { value: 0, label: "< 1 mile" },
+    { value: 1, label: "< 2 miles" },
+    { value: 2, label: "< 5 miles" },
+    { value: 5, label: "> 5 miles" },
   ],
   PayWay: [
     { value: "Cash", label: "Cash" },
@@ -65,7 +53,25 @@ export const MainContent: React.FC<MainContentProps> = ({
   const [showJobDetails, setShowJobDetails] = useState(false);
   const [jobUserData, setJobUserData] = useState<any>(null);
   const [showProfile, setShowProfile] = useState(false);
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  // Store the selected job details
+  const [selectedSecondaryJob, setSelectedSecondaryJob] = useState<Job | null>(
+    null
+  );
+  const [secondaryJobImages, setSecondaryJobImages] = useState<{
+    [key: string]: string;
+  }>({});
+  const [showSecondaryJobDetails, setShowSecondaryJobDetails] = useState(false);
 
+  // Update this function to handle both job and images
+  const onViewJobDetails = (job: Job, images: { [key: string]: string }) => {
+    setSelectedSecondaryJob(job);
+    setSecondaryJobImages(images);
+    setShowSecondaryJobDetails(true);
+  };
   const MODAL_STYLES: React.CSSProperties = {
     position: "fixed",
     top: "50%",
@@ -94,6 +100,43 @@ export const MainContent: React.FC<MainContentProps> = ({
     justifyContent: "center",
     alignItems: "center",
   };
+
+  const getDistanceFromLatLonInMiles = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ): number => {
+    const R = 3958.8; // Radius of the Earth in miles
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, []);
 
   const handleOpenJobDetailsModal = (job: Job) => {
     setSelectedJob(job);
@@ -409,10 +452,28 @@ export const MainContent: React.FC<MainContentProps> = ({
                 });
               }
 
-              if (key === "Location") {
-                return values.some(
-                  (val) => val.toLowerCase() === job.location.toLowerCase()
-                );
+              if (key === "Location" && userLocation) {
+                return values.some((val) => {
+                  const distance = getDistanceFromLatLonInMiles(
+                    userLocation.lat,
+                    userLocation.lng,
+                    job.lat, // assuming you store job's lat
+                    job.lng // assuming you store job's lng
+                  );
+
+                  switch (Number(val)) {
+                    case 0:
+                      return distance < 1;
+                    case 1:
+                      return distance < 2;
+                    case 2:
+                      return distance < 5;
+                    case 5:
+                      return distance >= 5;
+                    default:
+                      return false;
+                  }
+                });
               }
 
               if (key === "PayWay") {
@@ -485,7 +546,21 @@ export const MainContent: React.FC<MainContentProps> = ({
             onClose={() => {
               setShowProfile(false);
             }}
+            onViewJobDetails={(job) => {
+              setSelectedSecondaryJob(job);
+              setSecondaryJobImages(jobImages);
+              setShowSecondaryJobDetails(true);
+            }}
           ></UserProfileModal>
+        ) : null}
+        {showSecondaryJobDetails ? (
+          <SecondaryJobDetailsModal
+            setShowProfile={setShowProfile}
+            jobImages={secondaryJobImages}
+            selectedJob={selectedSecondaryJob}
+            jobUserData={selectedSecondaryJob?.employerID}
+            handleJobCloseDetailsModal={() => setShowSecondaryJobDetails(false)}
+          ></SecondaryJobDetailsModal>
         ) : null}
 
         <div className="search-container">
@@ -495,45 +570,44 @@ export const MainContent: React.FC<MainContentProps> = ({
           <div className="job-cards">
             {jobs.length > 0 ? (
               jobs.map((job) => (
-                <div
-                  key={job.id}
-                  className="job-card"
-                  style={{ width: "18rem" }}
+                <button
+                  onClick={() => {
+                    handleOpenJobDetailsModal(job), setShowJobDetails(true);
+                  }}
+                  className={styles.smallbtn}
                 >
-                  <img
-                    src={jobImages[job.id] || "https://via.placeholder.com/150"}
-                    className="card-img-top"
-                    alt={job.title}
-                  />
-                  <div className="card-body">
-                    <h5>{job.title}</h5>
-                    <p>
-                      <strong>Location:</strong> {job.location}
-                    </p>
-                    <p>
-                      <strong>Pay:</strong> ${job.pay}
-                    </p>
-                    <div className="payment-methods">
+                  <div
+                    key={job.id}
+                    className="job-card"
+                    style={{ width: "18rem" }}
+                  >
+                    <img
+                      src={
+                        jobImages[job.id] || "https://via.placeholder.com/150"
+                      }
+                      className="card-img-top"
+                      alt={job.title}
+                    />
+                    <div className="card-body">
+                      <h5>{job.title}</h5>
                       <p>
-                        <strong>Payment Methods:</strong>
+                        <strong>Location:</strong> {job.location}
                       </p>
-                      <span>{job.cash ? "💵 Cash" : ""}</span>
-                      <span>{job.venmo ? "📱 Venmo" : ""}</span>
-                      <span>{job.cashApp ? "💰 CashApp" : ""}</span>
-                    </div>
-                    <div className={styles.buttoncontainer}>
-                      <button
-                        onClick={() => {
-                          handleOpenJobDetailsModal(job),
-                            setShowJobDetails(true);
-                        }}
-                        className={styles.smallbtn}
-                      >
-                        Open Job Post
-                      </button>
+                      <p>
+                        <strong>Pay:</strong> ${job.pay}
+                      </p>
+                      <div className="payment-methods">
+                        <p>
+                          <strong>Payment Methods:</strong>
+                        </p>
+                        <span>{job.cash ? "💵 Cash" : ""}</span>
+                        <span>{job.venmo ? "📱 Venmo" : ""}</span>
+                        <span>{job.cashApp ? "💰 CashApp" : ""}</span>
+                      </div>
+                      <div className={styles.buttoncontainer}></div>
                     </div>
                   </div>
-                </div>
+                </button>
               ))
             ) : (
               <div className="empty-state">

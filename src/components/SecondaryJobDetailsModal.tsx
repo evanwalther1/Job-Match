@@ -14,7 +14,7 @@ interface Props {
   handleJobCloseDetailsModal: () => void;
 }
 
-const JobDetailsModal: React.FC<Props> = ({
+const SecondaryJobDetailsModal: React.FC<Props> = ({
   handleJobCloseDetailsModal,
   jobUserData,
   jobImages,
@@ -34,7 +34,7 @@ const JobDetailsModal: React.FC<Props> = ({
     maxWidth: "1000px",
     maxHeight: "90vh",
     overflow: "hidden",
-    zIndex: 1000,
+    zIndex: 9999,
   };
 
   const OVERLAY_STYLES: React.CSSProperties = {
@@ -44,10 +44,14 @@ const JobDetailsModal: React.FC<Props> = ({
     right: 0,
     bottom: 0,
     backgroundColor: "rgba(0, 0, 0, .7)",
-    zIndex: 1000, // Slightly lower than modal, but still very high
+    zIndex: 9999, // Slightly lower than modal, but still very high
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  };
+
+  const zIndex: React.CSSProperties = {
+    zIndex: 9999,
   };
 
   const getProfilePic = () => {
@@ -129,97 +133,6 @@ const JobDetailsModal: React.FC<Props> = ({
               >
                 {selectedJob?.title}
               </h1>
-
-              {/* Job Owner Section */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  backgroundColor: "#f8f9fa",
-                  padding: "16px",
-                  borderRadius: "8px",
-                  marginBottom: "20px",
-                  border: "1px solid #e0e0e0",
-                }}
-              >
-                <img
-                  src={getProfilePic()}
-                  alt="Profile"
-                  style={{
-                    width: "48px",
-                    height: "48px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    border: "2px solid #fff",
-                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                  }}
-                />
-                <div style={{ marginLeft: "16px", flex: 1 }}>
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <h3
-                      style={{ margin: 0, fontWeight: 600, fontSize: "1.1rem" }}
-                    >
-                      {jobUserData?.firstname} {jobUserData?.lastname}
-                    </h3>
-                    <span
-                      style={{
-                        backgroundColor: "#28a745",
-                        color: "white",
-                        fontSize: "0.7rem",
-                        padding: "2px 8px",
-                        borderRadius: "12px",
-                        marginLeft: "10px",
-                        fontWeight: 500,
-                      }}
-                    >
-                      JOB OWNER
-                    </span>
-                  </div>
-                  <p
-                    style={{
-                      margin: "4px 0 0 0",
-                      color: "#666",
-                      fontSize: "0.9rem",
-                    }}
-                  >
-                    Member since{" "}
-                    {new Date(
-                      jobUserData?.joinDate || Date.now()
-                    ).toLocaleDateString()}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setShowProfile(true)}
-                  style={{
-                    color: "#007bff",
-                    textDecoration: "none",
-                    fontWeight: 500,
-                    display: "flex",
-                    alignItems: "center",
-                    background: "none",
-                    border: "none",
-                    padding: 0,
-                    cursor: "pointer",
-                  }}
-                >
-                  View Profile
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ marginLeft: "4px" }}
-                  >
-                    <path d="M5 12h14"></path>
-                    <path d="m12 5 7 7-7 7"></path>
-                  </svg>
-                </button>
-              </div>
 
               <div style={{ marginBottom: "20px" }}>
                 <div
@@ -434,7 +347,7 @@ const JobDetailsModal: React.FC<Props> = ({
                   fontWeight: "bold",
                   color: "#333",
                   transition: "background-color 0.2s",
-                  zIndex: "1000",
+                  zIndex: "9999",
                 }}
                 onClick={handleJobCloseDetailsModal}
               >
@@ -482,4 +395,4 @@ const JobDetailsModal: React.FC<Props> = ({
   return <div>{renderJobDetailsPortal()}</div>;
 };
 
-export default JobDetailsModal;
+export default SecondaryJobDetailsModal;

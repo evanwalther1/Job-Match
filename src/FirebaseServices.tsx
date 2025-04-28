@@ -277,7 +277,12 @@ export const getAllJobs = async (): Promise<Job[]> => {
 export const getAllJobsFor = async (userId: string): Promise<Job[]> => {
   try {
     const jobCollectionRef = collection(db, "jobs");
-    const q = query(jobCollectionRef, where("employerID", "==", userId));
+    const q = query(
+      jobCollectionRef,
+      where("employerID", "==", userId),
+      where("completed", "==", false),
+      where("workersFound", "==", false)
+    );
     const data = await getDocs(q);
     return data.docs.map((doc) => ({
       id: doc.id,
@@ -289,7 +294,7 @@ export const getAllJobsFor = async (userId: string): Promise<Job[]> => {
   }
 };
 
-// Function to add a new job
+//Function to add a new job
 export const addJob = async (jobData: any): Promise<string> => {
   try {
     // Add job to Firestore and get the reference
