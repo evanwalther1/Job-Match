@@ -109,17 +109,6 @@ const ChatConversation = ({ otherUserID, otherUserDisplayName }: Props) => {
           <p style={{ margin: 5 }}>{"You"}</p>
         </div>
       </div>
-      <button
-        onClick={() => {
-          console.log("onClick start");
-          grabMessagesAndSort();
-          turnMessagesToUI();
-          console.log("onClick end");
-        }}
-      >
-        {" "}
-        Show/Refresh messages
-      </button>
     </div>
   );
 };
