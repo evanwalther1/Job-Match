@@ -9,6 +9,7 @@ import {
   getAllUsers,
   getUser,
   User,
+  getMostRecentChatBetweenUsers,
 } from "../FirebaseServices";
 import {
   collection,
@@ -36,12 +37,14 @@ const MyChats = () => {
   const [conversationPartnerID, setConversationPartnerID] =
     useState<string>("");
   const [users, setUsers] = useState<User[]>([]);
+  const [mostRecents, setMostRecents] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const userArray: User[] = await getAllUsers();
         setUsers(userArray);
+        //mostRecentMessages(); //doesn't work
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -74,6 +77,27 @@ const MyChats = () => {
     setConversationPartnerID(newID);
   };
 
+  const mostRecentMessage = async (user: User) => {
+    if (auth.currentUser == null) {
+      return "You are not logged in; no most recent message to display";
+    }
+    const recent = await getMostRecentChatBetweenUsers(
+      user.userId,
+      auth.currentUser?.uid
+    );
+    if (recent == undefined) {
+      return "No most recent chat found";
+    } else {
+      return recent.text;
+    }
+  };
+
+  const mostRecentMessages = async () => {
+    const mostRecentsNew = users.map(async (value) => {
+      return await mostRecentMessage(value);
+    });
+  };
+
   return (
     <div className="container">
       <div className="row align-items-start">
@@ -87,12 +111,12 @@ const MyChats = () => {
             {users.length == 0 ? (
               <></>
             ) : (
-              users.map((value) => {
+              users.map((value, index) => {
                 return value.userId == auth.currentUser?.uid ? null : (
                   <button
                     onClick={() => switchConversation(value.userId)}
                     style={{
-                      width: "500px",
+                      width: "600px",
                       display: "flex",
                       backgroundColor: "#f8f9fa",
                       padding: "16px",
@@ -133,10 +157,7 @@ const MyChats = () => {
                           fontSize: "0.9rem",
                         }}
                       >
-                        Member since{" "}
-                        {new Date(
-                          value.joinDate || Date.now()
-                        ).toLocaleDateString()}
+                        {mostRecents.at(index)}
                       </p>
                     </div>
                   </button>
