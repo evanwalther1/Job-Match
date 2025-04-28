@@ -12,19 +12,6 @@ import ChatConversation from "./ChatConversation";
 import ChatSendBox from "./ChatSendBox";
 import { Job } from "../FirebaseServices";
 
-/*interface Job {
-  id: string;
-  title: string;
-  location: string;
-  description: string;
-  pay: number;
-  cash: boolean;
-  venmo: boolean;
-  cashApp: boolean;
-  date: Date;
-  employerID: string;
-}*/
-
 interface MainContentProps {
   searchQuery: string;
   selectedFilters: { [key: string]: string[] };
@@ -41,10 +28,10 @@ const categoryOptions: {
     { value: 150, label: "Other" },
   ],
   Location: [
-    { value: "USA", label: "USA" },
-    { value: "Europe", label: "Europe" },
-    { value: "Asia", label: "Asia" },
-    { value: "Other", label: "Other" },
+    { value: 0, label: "< 1 mile" },
+    { value: 1, label: "< 2 miles" },
+    { value: 2, label: "< 5 miles" },
+    { value: 5, label: "> 5 miles" },
   ],
   PayWay: [
     { value: "Cash", label: "Cash" },
@@ -65,6 +52,10 @@ export const MainContent: React.FC<MainContentProps> = ({
   const [showJobDetails, setShowJobDetails] = useState(false);
   const [jobUserData, setJobUserData] = useState<any>(null);
   const [showProfile, setShowProfile] = useState(false);
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
   const MODAL_STYLES: React.CSSProperties = {
     position: "fixed",
@@ -94,6 +85,43 @@ export const MainContent: React.FC<MainContentProps> = ({
     justifyContent: "center",
     alignItems: "center",
   };
+
+  const getDistanceFromLatLonInMiles = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ): number => {
+    const R = 3958.8; // Radius of the Earth in miles
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, []);
 
   const handleOpenJobDetailsModal = (job: Job) => {
     setSelectedJob(job);
@@ -409,10 +437,28 @@ export const MainContent: React.FC<MainContentProps> = ({
                 });
               }
 
-              if (key === "Location") {
-                return values.some(
-                  (val) => val.toLowerCase() === job.location.toLowerCase()
-                );
+              if (key === "Location" && userLocation) {
+                return values.some((val) => {
+                  const distance = getDistanceFromLatLonInMiles(
+                    userLocation.lat,
+                    userLocation.lng,
+                    job.lat, // assuming you store job's lat
+                    job.lng // assuming you store job's lng
+                  );
+
+                  switch (Number(val)) {
+                    case 0:
+                      return distance < 1;
+                    case 1:
+                      return distance < 2;
+                    case 2:
+                      return distance < 5;
+                    case 5:
+                      return distance >= 5;
+                    default:
+                      return false;
+                  }
+                });
               }
 
               if (key === "PayWay") {

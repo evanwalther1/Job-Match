@@ -21,10 +21,10 @@ const categoryOptions: {
     { value: 150, label: "$150+" },
   ],
   Location: [
-    { value: "USA", label: "USA" },
-    { value: "Europe", label: "Europe" },
-    { value: "Asia", label: "Asia" },
-    { value: "Other", label: "Other" },
+    { value: 0, label: "< 1 mile" },
+    { value: 1, label: "< 2 miles" },
+    { value: 2, label: "< 5 miles" },
+    { value: 5, label: "> 5 miles" },
   ],
   PayWay: [
     { value: "Cash", label: "Cash" },
