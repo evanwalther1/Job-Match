@@ -84,90 +84,136 @@ const Navbar = () => {
         className="navbar navbar-expand-lg navbar-light bg-light fixed-top"
       >
         <div className="container-fluid" style={MODAL_STYLES}>
-          <h1 className={styles.title}>Job Match</h1>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "20px",
+            }}
           >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link
-                  style={{ marginLeft: "10px" }}
-                  className={styles.navbtn}
-                  to="/profile"
-                >
-                  <img
-                    src={getProfilePic()}
-                    alt="Profile"
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                      marginRight: "10px",
-                      marginLeft: "10px",
-                    }}
-                  />
-                  Profile
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  aria-current="page"
-                  to="/home"
-                  className={styles.navbtn}
-                  style={{ marginRight: "50px", marginLeft: "30px" }}
-                >
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  className={styles.navbtn}
-                  aria-current="page"
-                  to="/active-jobs"
-                  style={{ marginRight: "50px", marginLeft: "10px" }}
-                >
-                  Active Jobs
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  className={styles.navbtn}
-                  aria-current="page"
-                  to="/job-history"
-                  style={{ marginRight: "50px", marginLeft: "10px" }}
-                >
-                  History
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  className={styles.navbtn}
-                  aria-current="page"
-                  to="/chat"
-                  style={{ marginRight: "50px", marginLeft: "10px" }}
-                >
-                  Chat
-                </Link>
-              </li>
-              <li className="nav-item">
-                <button
-                  className={styles.logoutbtn}
-                  style={{ marginLeft: "30px" }}
-                  onClick={logOut}
-                >
-                  Logout
-                </button>
-              </li>
-            </ul>
+            <div
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "12px",
+                background: "linear-gradient(135deg, #4f63cd 0%, #647dee 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 10px 20px rgba(79, 99, 205, 0.3)",
+                marginRight: "15px",
+              }}
+            >
+              <span
+                style={{
+                  color: "white",
+                  fontSize: "28px",
+                  fontWeight: "bold",
+                }}
+              >
+                J
+              </span>
+            </div>
+            <h1
+              style={{
+                fontSize: "32px",
+                fontWeight: "400",
+                color: "#000000", // Changed to black
+                letterSpacing: "0.5px",
+                margin: 0,
+              }}
+            >
+              Job<span style={{ color: "#000000" }}>Match</span>{" "}
+              {/* Changed to black */}
+            </h1>
+
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div
+              className="collapse navbar-collapse"
+              id="navbarSupportedContent"
+            >
+              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <li className="nav-item">
+                  <Link
+                    style={{ marginLeft: "10px" }}
+                    className={styles.navbtn}
+                    to="/profile"
+                  >
+                    <img
+                      src={getProfilePic()}
+                      alt="Profile"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                        marginRight: "10px",
+                        marginLeft: "20px",
+                      }}
+                    />
+                    Profile
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    aria-current="page"
+                    to="/home"
+                    className={styles.navbtn}
+                    style={{ marginRight: "50px", marginLeft: "60px" }}
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className={styles.navbtn}
+                    aria-current="page"
+                    to="/active-jobs"
+                    style={{ marginRight: "50px", marginLeft: "40px" }}
+                  >
+                    Active Jobs
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className={styles.navbtn}
+                    aria-current="page"
+                    to="/job-history"
+                    style={{ marginRight: "50px", marginLeft: "40px" }}
+                  >
+                    History
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className={styles.navbtn}
+                    aria-current="page"
+                    to="/chat"
+                    style={{ marginRight: "50px", marginLeft: "40px" }}
+                  >
+                    Chat
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <button
+                    className={styles.logoutbtn}
+                    style={{ marginLeft: "30px" }}
+                    onClick={logOut}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </nav>

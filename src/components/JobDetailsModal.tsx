@@ -405,7 +405,10 @@ const JobDetailsModal: React.FC<Props> = ({
             >
               Contact About Job
             </h3>
-            <ChatLog otherUserID={jobUserData?.userId} />
+            <ChatLog
+              otherUserDisplayName={jobUserData?.displayName}
+              otherUserID={jobUserData?.userId}
+            />
             <div
               style={{
                 display: "flex",
