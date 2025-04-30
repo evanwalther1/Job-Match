@@ -408,8 +408,8 @@ const JobDetailsModal: React.FC<Props> = ({
             </h3>
             {
               <ChatLog
-                otherUserID={jobUserData.userId}
-                otherUserDisplayName={jobUserData.displayName}
+                otherUserID={jobUserData?.userId}
+                otherUserDisplayName={jobUserData?.displayName}
               />
             }
             <div
