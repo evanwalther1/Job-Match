@@ -5,6 +5,7 @@ import { auth, storage } from "../firebase";
 import { addJob, saveLocation } from "../FirebaseServices";
 import { ref, uploadBytes } from "firebase/storage";
 import { Circle, GoogleMap, MarkerF } from "@react-google-maps/api";
+import { Timestamp } from "firebase/firestore";
 interface Props {
   onClose: () => void;
 }
@@ -12,7 +13,7 @@ interface Props {
 const JobPostForm: React.FC<Props> = ({ onClose }) => {
   //New Job States
   const [newJobTitle, setNewJobTitle] = useState("");
-  const [newJobDate, setNewJobDate] = useState("");
+  const [newJobDate, setNewJobDate] = useState<Timestamp | null>(null);
   const [newJobLocation, setNewJobLocation] = useState("");
   const [newJobDescription, setNewJobDescription] = useState("");
   const [newPaymentAmount, setNewPaymentAmount] = useState(Number);
@@ -42,7 +43,7 @@ const JobPostForm: React.FC<Props> = ({ onClose }) => {
       });
       saveLocation(jobID, newLat, newLng);
       setNewJobTitle("");
-      setNewJobDate("");
+      setNewJobDate(null);
       setNewJobLocation("");
       setNewJobDescription("");
       setNewPaymentAmount(0);
@@ -238,8 +239,12 @@ const JobPostForm: React.FC<Props> = ({ onClose }) => {
           <input
             id="date"
             type="date"
-            value={newJobDate}
-            onChange={(e) => setNewJobDate(e.target.value)}
+            // value={newJobDate}
+            // onChange={(e) => setNewJobDate(e.target.value)}
+            onChange={(e) => {
+              const selectedDate = new Date(e.target.value + "T00:00:00");
+              setNewJobDate(Timestamp.fromDate(selectedDate));
+            }}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
