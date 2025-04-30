@@ -13,6 +13,7 @@ const Layout: React.FC = () => {
     Payment: [],
     Location: [],
     PayWay: [],
+    Date: [],
   });
 
   // Add the modal state and styles from JobSearch
@@ -92,6 +93,7 @@ const Layout: React.FC = () => {
         Payment: filters.Payment ?? [],
         Location: filters.Location ?? [],
         PayWay: filters.PayWay ?? [],
+        Date: filters.Date ?? [],
       }));
     },
     []
