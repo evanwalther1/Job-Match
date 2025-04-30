@@ -7,7 +7,7 @@ const ActiveJobs = () => {
       <div>
         <Navbar></Navbar>
       </div>
-      <div style={{ paddingTop: ComputerNavBarPadding }}>
+      <div style={{ paddingTop: 120 }}>
         <MyJobs></MyJobs>
       </div>
     </>
