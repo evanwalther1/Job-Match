@@ -1,16 +1,19 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { auth } from "../firebase";
 import {
   ChatMessage,
   getMessagesFromOneUserToAnother,
+  getUser,
 } from "../FirebaseServices";
 import ChatBubble from "./ChatBubble";
+import { Timestamp } from "firebase/firestore";
 
 interface Props {
   otherUserID: string;
+  otherUserDisplayName: string;
 }
 
-const ChatConversation = ({ otherUserID }: Props) => {
+const ChatConversation = ({ otherUserID, otherUserDisplayName }: Props) => {
   const currentUserID = auth.currentUser?.uid;
   if (currentUserID == null || currentUserID == undefined) {
     return (
@@ -54,7 +57,7 @@ const ChatConversation = ({ otherUserID }: Props) => {
           messagesStored.length
         );
         messagesStored.push(value.id);
-        messagesWithRightAlignData.push([value, false]);
+        messagesWithRightAlignData.push([value, true]);
       }
     });
     messagesSentByOtherUser.forEach((value) => {
@@ -65,7 +68,7 @@ const ChatConversation = ({ otherUserID }: Props) => {
           messagesStored.length
         );
         messagesStored.push(value.id);
-        messagesWithRightAlignData.push([value, true]);
+        messagesWithRightAlignData.push([value, false]);
       }
     });
     console.log(
@@ -90,25 +93,28 @@ const ChatConversation = ({ otherUserID }: Props) => {
     );
   };
 
-  console.log("line 93");
-  grabMessagesAndSort();
-  console.log("line 95");
-  //turnMessagesToUI();
+  useEffect(() => {
+    grabMessagesAndSort();
+    turnMessagesToUI();
+  });
 
   return (
     <div className="card">
       {returnElement}
-      <button
-        onClick={() => {
-          console.log("onClick start");
-          grabMessagesAndSort();
-          turnMessagesToUI();
-          console.log("onClick end");
-        }}
-      >
-        {" "}
-        Show/Refresh messages
-      </button>
+      <div className="card">
+        <div className="card">
+          <p style={{ margin: 5 }}>
+            {otherUserDisplayName == "" ||
+            otherUserDisplayName == null ||
+            otherUserDisplayName == undefined
+              ? "User's name not found"
+              : otherUserDisplayName}
+          </p>
+        </div>
+        <div className="card text-end">
+          <p style={{ margin: 5 }}>{"You"}</p>
+        </div>
+      </div>
     </div>
   );
 };

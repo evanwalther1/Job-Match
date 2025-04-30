@@ -19,6 +19,8 @@ import { profileEvents } from "../FirebaseServices"; // Adjust the import path a
 import ChatConversation from "./ChatConversation";
 import ChatSendBox from "./ChatSendBox";
 import ChatLog from "./ChatLog";
+import SecondaryJobDetailsModal from "./JobDetailsModal";
+import { getJobImages } from "../FirebaseServices";
 interface Props {
   onClose: () => void;
   userData: {
@@ -34,9 +36,14 @@ interface Props {
     username: string;
     dateJoined?: string;
   };
+  onViewJobDetails: (job: Job, images: { [key: string]: string }) => void;
 }
 
-const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
+const UserProfileModal: React.FC<Props> = ({
+  onClose,
+  userData,
+  onViewJobDetails,
+}) => {
   const MODAL_STYLES: React.CSSProperties = {
     position: "fixed",
     top: "50%",
@@ -49,7 +56,7 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
     maxWidth: "1000px",
     maxHeight: "90vh",
     overflow: "hidden",
-    zIndex: 9999,
+    zIndex: 5000,
   };
 
   const OVERLAY_STYLES: React.CSSProperties = {
@@ -59,10 +66,14 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
     right: 0,
     bottom: 0,
     backgroundColor: "rgba(0, 0, 0, .7)",
-    zIndex: 9999, // Slightly lower than modal, but still very high
+    zIndex: 5000, // Slightly lower than modal, but still very high
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  };
+
+  const zIndex: React.CSSProperties = {
+    zIndex: 5000,
   };
 
   const [following, setFollowing] = React.useState(false);
@@ -73,6 +84,12 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
   const [refreshToken, setRefreshToken] = React.useState(0);
 
   const [activeJobs, setActiveJobs] = React.useState<Job[]>([]); // Replace with your job type
+  const [showJobDetails, setShowJobDetails] = React.useState(false);
+  const [jobDetails, setJobDetails] = React.useState<Job | null>(null); // Replace with your job type
+  const [selectedJob, setSelectedJob] = React.useState<Job | null>(null); // Replace with your job type
+  const [jobImages, setJobImages] = React.useState<{ [key: string]: string }>(
+    {}
+  );
 
   useEffect(() => {
     const checkFollowStatus = async () => {
@@ -92,6 +109,16 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
 
     checkFollowStatus();
   }, [currentUserId, userData.userId]);
+
+  const convertArrayToObject = (
+    images: string[]
+  ): { [key: string]: string } => {
+    const result: { [key: string]: string } = {};
+    images.forEach((url, index) => {
+      result[index.toString()] = url;
+    });
+    return result;
+  };
 
   const handleToggleFollow = () => {
     if (!following) {
@@ -153,6 +180,12 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
     if (!userData.dateJoined) return "N/A";
     const date = new Date(userData.dateJoined);
     return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  };
+
+  const openJobDetailsModal = (job: Job) => {
+    console.log("Opening job details for:", job);
+    setSelectedJob(job);
+    setShowJobDetails(true);
   };
 
   const renderUserProfile = () => {
@@ -607,6 +640,12 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                         </div>
                       </div>
                       <button
+                        onClick={async () => {
+                          const imagesArray = await getJobImages(job.id);
+                          const imagesObject =
+                            convertArrayToObject(imagesArray);
+                          onViewJobDetails(job, imagesObject); // Pass both job and images
+                        }}
                         style={{
                           padding: "8px 12px",
                           backgroundColor: "#f0f0f0",
@@ -701,7 +740,10 @@ const UserProfileModal: React.FC<Props> = ({ onClose, userData }) => {
                     color: "#666",
                   }}
                 >
-                  <ChatLog otherUserID={userData.userId} />
+                  <ChatLog
+                    otherUserID={userData.userId}
+                    otherUserDisplayName={userData.displayName}
+                  />
                 </div>
               </div>
             </div>

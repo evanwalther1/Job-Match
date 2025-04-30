@@ -19,6 +19,7 @@ import firebase from "firebase/app";
 import firestore from "firebase/firestore";
 import "firebase/auth";
 import "firebase/storage";
+import { useState } from "react";
 
 export interface Job {
   id: string;
@@ -278,7 +279,12 @@ export const getAllJobs = async (): Promise<Job[]> => {
 export const getAllJobsFor = async (userId: string): Promise<Job[]> => {
   try {
     const jobCollectionRef = collection(db, "jobs");
-    const q = query(jobCollectionRef, where("employerID", "==", userId));
+    const q = query(
+      jobCollectionRef,
+      where("employerID", "==", userId),
+      where("completed", "==", false),
+      where("workersFound", "==", false)
+    );
     const data = await getDocs(q);
     return data.docs.map((doc) => ({
       id: doc.id,
@@ -386,6 +392,38 @@ export const getMessagesFromOneUserToAnother = async (
       error
     );
     return [];
+  }
+};
+
+export const getMostRecentChatBetweenUsers = async (
+  userAID: string,
+  userBID: string
+): Promise<ChatMessage | undefined> => {
+  try {
+    const aToB = await getMessagesFromOneUserToAnother(userAID, userBID);
+    const bToA = await getMessagesFromOneUserToAnother(userBID, userAID);
+    const [mostRecent, setMostRecent] = useState<ChatMessage | undefined>(
+      undefined
+    );
+    aToB.forEach((value) => {
+      if (
+        mostRecent == undefined ||
+        value.sendTime.valueOf() > mostRecent.sendTime.valueOf()
+      ) {
+        setMostRecent(value);
+      }
+    });
+    bToA.forEach((value) => {
+      if (
+        mostRecent == undefined ||
+        value.sendTime.valueOf() > mostRecent.sendTime.valueOf()
+      ) {
+        setMostRecent(value);
+      }
+    });
+    return mostRecent;
+  } catch (error) {
+    console.error(error);
   }
 };
 

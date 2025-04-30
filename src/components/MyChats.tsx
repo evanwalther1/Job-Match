@@ -9,6 +9,7 @@ import {
   getAllUsers,
   getUser,
   User,
+  getMostRecentChatBetweenUsers,
 } from "../FirebaseServices";
 import {
   collection,
@@ -36,13 +37,14 @@ const MyChats = () => {
   const [conversationPartnerID, setConversationPartnerID] =
     useState<string>("");
   const [users, setUsers] = useState<User[]>([]);
-  const [conversation, setConversation] = useState<ReactNode>(<></>);
+  const [mostRecents, setMostRecents] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const userArray: User[] = await getAllUsers();
         setUsers(userArray);
+        //mostRecentMessages(); //doesn't work
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -75,111 +77,104 @@ const MyChats = () => {
     setConversationPartnerID(newID);
   };
 
+  const mostRecentMessage = async (user: User) => {
+    if (auth.currentUser == null) {
+      return "You are not logged in; no most recent message to display";
+    }
+    const recent = await getMostRecentChatBetweenUsers(
+      user.userId,
+      auth.currentUser?.uid
+    );
+    if (recent == undefined) {
+      return "No most recent chat found";
+    } else {
+      return recent.text;
+    }
+  };
+
+  const mostRecentMessages = async () => {
+    const mostRecentsNew = users.map(async (value) => {
+      return await mostRecentMessage(value);
+    });
+  };
+
   return (
     <div className="container">
       <div className="row align-items-start">
         <div className="col">
-          {users.length == 0 ? (
-            <></>
-          ) : (
-            users.map((value) => {
-              return (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    backgroundColor: "#f8f9fa",
-                    padding: "16px",
-                    borderRadius: "8px",
-                    marginBottom: "20px",
-                    border: "1px solid #e0e0e0",
-                  }}
-                >
-                  <img
-                    src={getProfilePic(value)}
-                    alt="Profile"
-                    style={{
-                      width: "48px",
-                      height: "48px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      border: "2px solid #fff",
-                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                    }}
-                  />
-                  <div style={{ marginLeft: "16px", flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <h3
-                        style={{
-                          margin: 0,
-                          fontWeight: 600,
-                          fontSize: "1.1rem",
-                        }}
-                      >
-                        {value.firstname} {value.lastname}
-                      </h3>
-                    </div>
-                    <p
-                      style={{
-                        margin: "4px 0 0 0",
-                        color: "#666",
-                        fontSize: "0.9rem",
-                      }}
-                    >
-                      Member since{" "}
-                      {new Date(
-                        value.joinDate || Date.now()
-                      ).toLocaleDateString()}
-                    </p>
-                  </div>
+          <div
+            className="btn-group-vertical"
+            role="group"
+            aria-label="Vertical button group"
+            style={{ display: "block" }}
+          >
+            {users.length == 0 ? (
+              <></>
+            ) : (
+              users.map((value, index) => {
+                return value.userId == auth.currentUser?.uid ? null : (
                   <button
                     onClick={() => switchConversation(value.userId)}
                     style={{
-                      color: "#007bff",
-                      textDecoration: "none",
-                      fontWeight: 500,
+                      width: "600px",
                       display: "flex",
-                      alignItems: "center",
-                      background: "none",
-                      border: "none",
-                      padding: 0,
-                      cursor: "pointer",
+                      backgroundColor: "#f8f9fa",
+                      padding: "16px",
+                      borderRadius: "8px",
+                      marginBottom: "20px",
+                      border: "1px solid #e0e0e0",
+                      textAlign: "start",
                     }}
                   >
-                    Chat
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{ marginLeft: "4px" }}
-                    >
-                      <path d="M5 12h14"></path>
-                      <path d="m12 5 7 7-7 7"></path>
-                    </svg>
+                    <img
+                      src={getProfilePic(value)}
+                      alt="Profile"
+                      style={{
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        border: "2px solid #fff",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                      }}
+                    />
+                    <div style={{ marginLeft: "16px", flex: 1 }}>
+                      <div style={{ display: "block" }}>
+                        <h3
+                          style={{
+                            margin: 0,
+                            fontWeight: 600,
+                            fontSize: "1.1rem",
+                          }}
+                        >
+                          {value.firstname} {value.lastname}
+                        </h3>
+                      </div>
+                      <p
+                        style={{
+                          margin: 0,
+                          color: "#666",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        {mostRecents.at(index)}
+                      </p>
+                    </div>
                   </button>
-                </div>
-              );
-            })
-          )}
+                );
+              })
+            )}
+          </div>
         </div>
         <div className="col">
           {users.map((value) => {
             if (value.userId == conversationPartnerID) {
-              /*return (
-              <UserProfileModal
-                userData={value}
-                onClose={() => {
-                  setConversationPartnerID("");
-                }}
-              ></UserProfileModal>
-            );*/
-              return <ChatLog otherUserID={value?.userId} />;
+              return (
+                <ChatLog
+                  otherUserID={value?.userId}
+                  otherUserDisplayName={value?.displayName}
+                />
+              );
             } else {
               return <></>;
             }
