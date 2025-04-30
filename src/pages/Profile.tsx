@@ -246,146 +246,147 @@ const Profile = () => {
   return (
     <>
       <Navbar />
-      <div style={{ paddingTop: ComputerNavBarPadding }}></div>
-      <div className={styles.profileContainer}>
-        <h1 className={styles.profileHeader}>Your Profile</h1>
-        <div className={styles.profileBox}>
-          {user && !isEditingProfile ? (
-            <div className={styles.profileInfo}>
-              <img
-                src={getProfilePic(user)}
-                alt="Profile Photo"
-                className={styles.profileAvatar}
-              />
-              {/* Followers and Following Section */}
-              <div className={styles.socialCounters}>
-                <button
-                  onClick={() => setShowFollowersModal(true)}
-                  className={styles.socialCounterBtn}
-                >
-                  <span className={styles.socialCounterLabel}>
-                    Followers {user?.followers}
-                  </span>
+      <div style={{ paddingTop: ComputerNavBarPadding }}>
+        <div className={styles.profileContainer}>
+          <h1 className={styles.profileHeader}>Your Profile</h1>
+          <div className={styles.profileBox}>
+            {user && !isEditingProfile ? (
+              <div className={styles.profileInfo}>
+                <img
+                  src={getProfilePic(user)}
+                  alt="Profile Photo"
+                  className={styles.profileAvatar}
+                />
+                {/* Followers and Following Section */}
+                <div className={styles.socialCounters}>
+                  <button
+                    onClick={() => setShowFollowersModal(true)}
+                    className={styles.socialCounterBtn}
+                  >
+                    <span className={styles.socialCounterLabel}>
+                      Followers {user?.followers}
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowFollowingModal(true)}
+                    className={styles.socialCounterBtn}
+                  >
+                    <span className={styles.socialCounterLabel}>
+                      Following {user?.following}{" "}
+                    </span>
+                  </button>
+                </div>
+                <div className={styles.profileItem}>
+                  <span className="label">First Name: </span>
+                  <span className="label">{user?.firstname}</span>
+                </div>
+                <div className={styles.profileItem}>
+                  <span className="label">Last Name: </span>
+                  <span className="label">{user?.lastname}</span>
+                </div>
+                <div className={styles.profileItem}>
+                  <span className="label">Email: </span>
+                  <span className="label">{user?.email}</span>
+                </div>
+                <div className={styles.profileItem}>
+                  <span className="label">Username: </span>
+                  <span className="label">{user?.username}</span>
+                </div>
+                <div className={styles.profileItem}>
+                  <span className="label">Age: </span>
+                  <span className="label">{user?.age}</span>
+                </div>
+
+                <button onClick={editProfile} className={styles.profileBtn}>
+                  Edit Profile
                 </button>
+              </div>
+            ) : (
+              <div className={styles.profileInfo}>
+                <h1>Edit Your Profile</h1>
+                <img
+                  src={getProfilePic(user)}
+                  alt="Profile Photo"
+                  className={styles.profileAvatar}
+                />
 
+                <span>
+                  <label>Edit Photo</label>
+                  <input
+                    id="image"
+                    type="file"
+                    //accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files.length > 0) {
+                        setNewFile(e.target.files[0]);
+                      }
+                    }}
+                  ></input>
+                </span>
+
+                <span>
+                  <label>First Name: </label>
+                  <input
+                    onChange={(e) => setNewFirstName(e.target.value)}
+                    placeholder={user?.firstname}
+                  ></input>
+                </span>
+                <span>
+                  <label>Last Name: </label>
+                  <input
+                    onChange={(e) => setNewLastName(e.target.value)}
+                    placeholder={user?.lastname}
+                  ></input>
+                </span>
+
+                <span>
+                  <label>Email: </label>
+                  <label> {user?.email}</label>
+                </span>
+
+                <span>
+                  <label>Username: </label>
+                  <input
+                    onChange={(e) => setNewUsername(e.target.value)}
+                    placeholder={user?.username}
+                  ></input>
+                </span>
+                <span>
+                  <label>Age: </label>
+
+                  <input
+                    onChange={(e) => {
+                      setAge(Number(e.target.value));
+                    }}
+                    placeholder={user?.age}
+                    disabled={ageCheck}
+                  ></input>
+                </span>
+
+                <form>
+                  <button
+                    className={styles.profileBtn}
+                    onClick={() => {
+                      if (auth.currentUser) {
+                        submitForm(user.userId);
+                      } else {
+                        console.log("error submiting");
+                      }
+                    }}
+                  >
+                    Submit
+                  </button>
+                </form>
                 <button
-                  onClick={() => setShowFollowingModal(true)}
-                  className={styles.socialCounterBtn}
+                  className={classNames(styles.profileBtn, "btn btn-danger")}
+                  onClick={() => deleteUser(user.userId)}
                 >
-                  <span className={styles.socialCounterLabel}>
-                    Following {user?.following}{" "}
-                  </span>
+                  Delete Account
                 </button>
               </div>
-              <div className={styles.profileItem}>
-                <span className="label">First Name: </span>
-                <span className="label">{user?.firstname}</span>
-              </div>
-              <div className={styles.profileItem}>
-                <span className="label">Last Name: </span>
-                <span className="label">{user?.lastname}</span>
-              </div>
-              <div className={styles.profileItem}>
-                <span className="label">Email: </span>
-                <span className="label">{user?.email}</span>
-              </div>
-              <div className={styles.profileItem}>
-                <span className="label">Username: </span>
-                <span className="label">{user?.username}</span>
-              </div>
-              <div className={styles.profileItem}>
-                <span className="label">Age: </span>
-                <span className="label">{user?.age}</span>
-              </div>
-
-              <button onClick={editProfile} className={styles.profileBtn}>
-                Edit Profile
-              </button>
-            </div>
-          ) : (
-            <div className={styles.profileInfo}>
-              <h1>Edit Your Profile</h1>
-              <img
-                src={getProfilePic(user)}
-                alt="Profile Photo"
-                className={styles.profileAvatar}
-              />
-
-              <span>
-                <label>Edit Photo</label>
-                <input
-                  id="image"
-                  type="file"
-                  //accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files.length > 0) {
-                      setNewFile(e.target.files[0]);
-                    }
-                  }}
-                ></input>
-              </span>
-
-              <span>
-                <label>First Name: </label>
-                <input
-                  onChange={(e) => setNewFirstName(e.target.value)}
-                  placeholder={user?.firstname}
-                ></input>
-              </span>
-              <span>
-                <label>Last Name: </label>
-                <input
-                  onChange={(e) => setNewLastName(e.target.value)}
-                  placeholder={user?.lastname}
-                ></input>
-              </span>
-
-              <span>
-                <label>Email: </label>
-                <label> {user?.email}</label>
-              </span>
-
-              <span>
-                <label>Username: </label>
-                <input
-                  onChange={(e) => setNewUsername(e.target.value)}
-                  placeholder={user?.username}
-                ></input>
-              </span>
-              <span>
-                <label>Age: </label>
-
-                <input
-                  onChange={(e) => {
-                    setAge(Number(e.target.value));
-                  }}
-                  placeholder={user?.age}
-                  disabled={ageCheck}
-                ></input>
-              </span>
-
-              <form>
-                <button
-                  className={styles.profileBtn}
-                  onClick={() => {
-                    if (auth.currentUser) {
-                      submitForm(user.userId);
-                    } else {
-                      console.log("error submiting");
-                    }
-                  }}
-                >
-                  Submit
-                </button>
-              </form>
-              <button
-                className={classNames(styles.profileBtn, "btn btn-danger")}
-                onClick={() => deleteUser(user.userId)}
-              >
-                Delete Account
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 

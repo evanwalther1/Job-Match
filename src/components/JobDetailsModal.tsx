@@ -5,6 +5,7 @@ import { CircleMap } from "./CircleMap";
 import ChatConversation from "./ChatConversation";
 import ChatSendBox from "./ChatSendBox";
 import ChatLog from "./ChatLog";
+import { Timestamp } from "firebase/firestore";
 
 interface Props {
   setShowProfile: (show: boolean) => void;
@@ -259,7 +260,7 @@ const JobDetailsModal: React.FC<Props> = ({
                   </svg>
                   <p style={{ margin: 0, fontWeight: 500 }}>
                     {selectedJob?.date
-                      ? new Date(selectedJob.date).toLocaleDateString()
+                      ? selectedJob.date.toDate().toLocaleDateString()
                       : "No due date"}
                   </p>
                 </div>
@@ -406,8 +407,8 @@ const JobDetailsModal: React.FC<Props> = ({
               Contact About Job
             </h3>
             <ChatLog
-              otherUserDisplayName={jobUserData?.displayName}
               otherUserID={jobUserData?.userId}
+              otherUserDisplayName={jobUserData?.displayName}
             />
             <div
               style={{

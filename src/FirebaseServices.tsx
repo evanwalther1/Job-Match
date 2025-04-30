@@ -30,7 +30,8 @@ export interface Job {
   cash: boolean;
   venmo: boolean;
   cashApp: boolean;
-  date: Date;
+  date: Timestamp;
+  postedAt: string | Date;
   employerID: string;
   workersFound: boolean;
   completed: boolean;
@@ -299,8 +300,12 @@ export const getAllJobsFor = async (userId: string): Promise<Job[]> => {
 export const addJob = async (jobData: any): Promise<string> => {
   try {
     // Add job to Firestore and get the reference
-    const docRef = await addDoc(collection(db, "jobs"), jobData);
+    // const docRef = await addDoc(collection(db, "jobs"), jobData);
     // Fetch the newly created job data using the document ID
+    const docRef = await addDoc(collection(db, "jobs"), {
+      ...jobData,
+      postedAt: Timestamp.now(),
+    });
     return docRef.id;
   } catch (error) {
     console.error("Error adding job:", error);
@@ -468,5 +473,32 @@ export const hasUser = async (userID: string): Promise<boolean> => {
   } catch (error) {
     console.error("Error finding whether a user exists", error);
     return false;
+  }
+};
+
+export const convertJobPostedAtToTimestamp = async (): Promise<void> => {
+  try {
+    const snapshot = await getDocs(collection(db, "jobs"));
+
+    const updates = snapshot.docs.map(async (docSnap) => {
+      const data = docSnap.data();
+      const postedAt = data.postedAt;
+
+      if (typeof postedAt === "string") {
+        const date = new Date(postedAt);
+        if (!isNaN(date.getTime())) {
+          await updateDoc(doc(db, "jobs", docSnap.id), {
+            postedAt: Timestamp.fromDate(date),
+          });
+        } else {
+          console.warn(`Invalid date string in doc ${docSnap.id}: ${postedAt}`);
+        }
+      }
+    });
+
+    await Promise.all(updates);
+    console.log("All date fields converted successfully.");
+  } catch (error) {
+    console.error("Error converting postedAt fields to Timestamp:", error);
   }
 };

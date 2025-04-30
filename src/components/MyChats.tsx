@@ -44,7 +44,6 @@ const MyChats = () => {
       try {
         const userArray: User[] = await getAllUsers();
         setUsers(userArray);
-        //mostRecentMessages(); //doesn't work
       } catch (error) {
         console.error("Error fetching users:", error);
       }

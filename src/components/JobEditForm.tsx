@@ -6,6 +6,7 @@ import { addJob, Job, saveLocation, updateJob } from "../FirebaseServices";
 import { ref, uploadBytes } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { Timestamp } from "firebase/firestore";
 
 interface Props {
   onClose: () => void;
@@ -15,7 +16,10 @@ const JobEditForm: React.FC<Props> = ({ onClose, job }) => {
   const navigate = useNavigate();
   //New Job States
   const [newJobTitle, setNewJobTitle] = useState(job?.title);
-  const [newJobDate, setNewJobDate] = useState(job?.date);
+  // const [newJobDate, setNewJobDate] = useState(job?.date);
+  const [newJobDate, setNewJobDate] = useState<Date | undefined>(
+    job?.date ? job.date.toDate() : undefined
+  );
   const [newJobLocation, setNewJobLocation] = useState(job?.location);
   const [newJobDescription, setNewJobDescription] = useState(job?.description);
   const [newPaymentAmount, setNewPaymentAmount] = useState(job?.pay);
@@ -36,7 +40,7 @@ const JobEditForm: React.FC<Props> = ({ onClose, job }) => {
       await updateJob(job.id, {
         title: newJobTitle,
         description: newJobDescription,
-        date: newJobDate,
+        date: newJobDate ? Timestamp.fromDate(newJobDate) : null,
         location: newJobLocation,
         pay: newPaymentAmount,
         cash: cashAccept,
