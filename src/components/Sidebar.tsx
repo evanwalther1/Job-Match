@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import "../css.styles/SideBar.css";
 import { FaSearch } from "react-icons/fa";
 import { db } from "../firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  Timestamp,
+} from "firebase/firestore";
 import { Job } from "../FirebaseServices";
 
 interface SidebarProps {
@@ -31,6 +37,11 @@ const categoryOptions: {
     { value: "Venmo", label: "Venmo" },
     { value: "CashApp", label: "CashApp" },
   ],
+  Date: [
+    { value: 7, label: "Within a week" },
+    { value: 14, label: "Within two weeks" },
+    { value: 30, label: "Within a month" },
+  ],
 };
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -40,7 +51,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [query, setQuery] = useState("");
   const [selectedOptions, setSelectedOptions] = useState<{
-    [key: string]: (string | number)[];
+    [key: string]: (string | number | Timestamp)[];
   }>({});
 
   useEffect(() => {
@@ -55,7 +66,10 @@ const Sidebar: React.FC<SidebarProps> = ({
     onFilter(formattedFilters);
   }, [selectedOptions, onFilter]);
 
-  const handleCheckboxChange = (category: string, option: string | number) => {
+  const handleCheckboxChange = (
+    category: string,
+    option: string | number | Timestamp
+  ) => {
     setSelectedOptions((prev) => {
       const currentOptions = prev[category] || [];
       const newOptions = currentOptions.includes(option)

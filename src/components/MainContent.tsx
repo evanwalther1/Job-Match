@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import ChatConversation from "./ChatConversation";
 import ChatSendBox from "./ChatSendBox";
 import { Job } from "../FirebaseServices";
-
+import { Timestamp as FirestoreTimestamp } from "firebase/firestore";
 interface MainContentProps {
   searchQuery: string;
   selectedFilters: { [key: string]: string[] };
@@ -37,6 +37,11 @@ const categoryOptions: {
     { value: "Cash", label: "Cash" },
     { value: "Venmo", label: "Venmo" },
     { value: "CashApp", label: "CashApp" },
+  ],
+  Date: [
+    { value: 7, label: "Within a week" },
+    { value: 14, label: "Within two weeks" },
+    { value: 30, label: "Within a month" },
   ],
 };
 
@@ -103,6 +108,20 @@ export const MainContent: React.FC<MainContentProps> = ({
         Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
+  };
+
+  const isDueWithinDays = (
+    dueDate: Date | FirestoreTimestamp,
+    days: number
+  ) => {
+    if (!dueDate) return false;
+    const dateToCheck = dueDate instanceof Date ? dueDate : dueDate.toDate();
+
+    const now = new Date();
+    const timeDifference = dateToCheck.getTime() - now.getTime();
+    const daysDifference = timeDifference / (1000 * 3600 * 24);
+
+    return daysDifference > 0 && daysDifference <= days;
   };
 
   useEffect(() => {
@@ -469,6 +488,14 @@ export const MainContent: React.FC<MainContentProps> = ({
                     (methodLower === "venmo" && job.venmo) ||
                     (methodLower === "cashapp" && job.cashApp)
                   );
+                });
+              }
+
+              if (key === "Date") {
+                if (!job.date) return false;
+                return values.some((v) => {
+                  const days = parseInt(v, 10);
+                  return isDueWithinDays(job.date, days);
                 });
               }
 
