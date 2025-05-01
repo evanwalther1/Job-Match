@@ -94,8 +94,8 @@ const ChatConversation = ({ otherUserID, otherUserDisplayName }: Props) => {
   };
 
   useEffect(() => {
-    grabMessagesAndSort();
-    turnMessagesToUI();
+    /*grabMessagesAndSort();
+    turnMessagesToUI();*/
   });
 
   return (
