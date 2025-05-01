@@ -114,6 +114,11 @@ const ChatConversation = ({ otherUserID, otherUserDisplayName }: Props) => {
         <div className="card text-end">
           <p style={{ margin: 5 }}>{"You"}</p>
         </div>
+        <div>
+          <p style={{ margin: 5 }}>
+            Note: This is not real time. Reload page to see new messages.
+          </p>
+        </div>
       </div>
     </div>
   );
