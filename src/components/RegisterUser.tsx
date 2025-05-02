@@ -101,7 +101,7 @@ const RegisterUser = () => {
           <input
             type="number"
             onChange={(e) => setAge(Number(e.target.value))}
-            placeholder="Enter Birthday"
+            placeholder="Enter Age"
           ></input>
           <button
             onClick={signIn}
