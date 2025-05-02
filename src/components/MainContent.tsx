@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  Timestamp,
+  orderBy,
+} from "firebase/firestore";
 import "../css.styles/SearchBar.css";
 import { getJobImages } from "../FirebaseServices";
 import ReactDOM from "react-dom";
@@ -420,6 +427,12 @@ export const MainContent: React.FC<MainContentProps> = ({
   };
 
   useEffect(() => {
+    // const now = new Date();
+    // const timezoneOffset = now.getTimezoneOffset() * 60000;
+    // const todayStart = new Date(now.getTime() - timezoneOffset);
+    // todayStart.setHours(0, 0, 0, 0);
+    // const todayTimestamp = Timestamp.fromDate(todayStart);
+
     const fetchJobs = async () => {
       setLoading(true);
 
@@ -428,6 +441,8 @@ export const MainContent: React.FC<MainContentProps> = ({
           collection(db, "jobs"), // Start with base query
           where("completed", "==", false),
           where("workersFound", "==", false)
+          // where("date", ">=", todayTimestamp),
+          // orderBy("date", "asc")
         );
 
         if (filterCategories.length > 0 && filterCategories.length <= 10) {
