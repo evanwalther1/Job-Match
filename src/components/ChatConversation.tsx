@@ -41,6 +41,7 @@ const ChatConversation = ({ otherUserID, otherUserDisplayName }: Props) => {
   >([]);
   const [messagesStored, setMessagesStored] = useState<string[]>([]);
   const [returnElement, setReturnElement] = useState<ReactNode>(null);
+  const [loadedMessages, setLoadedMessages] = useState<boolean>(false);
 
   const grabMessagesAndSort = async () => {
     console.log("grabMessagesAndSort - start");
@@ -96,7 +97,7 @@ const ChatConversation = ({ otherUserID, otherUserDisplayName }: Props) => {
   useEffect(() => {
     /*grabMessagesAndSort();
     turnMessagesToUI();*/
-  });
+  }, []);
 
   return (
     <div className="card">
@@ -116,9 +117,18 @@ const ChatConversation = ({ otherUserID, otherUserDisplayName }: Props) => {
         </div>
         <div>
           <p style={{ margin: 5 }}>
-            Note: This is not real time. Reload page to see new messages.
+            Note: This is not real time. Use the reload button to see new
+            messages.
           </p>
         </div>
+        <button
+          onClick={() => {
+            grabMessagesAndSort();
+            turnMessagesToUI();
+          }}
+        >
+          Reload/See Messages
+        </button>
       </div>
     </div>
   );
